@@ -1,0 +1,40 @@
+.input_hidden{
+    display: none;
+}
+.panel_dinastia{
+    height: 10% !important;
+}
+.scroll_table {
+    height: 50%;
+    overflow: auto;
+}
+
+.fade_raf {
+    opacity: 0;
+    -webkit-transition: opacity 10.25s linear;
+    -moz-transition: opacity 10.25s linear;
+    -ms-transition: opacity 10.25s linear;
+    -o-transition: opacity 10.25s linear;
+    transition: opacity 10.25s linear;
+}
+.alert_raf{
+    top: 5%;
+    margin: 0 auto;
+    width: 60%;
+    text-align: center;
+    margin-top: 3%;
+}
+
+.wrap_input {
+    width: 35%;
+    display: inline-block;
+    margin-right: 5%;
+    margin-top: 1%;
+}
+
+.select_row_genitori:hover {
+    background: lightcyan;
+    cursor: pointer;
+}
+
+
