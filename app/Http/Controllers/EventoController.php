@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
+
 class EventoController extends Controller
 {
     public function insert_evento(Request $request)

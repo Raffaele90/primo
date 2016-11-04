@@ -1,7 +1,7 @@
 @extends('master')
 
 
-@section('title', 'Page Title')
+@section('title', 'Insert personaggio')
 
 @section('sidebar')
     @parent
@@ -12,7 +12,7 @@
 @section('content')
 
     <div class="container">
-        @yield('content_personaggio')
+        @include('personaggio')
     </div>
 
     <!-- Large modal -->

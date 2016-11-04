@@ -2,6 +2,78 @@
  * Created by raffaeleschiavone on 21/10/16.
  */
 
+function set_form_personaggio(personaggio) {
+
+    $("#idNome").val(personaggio['nome'])
+    $("#idCognome").val(personaggio['cognome'])
+    $("#label_idLuogoNascita").val(personaggio['denominazione_luogo'])
+    $("#idLuogoNascita").val(personaggio['idLuogo'])
+    $("#label_idLuogoMorte").val(personaggio['denominazione_luogo'])
+    $("#idLuogoMorte").val(personaggio['idMorte'])
+
+    $("#label_idPadre").val(personaggio['padre_id'])
+    $("#idPadre").val(personaggio['padre_id'])
+    $("#label_idMadre").val(personaggio['madre_id'])
+    $("#idMadre").val(personaggio['madre_id'])
+
+    $("#label_idConiuge1").val(personaggio['coniuge1_id'])
+    $("#idConiuge1").val(personaggio['coniuge1_id'])
+    $("#label_idConiuge2").val(personaggio['coniuge2_id'])
+    $("#idConiuge2").val(personaggio['coniuge2_id'])
+    $("#label_idConiuge3").val(personaggio['coniuge3_id'])
+    $("#idConiuge3").val(personaggio['coniuge3_id'])
+
+    $("#idDescrizione").val(personaggio['descrizione'])
+
+    $("#idTipo").val(personaggio['tipo'])
+
+    $("#idNascita").val(personaggio['data_nascita'])
+    $("#idMorte").val(personaggio['data_morte'])
+
+
+}
+
+function get_info_personaggio(id_personaggio) {
+    var type = "POST"; //for creating new resource
+    var formData = {
+        id: id_personaggio,
+
+    }
+    url = "get_personaggio"
+    $.ajax({
+
+        type: type,
+        url: url,
+        data: formData,
+        dataType: 'text',
+        success: function (data) {
+            data = JSON.parse(data);
+            alert(data[0]['denominazione_luogo'])
+
+            set_form_personaggio(data[0])
+
+        },
+        error: function (data) {
+
+            if (data.status === 422) {
+
+            } else {
+                /// do some thing else
+            }
+
+            console.log('Error:', data);
+        }
+    });
+
+}
+
+
+function open_form_personaggio(element) {
+    id_tr = element.id
+    id = id_tr.substr(12, 13)
+    personaggio = get_info_personaggio(id)
+}
+
 function show_hide_module(list_show, list_hide) {
 
     l_show = list_show.split(",");

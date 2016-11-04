@@ -1,4 +1,4 @@
-@extends('master')
+@extends('insert_personaggio')
 
 
 @section('title', 'Modifica Personaggio')
@@ -47,7 +47,8 @@
                                 </thead>
                                 <tbody id="lista_maschera_edit_eventi">
                                 @foreach($data['personaggi'] as $personaggio)
-                                    <tr class="select_row_genitori">
+                                    <tr id="personaggio_{{$personaggio->id}}" onclick="open_form_personaggio(this)"
+                                        class="select_row_genitori">
                                         <td>{{$personaggio->id}}</td>
                                         <td>{{$personaggio->cognome}}</td>
                                         <td>{{$personaggio->nome}}</td>
@@ -70,6 +71,15 @@
 
     <div class="container">
         @yield('content_personaggio')
+    </div>
+
+    <div class="container">
+        @include('personaggio')
+    </div>
+
+    <!-- Large modal -->
+    <div id="novo_evento" style="display: none">
+        @include('modal_evento')
     </div>
 
 @endsection

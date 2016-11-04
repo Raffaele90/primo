@@ -16,6 +16,15 @@ class Personaggio extends Model
 
     public function eventi()
     {
-        return $this->belongsToMany('App\evento', 'evento_personaggio', 'evento_id', 'personaggio_id');
+        return $this->belongsToMany('App\evento', 'evento_personaggio', 'personaggio_id', 'evento_id');
+    }
+    public function luoghi()
+    {
+        return $this->hasOne('App\luogo');
+    }
+
+    public function cazzo(){
+
+        return Personaggio::find(1)->eventi()->get();
     }
 }

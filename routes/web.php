@@ -18,15 +18,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('prova', function (){
-    $personaggio = \App\Personaggio::find(1);
-    $personaggio->eventi()->attach(1);
+Route::get('prova', ['uses' => 'PersonaggioController@get_personaggio']);
 
-    return view('insert_personaggio');
-});
 
 Route::get('insert_personaggio', ['uses' => 'PersonaggioController@getForm']);
+
 Route::get('edit_personaggio', ['uses' => 'PersonaggioController@get_form_edit']);
+
+Route::post('get_personaggio', ['uses' => 'PersonaggioController@get_personaggio']);
 
 
 Route::post('store', ['uses' => 'PersonaggioController@store']);
