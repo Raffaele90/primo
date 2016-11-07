@@ -2,35 +2,58 @@
  * Created by raffaeleschiavone on 21/10/16.
  */
 
+function crea_table() {
+
+
+}
 function set_form_personaggio(personaggio) {
 
-    $("#idNome").val(personaggio['nome'])
-    $("#idCognome").val(personaggio['cognome'])
-    $("#label_idLuogoNascita").val(personaggio['denominazione_luogo'])
-    $("#idLuogoNascita").val(personaggio['idLuogo'])
-    $("#label_idLuogoMorte").val(personaggio['denominazione_luogo'])
-    $("#idLuogoMorte").val(personaggio['idMorte'])
+    $("#idNome").val(personaggio['anagrafica']['nome'])
+    $("#idCognome").val(personaggio['anagrafica']['cognome'])
+    $("#label_idLuogoNascita").val(personaggio['luogo_nascita']['denominazione_luogo'])
+    $("#idLuogoNascita").val(personaggio['luogo_nascita']['id'])
+    $("#label_idLuogoMorte").val(personaggio['luogo_morte']['denominazione_luogo'])
+    $("#idLuogoMorte").val(personaggio['luogo_morte']['id'])
 
-    $("#label_idPadre").val(personaggio['padre_id'])
-    $("#idPadre").val(personaggio['padre_id'])
-    $("#label_idMadre").val(personaggio['madre_id'])
-    $("#idMadre").val(personaggio['madre_id'])
+    nomePadre = personaggio['dinastia'][0]['padre']['cognome'] + " " + personaggio['dinastia'][0]['padre']['nome']
+    nomeMadre = personaggio['dinastia'][0]['madre']['cognome'] + " " + personaggio['dinastia'][0]['madre']['nome']
+
+    $("#label_idPadre").val(nomePadre)
+    $("#idPadre").val(personaggio['anagrafica']['padre_id'])
+    $("#label_idMadre").val(nomeMadre)
+    $("#idMadre").val(personaggio['anagrafica']['madre_id'])
 
     $("#label_idConiuge1").val(personaggio['coniuge1_id'])
-    $("#idConiuge1").val(personaggio['coniuge1_id'])
+    $("#idConiuge1").val(personaggio['anagrafica']['coniuge1_id'])
     $("#label_idConiuge2").val(personaggio['coniuge2_id'])
-    $("#idConiuge2").val(personaggio['coniuge2_id'])
+    $("#idConiuge2").val(personaggio['anagrafica']['coniuge2_id'])
     $("#label_idConiuge3").val(personaggio['coniuge3_id'])
-    $("#idConiuge3").val(personaggio['coniuge3_id'])
+    $("#idConiuge3").val(personaggio['anagrafica']['coniuge3_id'])
 
-    $("#idDescrizione").val(personaggio['descrizione'])
+    $("#idDescrizione").val(personaggio['anagrafica']['descrizione'])
 
-    $("#idTipo").val(personaggio['tipo'])
+    $("#idTipo").val(personaggio['anagrafica']['tipo'])
 
-    $("#idNascita").val(personaggio['data_nascita'])
-    $("#idMorte").val(personaggio['data_morte'])
+    $("#idNascita").val(personaggio['anagrafica']['data_nascita'])
+    $("#idMorte").val(personaggio['anagrafica']['data_morte'])
 
 
+    eventi_non_ass = personaggio['eventi_non_associati']
+    for (i = 0; i < eventi_non_ass.length; i++) {
+        // tr = "<tr id='" + eventi_non_ass[0]['id'] + "'> <td>1</td><td>2</td><td>3</td><td>sposta</td></tr>"
+
+        nome = eventi_non_ass[i]['denominazione_evento']
+        desc = eventi_non_ass[i]
+        tr = "<tr >  " +
+            "<td><span class='replaceme'></span>11</td>" +
+            " <td>" + nome + "</td>" +
+            "<td>" + desc + "</td>" +
+            "<td>sss</td>" +
+            " <td><button type='button' id='s' class='sposta' value='ee' onclick='sposta_row(this)'> sposta</button> </td></tr>"
+
+        $('#corpo_lista_eventi').prepend(tr);
+
+    }
 }
 
 function get_info_personaggio(id_personaggio) {
@@ -48,9 +71,8 @@ function get_info_personaggio(id_personaggio) {
         dataType: 'text',
         success: function (data) {
             data = JSON.parse(data);
-            alert(data[0]['denominazione_luogo'])
 
-            set_form_personaggio(data[0])
+            set_form_personaggio(data)
 
         },
         error: function (data) {
@@ -469,7 +491,7 @@ $(document).ready(function () {
             dataType: 'text',
             success: function (data) {
                 data = JSON.parse(data);
-                id = data['idLuogo']
+                id = data['id']
                 den_luogo = data['denominazione_luogo']
                 loc = data['localizzazione_luogo']
                 tipo = data['tipo_luogo']

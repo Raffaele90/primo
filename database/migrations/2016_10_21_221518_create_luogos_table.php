@@ -15,7 +15,7 @@ class CreateLuogosTable extends Migration
     {
         Schema::create('luogo', function (Blueprint $table)
         {
-            $table->increments('idLuogo');
+            $table->increments('id');
             $table->string('denominazione_luogo');
             $table->string('anno_costruzione')->nullable();
             $table->string('descrizione_monumento')->nullable();

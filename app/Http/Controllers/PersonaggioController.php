@@ -78,8 +78,6 @@ class PersonaggioController extends Controller
     public function get_personaggio(Request $request)
 
     {
-        $personaggio = new Personaggio();
-
         $pers['eventi_associati'] = Personaggio::find($request['id'])->eventi()->get();
 
         $arr = [];
@@ -88,17 +86,31 @@ class PersonaggioController extends Controller
 
         }
         $pers['eventi_non_associati'] = evento::whereNotIn('id', $arr)->get()->toArray();
-        $pers['anagrafica'] = Personaggio::join('luogo', 'luogo.idLuogo', '=', 'personaggio.luogo_nascita')->where('id', '=', $request['id'])->get();
+        $pers['anagrafica'] = Personaggio::find($request['id']);
 
-        /*
-         *         $pers['dinastia'] = "";
+        $pers['dinastia'] = [];
 
-        $pers['luoghi'] = "";
+        $cont = 0;
+        $padre = $pers['anagrafica']['padre_id'];
+        $madre = $pers['anagrafica']['madre_id'];
+        $pers['dinastia'][$cont]['padre'] = Personaggio::find($padre);
+        $pers['dinastia'][$cont]['madre'] = Personaggio::find($madre);
+        while (1) {
+            if ($padre != null or $madre != null) {
+                $padre = Personaggio::find($padre)['padre_id'];
+                $madre = Personaggio::find($madre)['madre_id'];
+                $cont += 1;
+                $pers['dinastia'][$cont]['padre'] = Personaggio::find($padre);
+                $pers['dinastia'][$cont]['madre'] = Personaggio::find($madre);
 
-        $padre_id = $pers['anagrafica'][0]['padre_id'];
-        //$pers['padre'] = DB::table('personaggio')->where('madre_id','=',)->where('padre_id','=',$request['id']);
-        */
-        return $pers['anagrafica'];//Personaggio::join('luogo', 'luogo.idLuogo', '=', 'personaggio.luogo_nascita')->where('personaggio.id','=',$request['id'])->get();
+            } else {
+                break;
+            }
+        }
+        $pers['luogo_nascita'] = luogo::find($pers['anagrafica']['luogo_nascita']);
+        $pers['luogo_morte'] = luogo::find($pers['anagrafica']['luogo_morte']);
+
+        return  $pers;//Personaggio::join('luogo', 'luogo.idLuogo', '=', 'personaggio.luogo_nascita')->where('personaggio.id','=',$request['id'])->get();
 
 
     }
