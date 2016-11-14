@@ -1,6 +1,6 @@
-<form action="store" method="post">
+<form action="{{ Request::path()=='insert_personaggio' ? 'store' : 'update' }}" method="post" id="id_form_personaggio">
 
-
+    <input id="idPersonaggio" name="id" value="">
     {{ csrf_field() }}
     @if(count($errors)>0)
         <div class="alert alert-danger">
@@ -210,17 +210,128 @@
                 <label for="exampleInputFile">File input</label>
                 <input type="file" id="exampleInputFile">-->
 
-                            <button type="submit"
-                                    class="btn btn-default">Salva Personaggio
-                            </button>
-                            <button type="button" id="id_btn_collega_evento"
-                                    onclick="show_hide_module('id_collega_eventi','vuota')" class="btn btn-primary">
-                                Collega Evento
-                            </button>
+                            @if(Request::path() == 'insert_personaggio')
+                                <button type="submit"
+                                        class="btn btn-default">Salva Personaggio
+                                </button>
+                                <button type="button" id="id_btn_collega_evento"
+                                        onclick="show_hide_module('id_collega_eventi','vuota')" class="btn btn-primary">
+                                    Collega Evento
+
+                                </button>
+                            @elseif (Request::path() == 'edit_personaggio')
+                                <button type="submit"
+                                        class="btn btn-default">Aggiorna Personaggio
+                                </button>
+                                <button type="button" id="id_btn_collega_evento"
+                                        onclick="show_hide_module('id_collega_eventi','vuota'),goToByScroll('corpo_lista_eventi')"
+                                        class="btn btn-primary">
+                                    Visualizza Eventi
+
+                                </button>
+                            @elseif (Request::path() == 'insert_evento')
+                                <button type="button" onclick="insert_personaggio()"
+                                        class="btn btn-default">Salva Personaggio
+                                </button>
+                                <button type="button" id="id_btn_collega_evento"
+                                        onclick="show_hide_module('id_collega_eventi','vuota')"
+                                        class="btn btn-primary">
+                                    Collega Evento
+
+                                </button>
+                            @endif
+
+
                         </div>
                     </div>
 
 
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row {{ Request::path()=='insert_personaggio' ? 'input_hidden' : '' }}" id="id_collega_eventi">
+
+
+        <div class="col-xs-6 col-md-6">
+            <div class="panel panel-info scroll_table">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-6 col-md-6">
+                            <h3 class="panel-title"> Collega Eventi </h3>
+                        </div>
+                        <div class="col-xs-6 col-md-6">
+                            <input type="text" class="form-control" placeholder="Search" id="id_search_evento">
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="panel-body">
+
+
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Nome evento</th>
+                            <th>Descrizione</th>
+                        </tr>
+                        </thead>
+                        <tbody id="corpo_lista_eventi">
+
+                        @if(Request::path() == 'insert_personaggio' or Request::path() == 'insert_evento')
+                            @foreach($data['eventi'] as $evento)
+                                <tr id="evento_{{$evento->id}}">
+
+                                    <td><span class="replaceme"></span>{{$evento->id}}</td>
+                                    <td>{{$evento->denominazione_evento}}</td>
+                                    <td>{{$evento->descrizione_evento}}</td>
+                                    <td>
+                                        <button type="button" id="s" class="sposta" value="ee"
+                                                onclick="sposta_row(this)"> sposta
+                                        </button>
+                                    </td>
+
+
+                                </tr>
+
+                            @endforeach
+                        @endif
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+            @if(Request::path() == 'insert_personaggio')
+
+                <button type="button" class="btn btn-primary dropdown-toggle"
+                        onclick="show_hide_module('novo_evento','vuota'), goToByScroll('new_evento')">+ Add evento
+                </button>
+            @endif
+        </div>
+
+        <div class="col-xs-6 col-md-6">
+            <div class="panel panel-info scroll_table">
+                <div class="panel-heading">
+                    <h3 class="panel-title"> Eventi Personaggio </h3>
+                </div>
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Nome evento</th>
+                            <th>Descrizione</th>
+                        </tr>
+                        </thead>
+                        <tbody id="corpo_lista_eventi_personaggio" ondrop="drop(event)"
+                               ondragover="allowDrop(event)">
+
+
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -392,91 +503,7 @@
     <div class="modal-footer">
 
     </div>
-    <div class="row" id="id_collega_eventi" style="display:none;">
 
-
-        <div class="col-xs-6 col-md-6">
-            <div class="panel panel-info scroll_table">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-xs-6 col-md-6">
-                            <h3 class="panel-title"> Collega Eventi </h3>
-                        </div>
-                        <div class="col-xs-6 col-md-6">
-                            <input type="text" class="form-control" placeholder="Search" id="id_search_evento">
-
-                        </div>
-                    </div>
-
-                </div>
-                <div class="panel-body">
-
-
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Tipo evento</th>
-                            <th>Descrizione</th>
-                            <th>Stessa posizione</th>
-                        </tr>
-                        </thead>
-                        <tbody id="corpo_lista_eventi">
-
-                        @foreach($data['eventi'] as $evento)
-                            <tr id="evento_{{$evento->id}}">
-
-                                <td><span class="replaceme"></span>{{$evento->id}}</td>
-                                <td>{{$evento->tipo_evento}}</td>
-                                <td>{{$evento->tipo_evento}}</td>
-                                <td>{{$evento->tipo_evento}}</td>
-                                <td>
-                                    <button type="button" id="s" class="sposta" value="ee"
-                                            onclick="sposta_row(this)"> sposta
-                                    </button>
-                                </td>
-
-
-                            </tr>
-
-                        @endforeach
-                        </tbody>
-                    </table>
-
-                </div>
-
-            </div>
-            <button type="button" class="btn btn-primary dropdown-toggle"
-                    onclick="show_hide_module('novo_evento','vuota')"><a style="color:white;" href="#new_evento">
-                    Nuovo
-                    Evento</a></button>
-        </div>
-
-        <div class="col-xs-6 col-md-6">
-            <div class="panel panel-info scroll_table">
-                <div class="panel-heading">
-                    <h3 class="panel-title"> Eventi Personaggio </h3>
-                </div>
-                <div class="panel-body">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Tipo evento</th>
-                            <th>Descrizione</th>
-                            <th>Stessa posizione</th>
-                        </tr>
-                        </thead>
-                        <tbody id="corpo_lista_eventi_personaggio" ondrop="drop(event)"
-                               ondragover="allowDrop(event)">
-
-
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
 </form>
 <div id="form_errors"></div>
 <div id="alert_insert_evento" class="alert alert-success alert_raf fade in" role="alert" style="display: none;">

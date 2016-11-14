@@ -1,7 +1,7 @@
-@extends('insert_personaggio')
+@extends('master')
 
 
-@section('title', 'Modifica Personaggio')
+@section('title', 'Insert evento')
 
 @section('sidebar')
     @parent
@@ -11,20 +11,21 @@
 
 @section('content')
 
+
+
     <div class="container">
         <div class="row">
             <div class="col-xs-12 col-md-12">
-                <div class="panel panel-success" style=""
-                     id="id_dinastia">
+                <div class="panel panel-success" style="">
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-xs-6 col-md-6">
-                                <h3 class="panel-title">Personaggi </h3>
+                                <h3 class="panel-title">Eventi </h3>
                             </div>
                             <div class="col-xs-6 col-md-6">
 
                                 <input type="text" class="form-control" placeholder="Search"
-                                       id="id_search_personaggio">
+                                       id="id_search_eventi">
                             </div>
                         </div>
 
@@ -40,21 +41,21 @@
                                 <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Cognome</th>
-                                    <th>nome</th>
-                                    <th>Dinastia</th>
+                                    <th>Nome</th>
+                                    <th>Tipo evento</th>
+                                    <th>Descrizione</th>
                                 </tr>
                                 </thead>
                                 <tbody id="lista_personaggi">
-                                @foreach($data['personaggi'] as $personaggio)
+                                @foreach($data['eventi'] as $evento)
 
-                                    <a href="#id_form_personaggio">
-                                        <tr id="personaggio_{{$personaggio->id}}" onclick="open_form_personaggio(this)" data-href="id_form_personaggio/"
+                                    <a href="#id_form_evento">
+                                        <tr id="evento_{{$evento->id}}" onclick="open_form_evento(this)" data-href="id_form_evento/"
                                             class="select_row_genitori clickable-row">
-                                            <td>{{$personaggio->id}}</td>
-                                            <td>{{$personaggio->cognome}}</td>
-                                            <td>{{$personaggio->nome}}</td>
-                                            <td>{{$personaggio->dinastia}}</td>
+                                            <td>{{$evento->id}}</td>
+                                            <td>{{$evento->denominazione_evento}}</td>
+                                            <td>{{$evento->tipo_evento}}</td>
+                                            <td>{{$evento->descrizione_evento}}</td>
                                         </tr>
                                     </a>
                                 @endforeach
@@ -72,16 +73,10 @@
         </div>
     </div>
 
-    <div class="container">
-        @yield('content_personaggio')
-    </div>
 
-    <div class="container">
-        @include('personaggio')
-    </div>
 
     <!-- Large modal -->
-    <div id="novo_evento" style="display: none">
+    <div id="novo_evento" style="display: block">
         @include('modal_evento')
     </div>
 

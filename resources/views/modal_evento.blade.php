@@ -13,7 +13,8 @@
                         <div class="form-group">
                             <label for="exampleInputEmail1">Denominazione Evento</label>
                             <input type="text" class="form-control"
-                                   id="id_denominazione_evento" placeholder="Denominazione evento">
+                                   id="id_denominazione_evento" placeholder="Denominazione evento"
+                                   name="denominazione_evento">
 
                         </div>
 
@@ -21,7 +22,7 @@
                             <div class="row">
                                 <div class="col-xs-6 col-md-6">
                                     <label for="exampleInputEmail1">Tipo Evento</label>
-                                    <select class="form-control" id="idTipoEvento">
+                                    <select class="form-control" id="idTipoEvento" name="tipo_evento">
                                         <option value="" disabled selected>Seleziona tipo evento</option>
 
                                         @foreach($data['tipo_eventi'] as $tipo)
@@ -34,7 +35,14 @@
                                     <label for="exampleInputEmail1">Add</label>
 
                                     <input class="form-control" type="text" id="id_nuovo_tipo_evento"
-                                           placeholder="Nuovo tipo evento"/></div>
+                                           placeholder="Nuovo tipo evento"/>
+                                    <button type="button" id=""
+                                            onclick="add_tipo('id_nuovo_tipo_evento','idTipoEvento')"> +
+                                    </button>
+
+                                </div>
+
+
                             </div>
                         </div>
 
@@ -45,18 +53,18 @@
                                    id="label_id_denominazione_luogo" placeholder="Denominazione"
                                    readonly onclick="set_modal_value('modalLuoghi',this.id)">
                             <input type="text" class="form-control input_hidden"
-                                   readonly id="id_denominazione_luogo"
-                                   placeholder="Denominazione ID">
+                                   readonly id="id_denominazione_luogo" name="denominazione_luogo"
+                                   placeholder="Denominazione ID" name="origine_luogo_id">
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Anno di Costruzione</label>
                             <input class="form-control" type="number" min="0" step="1" id="id_anno_costruzione"
-                                   placeholder="Anno costruzione"/>
+                                   placeholder="Anno costruzione" name="anno_costruzione"/>
 
                         </div>
                         <div class="form-group">
                             <label for="comment">Descrizione</label>
-                            <textarea class="form-control" rows="5"
+                            <textarea class="form-control" rows="5" name="descrizione_evento"
                                       placeholder="Descrizione" id="idDescrizioneEvento"></textarea>
                         </div>
                     </div>
@@ -75,7 +83,7 @@
                                     <label for="exampleInputEmail1"> Tipo Sub Evento</label>
                                     <select class="form-control" id="idTipoSubEvento">
                                         <option value="" disabled selected>Seleziona tipo sub evento</option>
-                                        <option> Tipo 2</option>
+                                        <option><input type="tex"></option>
 
                                     </select>
 
@@ -85,13 +93,18 @@
                                     <label for="exampleInputEmail1">Add</label>
 
                                     <input class="form-control" type="text" id="id_nuovo_sub_tipo_evento"
-                                           placeholder="Nuovo sub evento"/>
+                                           placeholder="Nuovo sub evento" name="tipo_sub_evento"/>
+                                    <button type="button" id="id_add_btn_tipo"
+                                            onclick="add_tipo('id_nuovo_sub_tipo_evento','idTipoSubEvento')"> +
+                                    </button>
+
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Ulteriore
                                 caratterizzazione</label> <textarea type="text" class="form-control"
+                                                                    name="ulteriore_caratterizzazione"
                                                                     id="id_ulteriore_caratterizzazione" rows="5"
                                                                     placeholder="Caratterizzazione"></textarea>
                         </div>
@@ -123,33 +136,133 @@
                                        onclick="set_modal_value('modalLuoghi',this.id)" placeholder="Denominazione">
                                 <input type="text" class="form-control input_hidden"
                                        readonly id="id_nuova_denominazione_luogo"
-                                       placeholder="Denominazione ID">
+                                       placeholder="Denominazione ID" name="nuovo_luogo_id">
                             </div>
                             <!--<div class="form-group">
                                 <label for="exampleInputEmail1">Nuovo Anno di Costruzione</label>
                                 <input type="text" class="form-control"
-                                       id="id_nuovo_anno_costruzione" placeholder="Anno costruzione">
+                                       id="id_nuovo_anno_costruzione" name="anno_evento" placeholder="Anno costruzione">
                             </div>-->
-
 
 
                         </div>
                     </div>
                     <div class="col-xs-6 col-md-6">
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Descrizione movimento opera ?
+                            <label for="exampleInputEmail1">Descrizione movimento opera
                             </label> <textarea type="text" class="form-control"
                                                id="id_descrizione_movimento_opera"
-                                               placeholder="Descrizione" rows="5fti"></textarea>
+                                               placeholder="Descrizione" rows="5fti"
+                                               name="descrizione_movimento_opera"></textarea>
                         </div>
                     </div>
                 </div>
             </div>
-            <button type="submit" onclick="insert_Evento()"
-                    class="btn btn-default">Salva Evento
-            </button>
+            @if (Request::path() =='insert_evento')
+
+                <button type="submit" class="btn btn-default">Salva Evento
+                </button>
+                <button type="submit" onclick="show_hide_module()"
+                        class="btn btn-default">Collega Personaggi
+                </button>
+
+            @else
+                <button type="submit" onclick="insert_Evento()" class="btn btn-default">Salva Evento</button>
+            @endif
+
+
         </div>
 
     </div>
+
+    <div id="id_personaggi">
+        <div class="row" id="id_collega_eventi">
+            <div class="col-xs-6 col-md-6">
+                <div class="panel panel-info scroll_table">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-6 col-md-6">
+                                <h3 class="panel-title"> Collega Personaggi </h3>
+                            </div>
+                            <div class="col-xs-6 col-md-6">
+                                <input type="text" class="form-control" placeholder="Search"
+                                       id="id_search_personaggio">
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="panel-body">
+
+
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nome</th>
+                                <th>Cognome</th>
+                            </tr>
+                            </thead>
+                            <tbody id="lista_personaggi">
+
+
+                            @foreach($data['personaggi'] as $personaggio)
+                                <tr id="personaggio_{{$personaggio->id}}">
+
+                                    <td><span class="replaceme"></span>{{$personaggio->id}}</td>
+                                    <td>{{$personaggio->nome}}</td>
+                                    <td>{{$personaggio->cognome}}</td>
+                                    <td>
+                                        <button type="button" id="s" class="sposta" value="ee"
+                                                onclick="sposta_row_personaggio(this)"> sposta
+                                        </button>
+                                    </td>
+
+
+                                </tr>
+
+                            @endforeach
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </div>
+                <button type="button" class="btn btn-primary dropdown-toggle"
+                        onclick="show_hide_module('novo_evento','vuota'), goToByScroll('new_evento')">+ Add Personaggio
+                </button>
+            </div>
+
+            <div class="col-xs-6 col-md-6">
+                <div class="panel panel-info scroll_table">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"> Personaggi associati </h3>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nome evento</th>
+                                <th>Descrizione</th>
+                            </tr>
+                            </thead>
+                            <tbody id="lista_personaggi_associati" ondrop="drop(event)"
+                                   ondragover="allowDrop(event)">
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+<div id="form_errors_personaggio"></div>
+<div id="alert_insert_personaggio" class="alert alert-success alert_raf fade in" role="alert" style="display: none;">
+    Personaggio Inserito
 </div>
 

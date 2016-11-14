@@ -45,15 +45,17 @@ class PersonaggioController extends Controller
         return view('edit_personaggio')->with('data', $data);
     }
 
-    public function store(Request $request)
+    private function validate_personaggio($request)
     {
-
         $this->validate($request, [
             'nome' => 'required|max:25|',
             'cognome' => 'required|max:25',
 
         ]);
+    }
 
+    private function get_info($request)
+    {
         $personaggio = new Personaggio();
         $personaggio->nome = $request['nome'];
         $personaggio->cognome = $request['cognome'];
@@ -63,17 +65,71 @@ class PersonaggioController extends Controller
         $personaggio->luogo_morte = $request['luogo_morte'];
         $personaggio->descrizione = $request['descrizione'];
         $personaggio->nome_dinastia = $request['nome_dinastia'];
-        $personaggio->padre_id = $request['padre'];
-        $personaggio->madre_id = $request['madre'];
-        $personaggio->coniuge1_id = $request['coniuge1'];
-        $personaggio->coniuge2_id = $request['coniuge2'];
-        $personaggio->coniuge3_id = $request['coniuge3'];
+        $personaggio->padre_id =  $request['padre'] == null ? null : $request['padre'];
+        $personaggio->madre_id = $request['madre'] == null ? null : $request['madre'];
+        $personaggio->coniuge1_id = $request['coniuge1'] == null ? null : $request['coniuge1'];
+        $personaggio->coniuge2_id =  $request['coniuge2'] == null ? null : $request['coniuge2'];
+        $personaggio->coniuge3_id =  $request['coniuge3'] == null ? null : $request['coniuge3'];
         $personaggio->tipo = $request['tipo'];
 
+        return $personaggio;
+    }
+
+
+    public function store(Request $request)
+    {
+
+        $this->validate_personaggio($request);
+        $personaggio = $this->get_info($request);
         $personaggio->save();
         return redirect()->action('PersonaggioController@getForm');
     }
 
+    public function store_ajax(Request $request)
+    {
+        $this->validate_personaggio($request);
+        $personaggio = $this->get_info($request);
+        $personaggio->save();
+        return $personaggio;
+    }
+
+
+    public function update(Request $request)
+    {
+
+        $this->validate_personaggio($request);
+
+        $personaggio = Personaggio::find($request['id']);
+
+        $personaggio->nome = $request['nome'];
+        $personaggio->cognome = $request['cognome'];
+        $personaggio->luogo_nascita = $request['luogo_nascita'];
+        $personaggio->data_nascita = $request['data_nascita'];
+        $personaggio->data_morte = $request['data_morte'];
+        $personaggio->luogo_morte = $request['luogo_morte'];
+        $personaggio->descrizione = $request['descrizione'];
+        $personaggio->nome_dinastia = $request['nome_dinastia'];
+        $personaggio->padre_id =  $request['padre'] == null ? null : $request['padre'];
+        $personaggio->madre_id = $request['madre'] == null ? null : $request['madre'];
+        $personaggio->coniuge1_id = $request['coniuge1'] == null ? null : $request['coniuge1'];
+        $personaggio->coniuge2_id =  $request['coniuge2'] == null ? null : $request['coniuge2'];
+        $personaggio->coniuge3_id =  $request['coniuge3'] == null ? null : $request['coniuge3'];
+        $personaggio->tipo = $request['tipo'];
+
+
+        $personaggio->save();
+
+        $eventi_ass = [];
+        for ($i=0; $i<count($request['eventi']);$i++){
+            $id_evento = substr($request['eventi'][$i],7);
+            array_push($eventi_ass,$id_evento);
+        }
+
+        $personaggio->eventi()->sync($eventi_ass);
+
+        return  $eventi_ass;
+
+    }
 
     public function get_personaggio(Request $request)
 
@@ -107,10 +163,12 @@ class PersonaggioController extends Controller
                 break;
             }
         }
+        $pers['luogo_nascita'] = "";
+        $pers['luogo_morte'] = "";
         $pers['luogo_nascita'] = luogo::find($pers['anagrafica']['luogo_nascita']);
         $pers['luogo_morte'] = luogo::find($pers['anagrafica']['luogo_morte']);
 
-        return  $pers;//Personaggio::join('luogo', 'luogo.idLuogo', '=', 'personaggio.luogo_nascita')->where('personaggio.id','=',$request['id'])->get();
+        return $pers;//Personaggio::join('luogo', 'luogo.idLuogo', '=', 'personaggio.luogo_nascita')->where('personaggio.id','=',$request['id'])->get();
 
 
     }

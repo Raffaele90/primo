@@ -2,56 +2,104 @@
  * Created by raffaeleschiavone on 21/10/16.
  */
 
-function crea_table() {
+function add_tipo(idInput, idSelect) {
+    newTipo = $("#id_nuovo_tipo_evento").val()
+    opt = "<option>" + newTipo + "</option>"
+    $('#' + idSelect)
+        .prepend($("<option selected></option>")
+            .attr("value", newTipo)
+            .text(newTipo));
 
+
+    $('#' + idInput).val('')
+
+}
+function check(value) {
+
+    if (value == null)
+        return ""
+    else
+        return value
 
 }
 function set_form_personaggio(personaggio) {
 
-    $("#idNome").val(personaggio['anagrafica']['nome'])
-    $("#idCognome").val(personaggio['anagrafica']['cognome'])
-    $("#label_idLuogoNascita").val(personaggio['luogo_nascita']['denominazione_luogo'])
-    $("#idLuogoNascita").val(personaggio['luogo_nascita']['id'])
-    $("#label_idLuogoMorte").val(personaggio['luogo_morte']['denominazione_luogo'])
-    $("#idLuogoMorte").val(personaggio['luogo_morte']['id'])
 
-    nomePadre = personaggio['dinastia'][0]['padre']['cognome'] + " " + personaggio['dinastia'][0]['padre']['nome']
-    nomeMadre = personaggio['dinastia'][0]['madre']['cognome'] + " " + personaggio['dinastia'][0]['madre']['nome']
+    //Reset Form e table eventi ed eventi ass
+    document.getElementById("id_form_personaggio").reset();
+    $("#corpo_lista_eventi").empty();
+    $("#corpo_lista_eventi_personaggio").empty();
 
-    $("#label_idPadre").val(nomePadre)
-    $("#idPadre").val(personaggio['anagrafica']['padre_id'])
-    $("#label_idMadre").val(nomeMadre)
-    $("#idMadre").val(personaggio['anagrafica']['madre_id'])
 
-    $("#label_idConiuge1").val(personaggio['coniuge1_id'])
-    $("#idConiuge1").val(personaggio['anagrafica']['coniuge1_id'])
-    $("#label_idConiuge2").val(personaggio['coniuge2_id'])
-    $("#idConiuge2").val(personaggio['anagrafica']['coniuge2_id'])
-    $("#label_idConiuge3").val(personaggio['coniuge3_id'])
-    $("#idConiuge3").val(personaggio['anagrafica']['coniuge3_id'])
+    $("#idPersonaggio").val(check(personaggio['anagrafica']['id']))
 
-    $("#idDescrizione").val(personaggio['anagrafica']['descrizione'])
+    $("#idNome").val(check(personaggio['anagrafica']['nome']))
+    $("#idCognome").val(check(personaggio['anagrafica']['cognome']))
 
-    $("#idTipo").val(personaggio['anagrafica']['tipo'])
+    if (personaggio['luogo_nascita'] != "" && personaggio['luogo_nascita'] != null) {
+        $("#label_idLuogoNascita").val(check(personaggio['luogo_nascita']['denominazione_luogo']))
+        $("#idLuogoNascita").val(check(personaggio['luogo_nascita']['id']))
 
-    $("#idNascita").val(personaggio['anagrafica']['data_nascita'])
-    $("#idMorte").val(personaggio['anagrafica']['data_morte'])
+    }
+    if (personaggio['luogo_morte'] != "" && personaggio['luogo_morte'] != null) {
+
+        $("#label_idLuogoMorte").val(check(personaggio['luogo_morte']['denominazione_luogo']))
+        $("#idLuogoMorte").val(check(personaggio['luogo_morte']['id']))
+
+    }
+
+    if (personaggio['dinastia'][0]['padre'] != "" && personaggio['dinastia'][0]['padre'] != null) {
+
+        nomePadre = check(personaggio['dinastia'][0]['padre']['cognome']) + " " + check(personaggio['dinastia'][0]['padre']['nome'])
+        $("#label_idPadre").val(check(nomePadre))
+        $("#idPadre").val(check(personaggio['anagrafica']['padre_id']))
+
+    }
+    if (personaggio['dinastia'][0]['madre'] != "" && personaggio['dinastia'][0]['madre'] != null) {
+
+        nomeMadre = check(personaggio['dinastia'][0]['madre']['cognome']) + " " + check(personaggio['dinastia'][0]['madre']['nome'])
+        $("#label_idMadre").val(check(nomeMadre))
+        $("#idMadre").val(check(personaggio['anagrafica']['madre_id']))
+
+    }
+
+    if (personaggio['dinastia'][0]['coniuge1'] != "" && personaggio['dinastia'][0]['coniuge1'] != null) {
+
+        $("#label_idConiuge1").val(check(personaggio['coniuge1_id']))
+        $("#idConiuge1").val(check(personaggio['anagrafica']['coniuge1_id']))
+
+
+    }
+    if (personaggio['dinastia'][0]['coniuge2'] != "" && personaggio['dinastia'][0]['coniuge2'] != null) {
+
+        $("#label_idConiuge2").val(check(personaggio['coniuge2_id']))
+        $("#idConiuge2").val(check(personaggio['anagrafica']['coniuge2_id']))
+
+
+    }
+    if (personaggio['dinastia'][0]['coniuge3'] != "" && personaggio['dinastia'][0]['coniuge3'] != null) {
+        $("#label_idConiuge3").val(check(personaggio['coniuge3_id']))
+        $("#idConiuge3").val(check(personaggio['anagrafica']['coniuge3_id']))
+
+    }
+
+
+    $("#idDescrizione").val(check(personaggio['anagrafica']['descrizione']))
+
+    $("#idTipo").val(check(personaggio['anagrafica']['tipo']))
+
+    $("#idNascita").val(check(personaggio['anagrafica']['data_nascita']))
+    $("#idMorte").val(check(personaggio['anagrafica']['data_morte']))
 
 
     eventi_non_ass = personaggio['eventi_non_associati']
+    eventi_ass = personaggio['eventi_associati']
+
     for (i = 0; i < eventi_non_ass.length; i++) {
-        // tr = "<tr id='" + eventi_non_ass[0]['id'] + "'> <td>1</td><td>2</td><td>3</td><td>sposta</td></tr>"
-
-        nome = eventi_non_ass[i]['denominazione_evento']
-        desc = eventi_non_ass[i]
-        tr = "<tr >  " +
-            "<td><span class='replaceme'></span>11</td>" +
-            " <td>" + nome + "</td>" +
-            "<td>" + desc + "</td>" +
-            "<td>sss</td>" +
-            " <td><button type='button' id='s' class='sposta' value='ee' onclick='sposta_row(this)'> sposta</button> </td></tr>"
-
-        $('#corpo_lista_eventi').prepend(tr);
+        create_row_event(eventi_non_ass[i], "corpo_lista_eventi")
+    }
+    for (i = 0; i < eventi_ass.length; i++) {
+        create_row_event(eventi_ass[i], "corpo_lista_eventi_personaggio")
 
     }
 }
@@ -116,15 +164,10 @@ function show_hide_module(list_show, list_hide) {
 }
 function get_info_evento() {
 
-    tipo_evento = $("#id_nuovo_tipo_evento").val()
-    sub_tipo_evento = $("#id_nuovo_sub_tipo_evento").val()
 
-    if (tipo_evento == "") {
-        tipo_evento = $("#idTipoEvento").val()
-        if (sub_tipo_evento == "") {
-            sub_tipo_evento = $("#idTipoSubEvento").val()
-        }
-    }
+    tipo_evento = $("#idTipoEvento").val()
+    sub_tipo_evento = $("#idTipoSubEvento").val()
+
     json_evento = {
         denominazione_evento: document.getElementById("id_denominazione_evento").value,
         tipo_evento: tipo_evento,
@@ -155,19 +198,11 @@ function insert_Evento() {
         success: function (data) {
 
             data = JSON.parse(data);
-            alert((data))
 
-            nome = data['denominazione_evento']
-            desc = data['descrizione_evento']
+            id_table = "corpo_lista_eventi"
 
-            tr = "<tr >  " +
-                "<td><span class='replaceme'></span>11</td>" +
-                " <td>" + nome + "</td>" +
-                "<td>" + desc + "</td>" +
-                "<td>sss</td>" +
-                " <td><button type='button' id='s' class='sposta' value='ee' onclick='sposta_row(this)'> sposta</button> </td></tr>"
 
-            $('#corpo_lista_eventi').prepend(tr);
+            create_row_event(data, id_table)
             $('#novo_evento').hide()
 //            $('#alert_insert_evento').css("display","block")
             $("#alert_insert_evento").fadeTo(2000, 500).slideUp(500, function () {
@@ -206,6 +241,151 @@ function insert_Evento() {
 
 }
 
+function insert_personaggio() {
+
+    var json_personaggio = get_value_from_form_personaggio();
+    console.log(json_personaggio);
+
+    var type = "POST"; //for creating new resource
+    url = "store_ajax"
+    $.ajax({
+
+        type: type,
+        url: url,
+        data: json_personaggio,
+        dataType: 'text',
+        success: function (data) {
+            data = JSON.parse(data);
+
+            id_table = "lista_personaggi"
+
+
+            create_row_personaggio(data, id_table)
+            $('#nuovo_personaggio').hide()
+//            $('#alert_insert_evento').css("display","block")
+            $("#alert_insert_personaggio").fadeTo(2000, 500).slideUp(500, function () {
+                $("#alert_insert_personaggio").slideUp(500);
+            });
+        },
+        error: function (data) {
+
+            if (data.status === 422) {
+                //process validation errors here.
+                errors = data.responseJSON; //this will get the errors response data.
+                //show them somewhere in the markup
+                //e.g
+
+                errors = JSON.parse(data['responseText'])
+
+                errorsHtml = '<div class="alert alert-danger"><ul>';
+
+                $.each(errors, function (key, value) {
+                    errorsHtml += '<li>' + value[0] + '</li>'; //showing only the first error.
+                });
+                errorsHtml += '</ul></di>';
+
+                $('#form_errors_personaggio').html(errorsHtml); //appending to a <div id="form-errors"></div> inside form
+
+                $("#form_errors_personaggio").fadeTo(5000, 500).slideUp(500, function () {
+                    $("#form_errors_personaggio").slideUp(500);
+                });
+            } else {
+                /// do some thing else
+            }
+
+            console.log('Error:', data);
+        }
+    });
+
+}
+
+function get_value_from_form_personaggio() {
+
+    nome = document.getElementById("idNome").value;
+    cognome = document.getElementById("idCognome").value;
+    data_nascita = document.getElementById("idNascita").value;
+    luogo_nascita = document.getElementById("idLuogoNascita").value;
+    data_morte = document.getElementById("idMorte").value;
+    luogo_morte = document.getElementById("idLuogoMorte").value;
+    padre = document.getElementById("idPadre").value; //
+    madre = document.getElementById("idMadre").value; //
+    coniuge1 = document.getElementById("idConiuge1").value; //
+    coniuge2 = document.getElementById("idConiuge2").value; //
+    coniuge3 = document.getElementById("idConiuge3").value; //
+
+    descrizione = document.getElementById("idDescrizione").value;
+    tipo = document.getElementById("idTipo").value;
+    nome_dinastia = "Rafilucc"
+
+    var json_personaggio = {
+        "nome": nome,
+        "cognome": cognome,
+        "data_nascita": data_nascita,
+        "luogo_nascita": luogo_nascita,
+        "luogo_morte": luogo_morte,
+        "padre": padre,
+        "madre": madre,
+        "coniuge1" : coniuge1,
+        "coniuge2" : coniuge2,
+        "coniuge3" : coniuge2,
+        "data_morte": data_morte,
+        "descrizione": descrizione,
+        "tipo": tipo,
+        "nome_dinastia" : nome_dinastia
+    }
+
+    return json_personaggio;
+}
+
+function create_row_personaggio(data,id_table) {
+    nome = data['nome']
+    cognome = data['cognome']
+    id_personaggio =  data['id']
+
+    if (id_table == "lista_personaggi_associati") {
+        tr = "<tr id='" + id_personaggio + "'>  " +
+            "<td><input name='personaggi[]' value= personaggio_" + id_personaggio + "> </td>" +
+            " <td>" + nome + "</td>" +
+            "<td>" + cognome + "</td>" +
+            " <td><button type='button' id='" + id_personaggio + "' class='sposta' value='ee' onclick='sposta_row_personaggio(this)'> sposta</button> </td></tr>"
+
+        $('#' + id_table + '').prepend(tr);
+    }
+    else {
+        tr = "<tr id='" + id_personaggio + "'>  " +
+            "<td><span class='replaceme'></span>" + id_personaggio + "</td>" +
+            " <td>" + nome + "</td>" +
+            "<td>" + cognome + "</td>" +
+            " <td><button type='button' id='" + id_personaggio + "' class='sposta' value='ee' onclick='sposta_row_personaggio(this)'> sposta</button> </td></tr>"
+
+        $('#' + id_table + '').prepend(tr);
+    }
+}
+
+function create_row_event(data, id_table) {
+    nome = data['denominazione_evento']
+    desc = data['descrizione_evento']
+    id_evento = "evento_" + data['id']
+
+    if (id_table == "corpo_lista_eventi_personaggio") {
+        tr = "<tr id='" + id_evento + "'>  " +
+            "<td><input name='eventi[]' value= " + id_evento + "> </td>" +
+            " <td>" + nome + "</td>" +
+            "<td>" + desc + "</td>" +
+            " <td><button type='button' id='" + id_evento + "' class='sposta' value='ee' onclick='sposta_row(this)'> sposta</button> </td></tr>"
+
+        $('#' + id_table + '').prepend(tr);
+    }
+    else {
+        tr = "<tr id='" + id_evento + "'>  " +
+            "<td><span class='replaceme'></span>" + id_evento + "</td>" +
+            " <td>" + nome + "</td>" +
+            "<td>" + desc + "</td>" +
+            " <td><button type='button' id='" + id_evento + "' class='sposta' value='ee' onclick='sposta_row(this)'> sposta</button> </td></tr>"
+
+        $('#' + id_table + '').prepend(tr);
+    }
+}
 
 function set_modal_value(idModal, id_value) {
     document.getElementById(idModal).setAttribute("value_call", id_value)
@@ -239,7 +419,7 @@ function sposta_row(ele) {
         $("#corpo_lista_eventi_personaggio").append(tr);
         $('#corpo_lista_eventi').find('#' + idTr).remove()
     } else {
-        tr.find("td").eq(0).html(idTr.substr(7, 8))
+        tr.find("td").eq(0).html(idTr)
         $("#corpo_lista_eventi").append(tr);
         $('#corpo_lista_eventi_personaggio').find('#' + idTr).remove()
 
@@ -247,8 +427,44 @@ function sposta_row(ele) {
 }
 
 
+function sposta_row_personaggio(ele) {
+
+    idTr = (ele.parentNode.parentNode).id
+    var tr = $("#" + idTr).clone();
+    if ($('#lista_personaggi').find('#' + idTr).length > 0) {
+        cell2 = tr.find('td').eq(0).text()
+        cell2 = cell2.replace("personaggio_", "");
+
+        tr.find("td").eq(0).html("<input name='personaggi[]' value='personaggio_" + cell2 + "'>")
+        $("#lista_personaggi_associati").append(tr);
+        $('#lista_personaggi').find('#' + idTr).remove()
+    } else {
+        tr.find("td").eq(0).html(idTr)
+        $("#lista_personaggi").append(tr);
+        $('#lista_personaggi_associati').find('#' + idTr).remove()
+
+    }
+}
+
+// This is a functions that scrolls to #{blah}link
+function goToByScroll(id) {
+    // Remove "link" from the ID
+    id = id.replace("link", "");
+    // Scroll
+    $('html,body').animate({
+        scrollTop: $("#" + id).offset().top
+    }, 'slow');
+}
+
+
 $(document).ready(function () {
 
+    $(".clickable-row").click(function (e) {
+        // Prevent a page reload when a link is pressed
+        e.preventDefault();
+        // Call the scroll function
+        goToByScroll("id_form_personaggio");
+    });
 
     $("#id_table_luoghi tr").click(function (event) {
         id_label_input_luogo = document.getElementById("modalLuoghi").getAttribute("value_call")
@@ -308,7 +524,7 @@ $(document).ready(function () {
     })
 
     $("#id_search_personaggio").keyup(function () {
-        $("#lista_maschera_edit_eventi tr td:nth-child(2)").each(function () {
+        $("#lista_personaggi tr td:nth-child(2)").each(function () {
             if ($(this).text().toLowerCase().indexOf($("#id_search_personaggio").val()) >= 0) {
                 $(this).closest('tr').show()
             }
@@ -468,7 +684,6 @@ $(document).ready(function () {
 
         var tipo_sub_luogo = ((nuovo_tipo_sub_luogo.length > 0) ? nuovo_tipo_sub_luogo : select_tipo_sub_luogo);
 
-        alert(tipo_luogo + " " + tipo_sub_luogo)
         var formData = {
             denominazione_luogo: $('#denominazione_luogo').val(),
             anno_costruzione: $('#anno_costruzione').val(),
