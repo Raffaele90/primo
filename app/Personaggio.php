@@ -23,8 +23,5 @@ class Personaggio extends Model
         return $this->hasOne('App\luogo');
     }
 
-    public function cazzo(){
 
-        return Personaggio::find(1)->eventi()->get();
-    }
 }

@@ -34,11 +34,10 @@
         </div>
         <div id="nuovo_evento">
             @include('modal_evento')
-
-        <div  id="nuovo_personaggio" style="display: block">
+        </div>
+        <div id="nuovo_personaggio" style="display: block">
             @include('personaggio')
         </div>
-
 
 
         <div id="nuovo_luogo" style="display: none">

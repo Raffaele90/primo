@@ -14,8 +14,8 @@
 use App\evento;
 use App\luogo;
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('prova2', function () {
+    return evento::all();
 });
 
 Route::get('prova', ['uses' => 'PersonaggioController@get_personaggio']);
@@ -34,6 +34,8 @@ Route::post('update', ['uses' => 'PersonaggioController@update']);
 
 
 Route::post('luogo', ['uses' => 'LuogoController@insert_luogo']);
+Route::get('edit_luogo', ['uses' => 'LuogoController@get_form_edit']);
+Route::post('get_luogo', ['uses' => 'LuogoController@get_luogo']);
 
 
 Route::post('get_sub_luoghi', ['uses' => 'LuogoController@get_sub_luoghi']);
@@ -45,3 +47,6 @@ Route::post('insert_evento', ['uses' => 'EventoController@insert_evento']);
 
 Route::get('insert_evento', ['uses' => 'EventoController@getForm']);
 Route::get('edit_evento', ['uses' => 'EventoController@get_form_edit']);
+Route::post('get_evento', ['uses' => 'EventoController@get_evento']);
+
+Route::post('update_evento', ['uses' => 'EventoController@update']);

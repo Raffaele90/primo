@@ -83,7 +83,6 @@
                                     <label for="exampleInputEmail1"> Tipo Sub Evento</label>
                                     <select class="form-control" id="idTipoSubEvento">
                                         <option value="" disabled selected>Seleziona tipo sub evento</option>
-                                        <option><input type="tex"></option>
 
                                     </select>
 
@@ -108,18 +107,7 @@
                                                                     id="id_ulteriore_caratterizzazione" rows="5"
                                                                     placeholder="Caratterizzazione"></textarea>
                         </div>
-                        <div class="checkbox">
-                            <label>
-                                Stessa posizione - Si
-                                <input type="radio"
-                                       onclick="show_hide_module('vuota','id_form_nuovo_evento')"
-                                       name="posizione" checked="true">
-                                No
-                                <input type="radio"
-                                       onclick="show_hide_module('id_form_nuovo_evento','vuota')"
-                                       name="posizione">
-                            </label>
-                        </div>
+
                     </div>
                 </div>
 
@@ -166,8 +154,6 @@
                         class="btn btn-default">Collega Personaggi
                 </button>
 
-            @else
-                <button type="submit" onclick="insert_Evento()" class="btn btn-default">Salva Evento</button>
             @endif
 
 
@@ -175,37 +161,39 @@
 
     </div>
 
-    <div id="id_personaggi">
-        <div class="row" id="id_collega_eventi">
-            <div class="col-xs-6 col-md-6">
-                <div class="panel panel-info scroll_table">
-                    <div class="panel-heading">
-                        <div class="row">
-                            <div class="col-xs-6 col-md-6">
-                                <h3 class="panel-title"> Collega Personaggi </h3>
-                            </div>
-                            <div class="col-xs-6 col-md-6">
-                                <input type="text" class="form-control" placeholder="Search"
-                                       id="id_search_personaggio">
 
-                            </div>
+</div>
+<div id="id_personaggi">
+    <div class="row" id="id_collega_eventi">
+        <div class="col-xs-6 col-md-6">
+            <div class="panel panel-info scroll_table">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-6 col-md-6">
+                            <h3 class="panel-title"> Collega Personaggi </h3>
                         </div>
+                        <div class="col-xs-6 col-md-6">
+                            <input type="text" class="form-control" placeholder="Search"
+                                   id="id_search_personaggio">
 
+                        </div>
                     </div>
-                    <div class="panel-body">
+
+                </div>
+                <div class="panel-body">
 
 
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Nome</th>
-                                <th>Cognome</th>
-                            </tr>
-                            </thead>
-                            <tbody id="lista_personaggi">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Nome</th>
+                            <th>Cognome</th>
+                        </tr>
+                        </thead>
+                        <tbody id="lista_personaggi">
 
-
+                        @if(Request::path() == 'insert_evento')
                             @foreach($data['personaggi'] as $personaggio)
                                 <tr id="personaggio_{{$personaggio->id}}">
 
@@ -222,41 +210,52 @@
                                 </tr>
 
                             @endforeach
-                            </tbody>
-                        </table>
-
-                    </div>
+                        @endif
+                        </tbody>
+                    </table>
 
                 </div>
+
+            </div>
+            @if(Request::path() == 'insert_evento')
+
                 <button type="button" class="btn btn-primary dropdown-toggle"
-                        onclick="show_hide_module('novo_evento','vuota'), goToByScroll('new_evento')">+ Add Personaggio
+                        onclick="show_hide_module('novo_evento','vuota'), goToByScroll('new_evento')">+ Add
+                    Personaggio
                 </button>
-            </div>
+            @endif
 
-            <div class="col-xs-6 col-md-6">
-                <div class="panel panel-info scroll_table">
-                    <div class="panel-heading">
-                        <h3 class="panel-title"> Personaggi associati </h3>
-                    </div>
-                    <div class="panel-body">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Nome evento</th>
-                                <th>Descrizione</th>
-                            </tr>
-                            </thead>
-                            <tbody id="lista_personaggi_associati" ondrop="drop(event)"
-                                   ondragover="allowDrop(event)">
+        </div>
+
+        <div class="col-xs-6 col-md-6">
+            <div class="panel panel-info scroll_table">
+                <div class="panel-heading">
+                    <h3 class="panel-title"> Personaggi associati </h3>
+                </div>
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Nome evento</th>
+                            <th>Descrizione</th>
+                        </tr>
+                        </thead>
+                        <tbody id="lista_personaggi_associati" ondrop="drop(event)"
+                               ondragover="allowDrop(event)">
 
 
-                            </tbody>
-                        </table>
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
             </div>
+
         </div>
+
+        @if (Request::path() =='edit_evento')
+
+            <button type="submit" class="btn btn-danger btn_update_raf">Aggiorna Evento</button>
+        @endif
     </div>
 </div>
 
@@ -266,3 +265,5 @@
     Personaggio Inserito
 </div>
 
+<!-- Large modal Per selezione luogo-->
+@include('modal_luoghi')

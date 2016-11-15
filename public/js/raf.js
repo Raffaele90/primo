@@ -2,6 +2,12 @@
  * Created by raffaeleschiavone on 21/10/16.
  */
 
+
+function show_hide_module_with_scroll(id_show, id_hide, id_scroll) {
+    show_hide_module(id_show, id_hide)
+    goToByScroll(id_scroll)
+
+}
 function add_tipo(idInput, idSelect) {
     newTipo = $("#id_nuovo_tipo_evento").val()
     opt = "<option>" + newTipo + "</option>"
@@ -125,6 +131,7 @@ function get_info_personaggio(id_personaggio) {
         },
         error: function (data) {
 
+
             if (data.status === 422) {
 
             } else {
@@ -137,10 +144,128 @@ function get_info_personaggio(id_personaggio) {
 
 }
 
+function get_evento_db(id_evento) {
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    var type = "POST"; //for creating new resource
+    var formData = {
+        id: id_evento,
+
+    }
+    console.log(formData)
+    var url = "get_evento"
+    $.ajax({
+        type: type,
+        url: url,
+        data: formData,
+        dataType: 'text',
+        success: function (data) {
+            data = JSON.parse(data);
+
+            set_form_eventi(data)
+
+        },
+        error: function (data) {
+
+            if (data.status === 422) {
+
+            } else {
+                /// do some thing else
+            }
+
+            console.log('Error:', data);
+        }
+    });
+
+}
+
+function  set_form_luoghi(luogo){
+
+  //  $("#lista_personaggi").empty();
+   // $("#lista_personaggi_associati").empty();
+
+    $('#id_luogo').val(luogo['id'])
+
+    $('#denominazione_luogo').val(luogo['denominazione_luogo'])
+    $('#anno_costruzione').val(luogo['anno_costruzione'])
+
+    $('#localizzazione_luogo').val(luogo['localizzazione_luogo'])
+
+    $('#id_tipo_luoghi').val(luogo['tipo_luogo'])
+    $('#id_sub_luoghi').val(luogo['tipo_sub_luogo'])
+    $('#ulteriore_caratterizzazione').val(luogo['ulteriore_caratterizzazione'])
+    $('#descrizione_monumento').val(luogo['descrizione_monumento'])
+
+    personaggi_ass = luogo['personaggi']
+
+    for (i = 0; i < personaggi_ass.length; i++) {
+        create_row_personaggio(personaggi_ass[i], "lista_personaggi")
+    }
+
+    eventi_ass = luogo['eventi']
+
+    for (i = 0; i < eventi_ass.length; i++) {
+        create_row_event(eventi_ass[i], "lista_eventi")
+    }
+
+}
+
+function set_form_eventi(evento) {
+
+    $("#lista_personaggi").empty();
+    $("#lista_personaggi_associati").empty();
+
+    $('#id_evento').val(evento['id'])
+
+    $('#id_denominazione_evento').val(evento['denominazione_evento'])
+    $('#idTipoEvento').val(evento['tipo_evento'])
+
+    $('#label_id_denominazione_luogo').val(evento['vecchio_luogo'])
+
+    $('#id_denominazione_luogo').val(evento['origine_luogo_id'])
+    $('#id_anno_costruzione').val(evento['anno_evento'])
+    $('#id_ulteriore_caratterizzazione').val(evento['ulteriore_caratterizzazione'])
+    $('#idDescrizioneEvento').val(evento['descrizione_evento'])
+    $('#id_anno_costruzione').val(evento['anno_evento'])
+
+    $('#label_id_nuova_denominazione_luogo').val(evento['nuovo_luogo'])
+    $('#id_nuova_denominazione_luogo').val(evento['nuovo_luogo_id'])
+    $('#id_descrizione_movimento_opera').val(evento['descrizione_movimento_opera'])
+    show_hide_module('id_form_nuovo_evento', 'vuota')
+
+
+    personaggi_non_ass = evento['personaggi_non_associati']
+    personaggi_ass = evento['personaggi_associati']
+
+    for (i = 0; i < personaggi_non_ass.length; i++) {
+        create_row_personaggio(personaggi_non_ass[i], "lista_personaggi")
+    }
+    for (i = 0; i < personaggi_ass.length; i++) {
+        create_row_personaggio(personaggi_ass[i], "lista_personaggi_associati")
+
+    }
+
+}
+
+function open_form_luogo(element) {
+    id_tr = element.id
+    id = id_tr.substr(6, id_tr.length)
+    get_luogo_db(id)
+}
+function open_form_evento(element) {
+    id_tr = element.id
+    id = id_tr.substr(7, id_tr.length)
+    get_evento_db(id)
+
+}
 
 function open_form_personaggio(element) {
     id_tr = element.id
-    id = id_tr.substr(12, 13)
+    id = id_tr.substr(12, id_tr.length)
     personaggio = get_info_personaggio(id)
 }
 
@@ -161,6 +286,44 @@ function show_hide_module(list_show, list_hide) {
         }
 
     }
+}
+
+function get_luogo_db(id_luogo) {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    var type = "POST"; //for creating new resource
+    var formData = {
+        id: id_luogo,
+
+    }
+    console.log(formData)
+    var url = "get_luogo"
+    $.ajax({
+        type: type,
+        url: url,
+        data: formData,
+        dataType: 'text',
+        success: function (data) {
+            data = JSON.parse(data);
+
+            set_form_luoghi(data)
+
+        },
+        error: function (data) {
+
+            if (data.status === 422) {
+
+            } else {
+                /// do some thing else
+            }
+
+            console.log('Error:', data);
+        }
+    });
+
 }
 function get_info_evento() {
 
@@ -325,22 +488,22 @@ function get_value_from_form_personaggio() {
         "luogo_morte": luogo_morte,
         "padre": padre,
         "madre": madre,
-        "coniuge1" : coniuge1,
-        "coniuge2" : coniuge2,
-        "coniuge3" : coniuge2,
+        "coniuge1": coniuge1,
+        "coniuge2": coniuge2,
+        "coniuge3": coniuge2,
         "data_morte": data_morte,
         "descrizione": descrizione,
         "tipo": tipo,
-        "nome_dinastia" : nome_dinastia
+        "nome_dinastia": nome_dinastia
     }
 
     return json_personaggio;
 }
 
-function create_row_personaggio(data,id_table) {
+function create_row_personaggio(data, id_table) {
     nome = data['nome']
     cognome = data['cognome']
-    id_personaggio =  data['id']
+    id_personaggio = data['id']
 
     if (id_table == "lista_personaggi_associati") {
         tr = "<tr id='" + id_personaggio + "'>  " +

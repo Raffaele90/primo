@@ -12,8 +12,9 @@
 @section('content')
 
 
+    {{ csrf_field() }}
 
-    <div class="container">
+    <div class="">
         <div class="row">
             <div class="col-xs-12 col-md-12">
                 <div class="panel panel-success" style="">
@@ -25,7 +26,7 @@
                             <div class="col-xs-6 col-md-6">
 
                                 <input type="text" class="form-control" placeholder="Search"
-                                       id="id_search_eventi">
+                                       id="id_search_evento">
                             </div>
                         </div>
 
@@ -46,12 +47,12 @@
                                     <th>Descrizione</th>
                                 </tr>
                                 </thead>
-                                <tbody id="lista_personaggi">
+                                <tbody id="corpo_lista_eventi">
                                 @foreach($data['eventi'] as $evento)
 
                                     <a href="#id_form_evento">
-                                        <tr id="evento_{{$evento->id}}" onclick="open_form_evento(this)" data-href="id_form_evento/"
-                                            class="select_row_genitori clickable-row">
+                                        <tr id="evento_{{$evento->id}}" onclick="open_form_evento(this),show_hide_module_with_scroll('id_scheda_personaggio','vuota','id_scheda_personaggio')"
+                                            class="select_row_genitori" >
                                             <td>{{$evento->id}}</td>
                                             <td>{{$evento->denominazione_evento}}</td>
                                             <td>{{$evento->tipo_evento}}</td>
@@ -72,12 +73,26 @@
             </div>
         </div>
     </div>
+    <div id="id_scheda_personaggio" style="display: none">
 
+        <form method="POST" action="update_evento">
+            {{ csrf_field() }}
+            @if(count($errors)>0)
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li>{{$error}}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
+        <!-- Large modal -->
+            <input type="text" name="id" id="id_evento">
+            @include('modal_evento')
 
-    <!-- Large modal -->
-    <div id="novo_evento" style="display: block">
-        @include('modal_evento')
+        </form>
+
     </div>
 
 @endsection
