@@ -1,6 +1,6 @@
 <form action="{{ Request::path()=='insert_personaggio' ? 'store' : 'update' }}" method="post" id="id_form_personaggio">
 
-    <input id="idPersonaggio" name="id" value="">
+    <input id="idPersonaggio" class="input_hidden" name="id" value="">
     {{ csrf_field() }}
     @if(count($errors)>0)
         <div class="alert alert-danger">
@@ -11,12 +11,16 @@
             </ul>
         </div>
     @endif
+    <div class="modal-content">
 
     <div class="row">
         <div class="col-xs-12 col-md-12">
+            <div class="modal-header">
+
             <div class="panel panel-info">
                 <div class="panel-heading">
-                    <h3 class="panel-title">NUOVO PERSONAGGIO</h3>
+                    <h3 class="panel-title">Nuovo Personaggio</h3>
+                </div>
                 </div>
                 <div class="panel-body">
                     <div class="row">
@@ -98,60 +102,60 @@
                                         <label for="exampleInputEmail1">padre</label>
 
                                         <input
-                                                type="text" class="form-control input_hidden" data-toggle="modal"
+                                                type="text" class="form-control" data-toggle="modal"
                                                 data-target="#modalDinastia" readonly id="label_idPadre"
                                                 placeholder="Padre"
                                                 name="label_padre">
                                         <input
-                                                type="text" class="form-control" data-toggle="modal"
+                                                type="text" class="form-control input_hidden" data-toggle="modal"
                                                 data-target="#modalDinastia" readonly id="idPadre"
                                                 placeholder="ID Padre"
                                                 name="padre">
                                         <label for="exampleInputEmail1">Madre</label>
 
                                         <input
-                                                type="text" class="form-control input_hidden" data-toggle="modal"
+                                                type="text" class="form-control" data-toggle="modal"
                                                 data-target="#modalDinastia" readonly id="label_idMadre"
                                                 placeholder="Madre"
                                                 name="label_madre">
                                         <input
-                                                type="text" class="form-control" data-toggle="modal"
+                                                type="text" class="form-control input_hidden" data-toggle="modal"
                                                 data-target="#modalDinastia" readonly id="idMadre"
                                                 placeholder="ID madre"
                                                 name="madre">
                                         <label for="exampleInputEmail1">Coniuge1</label>
 
                                         <input
-                                                type="text" class="form-control input_hidden" data-toggle="modal"
+                                                type="text" class="form-control" data-toggle="modal"
                                                 data-target="#modalDinastia" readonly id="label_idConiuge1"
                                                 placeholder="Coniuge1"
                                                 name="label_coniuge1">
                                         <input
-                                                type="text" class="form-control" data-toggle="modal"
+                                                type="text" class="form-control input_hidden" data-toggle="modal"
                                                 data-target="#modalDinastia" readonly id="idConiuge1"
                                                 placeholder="ID coniuge1"
                                                 name="coniuge1">
                                         <label for="exampleInputEmail1">Coniuge2</label>
 
                                         <input
-                                                type="text" class="form-control input_hidden" data-toggle="modal"
+                                                type="text" class="form-control" data-toggle="modal"
                                                 data-target="#modalDinastia" readonly id="label_idConiuge2"
                                                 placeholder="Coniuge2"
                                                 name="label_coniuge2">
                                         <input
-                                                type="text" class="form-control" data-toggle="modal"
+                                                type="text" class="form-control input_hidden" data-toggle="modal"
                                                 data-target="#modalDinastia" readonly id="idConiuge2"
                                                 placeholder="ID coniuge2"
                                                 name="coniuge2">
                                         <label for="exampleInputEmail1">Coniuge3</label>
 
                                         <input
-                                                type="text" class="form-control input_hidden" data-toggle="modal"
+                                                type="text" class="form-control" data-toggle="modal"
                                                 data-target="#modalDinastia" readonly id="label_idConiuge3"
                                                 placeholder="Coniuge3"
                                                 name="label_coniuge3">
                                         <input
-                                                type="text" class="form-control" data-toggle="modal"
+                                                type="text" class="form-control input_hidden" data-toggle="modal"
                                                 data-target="#modalDinastia" readonly id="idConiuge3"
                                                 placeholder="ID coniuge3"
                                                 name="coniuge3">
@@ -337,6 +341,172 @@
         </div>
     </div>
 
+
+
+    <form id="form_dinastia">
+        <div class="modal fade bs-example-modal-lg" tabindex="-1" id="modalDinastia" role="dialog"
+             aria-labelledby="myLargeModalLabel">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">×</span></button>
+                        <div class="row">
+                            <div class="col-xs-6 col-md-6">
+                                <div class="form-group">
+                                    <h4 class="modal-title">Scelta Dinastia</h4>
+
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-md-6">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="Search"
+                                           id="id_search_personaggio">
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-xs-12 col-md-12">
+                                <div class="list-group">
+
+                                    <label> Dinastia </label>
+                                    <select id="id_dinastia" name="dinastia">
+                                        @foreach($data['dinastia'] as $dinastia)
+                                            <option> {{$dinastia['dinastia']}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <p></p>
+                            <div class="col-xs-6 col-md-6">
+
+                                <div class="list-group">
+
+                                    <a href="#" class="list-group-item active">
+                                        Padre
+                                    </a>
+
+                                    <div class="list-group-item panel_dinastia" id="padre_casella"
+                                         ondrop="drop(event)"
+                                         ondragover="allowDrop(event)">
+                                        Drop here
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-md-6">
+                                    <div class="list-group">
+                                        <a href="#" class="list-group-item active">
+                                            Madre
+                                        </a>
+                                        <div class="list-group-item panel_dinastia" id="madre_casella"
+                                             ondrop="drop(event)"
+                                             ondragover="allowDrop(event)">
+                                            Drop here
+
+                                        </div>
+
+
+                                    </div>
+
+                            </div>
+
+                            <p></p>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-md-12">
+                                <div class="panel panel-default">
+                                    <div class="list-group" ondrop="drop(event)" ondragover="allowDrop(event)">
+                                        <a href="#" class="list-group-item active">
+                                            Personaggi
+                                        </a>
+                                        @foreach($data['personaggi'] as $personaggio)
+
+                                            <a id="personaggio_{{$personaggio->id}}" name="pippo"
+                                               class="list-group-item"
+                                               draggable="true"
+                                               ondragstart="drag(event)">{{$personaggio->cognome}} {{$personaggio->nome}}  </a>
+                                            @endforeach
+                                            </ul>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-4 col-md-4">
+                                    <div class="list-group">
+                                        <a href="#" class="list-group-item active">
+                                            Coniuge 1
+                                        </a>
+                                        <div class="list-group-item panel_dinastia" id="coniuge1_casella"
+                                             ondrop="drop(event)"
+                                             ondragover="allowDrop(event)">
+                                            Drop here
+
+                                        </div>
+
+                                    </div>
+
+                            </div>
+                            <div class="col-xs-4 col-md-4">
+                                    <div class="list-group">
+                                        <a href="#" class="list-group-item active">
+                                            Coniuge 2
+                                        </a>
+                                        <div class="list-group-item panel_dinastia" id="coniuge2_casella"
+                                             ondrop="drop(event)"
+                                             ondragover="allowDrop(event)">
+                                            Drop here
+
+                                        </div>
+
+                                    </div>
+
+                            </div>
+                            <div class="col-xs-4 col-md-4">
+                                    <div class="list-group">
+                                        <a href="#" class="list-group-item active">
+                                            Coniuge 3
+                                        </a>
+                                        <div class="list-group-item panel_dinastia" id="coniuge3_casella"
+                                             ondrop="drop(event)"
+                                             ondragover="allowDrop(event)">
+                                            Drop here
+
+                                        </div>
+
+                                    </div>
+
+                            </div>
+                        </div>
+
+                        <ul class="list-group">
+                            <li id="id_load_dinastia" class="list-group-item">
+                                Carica Dinastia
+                            </li>
+                        </ul>
+
+                        <meta name="_token" content="{!! csrf_token() !!}"/>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+
+        </div>
+
+    </form>
+        </div>
 </form>
 
 <!-- Large modal Per selezione luogo-->
@@ -346,165 +516,6 @@
 
 <!-- Large modal Per selezione DINASTIA-->
 
-
-<form id="form_dinastia">
-    <div class="modal fade bs-example-modal-lg" tabindex="-1" id="modalDinastia" role="dialog"
-         aria-labelledby="myLargeModalLabel">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">×</span></button>
-                    <div class="row">
-                        <div class="col-xs-6 col-md-6">
-                            <div class="form-group">
-                                <h4 class="modal-title">Scelta Dinastia</h4>
-
-                            </div>
-                        </div>
-                        <div class="col-xs-6 col-md-6">
-                            <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Search"
-                                       id="id_search_personaggio">
-
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-xs-6 col-md-6">
-                            <div class="list-group">
-
-                                <a href="#" class="list-group-item active">
-                                    Padre
-                                </a>
-
-                                <div class="list-group-item panel_dinastia" id="padre_casella"
-                                     ondrop="drop(event)"
-                                     ondragover="allowDrop(event)">
-                                    Drop here
-
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="col-xs-6 col-md-6">
-                            <div class="panel panel-default">
-                                <div class="list-group">
-                                    <a href="#" class="list-group-item active">
-                                        Madre
-                                    </a>
-                                    <div class="list-group-item panel_dinastia" id="madre_casella"
-                                         ondrop="drop(event)"
-                                         ondragover="allowDrop(event)">
-                                        Drop here
-
-                                    </div>
-
-
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <p></p>
-
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12 col-md-12">
-                            <div class="panel panel-default">
-                                <div class="list-group" ondrop="drop(event)" ondragover="allowDrop(event)">
-                                    <a href="#" class="list-group-item active">
-                                        Personaggi
-                                    </a>
-                                    @foreach($data['personaggi'] as $personaggio)
-
-                                        <a id="personaggio_{{$personaggio->idPersonaggio}}" name="pippo"
-                                           class="list-group-item"
-                                           draggable="true"
-                                           ondragstart="drag(event)">{{$personaggio->cognome}} {{$personaggio->nome}}  </a>
-                                        @endforeach
-                                        </ul>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-4 col-md-4">
-                            <div class="panel panel-default">
-                                <div class="list-group">
-                                    <a href="#" class="list-group-item active">
-                                        Coniuge 1
-                                    </a>
-                                    <div class="list-group-item panel_dinastia" id="coniuge1_casella"
-                                         ondrop="drop(event)"
-                                         ondragover="allowDrop(event)">
-                                        Drop here
-
-                                    </div>
-
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="col-xs-4 col-md-4">
-                            <div class="panel panel-default">
-                                <div class="list-group">
-                                    <a href="#" class="list-group-item active">
-                                        Coniuge 2
-                                    </a>
-                                    <div class="list-group-item panel_dinastia" id="coniuge2_casella"
-                                         ondrop="drop(event)"
-                                         ondragover="allowDrop(event)">
-                                        Drop here
-
-                                    </div>
-
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="col-xs-4 col-md-4">
-                            <div class="panel panel-default">
-                                <div class="list-group">
-                                    <a href="#" class="list-group-item active">
-                                        Coniuge 3
-                                    </a>
-                                    <div class="list-group-item panel_dinastia" id="coniuge3_casella"
-                                         ondrop="drop(event)"
-                                         ondragover="allowDrop(event)">
-                                        Drop here
-
-                                    </div>
-
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                    <ul class="list-group">
-                        <li id="id_load_dinastia" class="list-group-item">
-                            Salva Dinastia
-                        </li>
-                    </ul>
-
-                    <meta name="_token" content="{!! csrf_token() !!}"/>
-
-
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal-footer">
-
-    </div>
-
-</form>
 <div id="form_errors"></div>
 <div id="alert_insert_evento" class="alert alert-success alert_raf fade in" role="alert" style="display: none;">
     Evento

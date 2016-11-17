@@ -23,6 +23,7 @@ class Personaggio extends Migration
             $table->string('luogo_morte')->nullable();
             $table->text('descrizione')->nullable();
             $table->string('tipo')->nullable();
+            $table->string('dinastia')->nullable();
 
         });
     }

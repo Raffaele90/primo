@@ -12,10 +12,22 @@
 @section('content')
 
 
-    {{ csrf_field() }}
 
 
-    <form id="form_luogo">
+    <form id="form_luogo" method="post" action="update_luogo">
+        {{ csrf_field() }}
+        @if(count($errors)>0)
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{$error}}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+        @if(isset($success)&&$success==1)
+            <div class="alert alert-success">Luogo Aggiornato</div>
+        @endif
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
@@ -72,7 +84,7 @@
 
                 </div>
 
-                <input id="id_luogo" name="id">
+                <input id="id_luogo" name="id" class="input_hidden">
                 <div id="id_form_luogo" style="display:none;">
                     <div class="panel-group" id="" role="tablist" aria-multiselectable="false">
                         <div class="panel panel-default">
@@ -185,8 +197,7 @@
                                         </div>
 
                                     </div>
-                                    <button type="button" id="idSaveLuogo" class="btn btn-default">Aggiorna luogo
-                                    </button>
+
                                     <meta name="_token" content="{!! csrf_token() !!}"/>
 
 
@@ -246,7 +257,7 @@
                                                 </div>
                                                 <div class="col-xs-6 col-md-6">
                                                     <input type="text" class="form-control" placeholder="Search"
-                                                           id="id_search_personaggio">
+                                                           id="id_search_evento">
 
                                                 </div>
                                             </div>
@@ -260,10 +271,10 @@
                                                 <tr>
                                                     <th>#</th>
                                                     <th>Nome</th>
-                                                    <th>Cognome</th>
+                                                    <th>Tipo </th>
                                                 </tr>
                                                 </thead>
-                                                <tbody id="lista_eventi">
+                                                <tbody id="corpo_lista_eventi">
 
                                                 </tbody>
                                             </table>

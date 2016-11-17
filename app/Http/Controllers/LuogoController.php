@@ -39,16 +39,12 @@ class LuogoController extends Controller
         $luogo->localizzazione_luogo = $request['localizzazione_luogo'];
         $luogo->tipo_sub_luogo = $request['tipo_sub_luogo'];
 
-        $luogo->save();
+        $success = $luogo->save();
 
-        return $luogo;
+        return redirect()->route('edit_luogo');
     }
 
 
-    public function prova()
-    {
-        return DB::table('luogo')->select('tipo_luogo')->distinct()->get();
-    }
 
     public function get_sub_luoghi(Request $request)
     {
@@ -62,9 +58,33 @@ class LuogoController extends Controller
     {
 
         $luogo = luogo::find($request['id']);
-        $luogo['personaggi'] = Personaggio::all();
-        $luogo['eventi'] = evento::all();
+        $luogo['personaggi'] = Personaggio::where('luogo_nascita','=',$request['id'])->orWhere('luogo_morte','=',$request['id'])->get();
+        $luogo['eventi'] = evento::where('origine_luogo_id','=',$request['id'])->orWhere('nuovo_luogo_id','=',$request['id'])->get();
 
         return $luogo;
     }
+
+    public function update(Request $request)
+    {
+
+        $luogo = luogo::find($request['id']);
+
+
+        $luogo->denominazione_luogo = $request['denominazione_luogo'];
+        $luogo->anno_costruzione = $request['anno_costruzione'];
+        $luogo->descrizione_monumento = $request['descrizione_monumento'];
+        $luogo->tipo_luogo = $request['tipo_luogo'];
+        $luogo->ulteriore_caratterizzazione = $request['ulteriore_caratterizzazione'];
+        $luogo->localizzazione_luogo = $request['localizzazione_luogo'];
+        $luogo->tipo_sub_luogo = $request['tipo_sub_luogo'];
+
+        $success = $luogo->save();
+
+        return redirect()->back()->with($success, 1);
+        //return redirect()->to('edit_luogo')->with($success);
+    }
+
+
+
+
 }

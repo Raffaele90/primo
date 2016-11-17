@@ -150,6 +150,7 @@ class EventoController extends Controller
         $evento->ulteriore_caratterizzazione = $request['ulteriore_caratterizzazione'];
 
         $evento->descrizione_movimento_opera = $request['descrizione_movimento_opera'];
+        $evento->dinastia = $request['dinastia'];
 
         $evento->save();
 

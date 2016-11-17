@@ -22,7 +22,7 @@ class PersonaggioController extends Controller
 
         $data['luoghi'] = luogo::orderBy('denominazione_luogo', 'ASC')->get();
         $data['tipo_luoghi'] = $luogo->get_tipo_luoghi();
-        $data['dinastia'] = [];
+        $data['dinastia'] = Personaggio::select('dinastia')->where('dinastia','<>','null')->orderBy('dinastia', 'ASC')->get();
         $data['personaggi'] = personaggio::orderBy('cognome', 'ASC')->get();
         $data['eventi'] = evento::orderBy('tipo_evento', 'ASC')->get();
         $data['tipo_eventi'] = evento::orderBy('tipo_evento', 'ASC')->get();
@@ -36,7 +36,7 @@ class PersonaggioController extends Controller
 
         $data['luoghi'] = luogo::orderBy('denominazione_luogo', 'ASC')->get();
         $data['tipo_luoghi'] = $luogo->get_tipo_luoghi();
-        $data['dinastia'] = [];
+        $data['dinastia'] = Personaggio::select('dinastia')->where('dinastia','<>','null')->orderBy('dinastia', 'ASC')->get();
         $data['personaggi'] = personaggio::orderBy('cognome', 'ASC')->get();
         $data['eventi'] = evento::orderBy('tipo_evento', 'ASC')->get();
         $data['tipo_eventi'] = evento::orderBy('tipo_evento', 'ASC')->get();
@@ -71,6 +71,8 @@ class PersonaggioController extends Controller
         $personaggio->coniuge2_id =  $request['coniuge2'] == null ? null : $request['coniuge2'];
         $personaggio->coniuge3_id =  $request['coniuge3'] == null ? null : $request['coniuge3'];
         $personaggio->tipo = $request['tipo'];
+        $personaggio->dinastia = $request['dinastia'];
+
 
         return $personaggio;
     }
@@ -78,10 +80,11 @@ class PersonaggioController extends Controller
 
     public function store(Request $request)
     {
-
+        dd($request);
         $this->validate_personaggio($request);
         $personaggio = $this->get_info($request);
         $personaggio->save();
+
         return redirect()->action('PersonaggioController@getForm');
     }
 
@@ -171,5 +174,54 @@ class PersonaggioController extends Controller
         return $pers;//Personaggio::join('luogo', 'luogo.idLuogo', '=', 'personaggio.luogo_nascita')->where('personaggio.id','=',$request['id'])->get();
 
 
+    }
+
+
+    public function get_dinastia (Request $request){
+
+        if ($request['id'] != null ) { // Se la dinastia è stata richiesta nella edit
+
+
+            $personaggio = Personaggio::find($request['id']);
+            $id_pers = $request['id'];
+            $nome = $personaggio['nome'];
+            $cognome = $personaggio['cognome'];
+
+            $id_padre = $personaggio['padre_id'];
+        }
+        else{ // Se la dinastia è stata richiesta nella insert
+            $id_pers = "-1";
+            $nome = $request['nome'];
+            $cognome = $request['cognome'];
+            $id_padre = $request['padre_id'];
+        }
+
+        $json_dinastia = "{\"class\": \"go.TreeModel\",\"nodeDataArray\":[";
+        $padre = Personaggio::find($id_padre);
+
+        if ($id_padre ==null or $id_padre == ""){
+
+            $json_dinastia .= "{\"key\":\"".$id_pers."\", \"name\" :\"".$cognome."nome:". $nome."\", \"title\": \"padre\"}]}";
+            return ($json_dinastia);
+        }
+        while ($padre['id'] !=null and $padre['id'] != ""){
+
+            $fratelli = Personaggio::where('padre_id','=',$id_padre)->get();
+            foreach ($fratelli as $fratello){
+                $json_dinastia .= "{\"key\":\"".$fratello['id']."\", \"name\" :\"".$fratello['cognome']." ". $fratello['nome']."\", \"title\": \"padre\", \"parent\":\"".$fratello['padre_id']."\"},";
+
+            }
+            $id = $padre['id'];
+            $cognome = $padre['cognome'];
+            $nome = $padre['nome'];
+            $id_padre = $padre['padre_id'];
+            $padre = Personaggio::find($id_padre);
+
+        }
+
+        $json_dinastia .= "{\"key\":\"".$id."\", \"name\" :\"".$cognome."nome:". $nome."\", \"title\": \"padre\"}]}";
+
+
+        return ($json_dinastia);
     }
 }

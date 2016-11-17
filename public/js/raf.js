@@ -142,6 +142,25 @@ function get_info_personaggio(id_personaggio) {
         }
     });
 
+    $.ajax({
+        type: "post",
+        url: "get_dinastia",
+        data: formData,
+        dataType: 'text',
+        success: function (data) {
+
+            dinastia = data //'{"class": "go.TreeModel","nodeDataArray":[{"key":"2", "name":"sasa Raf", "title": "padre", "parent":"7"},{"key":"9", "name":"Trimarco Pasquale", "title": "padre", "parent":"7"},{"key":"7", "name":"Trimarco Vincenzo", "title": "padre", "parent":"22"},{"key":"22", "name" :"qqqqqnome:qqqqqqqqqq", "title": "padre"}]}'
+            document.getElementById("mySavedModel").innerHTML = dinastia
+            init()
+            load()
+
+        },
+        error: function (data) {
+            console.log('Error:', data);
+        }
+
+
+    });
 }
 
 function get_evento_db(id_evento) {
@@ -185,8 +204,8 @@ function get_evento_db(id_evento) {
 
 function  set_form_luoghi(luogo){
 
-  //  $("#lista_personaggi").empty();
-   // $("#lista_personaggi_associati").empty();
+    $("#lista_personaggi").empty();
+    $("#corpo_lista_eventi").empty();
 
     $('#id_luogo').val(luogo['id'])
 
@@ -203,14 +222,48 @@ function  set_form_luoghi(luogo){
     personaggi_ass = luogo['personaggi']
 
     for (i = 0; i < personaggi_ass.length; i++) {
-        create_row_personaggio(personaggi_ass[i], "lista_personaggi")
+        create_row_personaggi_luoghi(personaggi_ass[i], "lista_personaggi")
     }
 
     eventi_ass = luogo['eventi']
 
     for (i = 0; i < eventi_ass.length; i++) {
-        create_row_event(eventi_ass[i], "lista_eventi")
+        create_row_event_luoghi(eventi_ass[i], "corpo_lista_eventi")
     }
+
+}
+
+function  create_row_event_luoghi(eventi, id_table){
+
+    nome = eventi['denominazione_evento']
+    desc = eventi['descrizione_evento']
+    id_evento =  eventi['id']
+
+
+        tr = "<tr id='" + id_evento + "'>  " +
+            "<td><span class='replaceme'></span>" + id_evento + "</td>" +
+            " <td>" + nome + "</td>" +
+            "<td>" + desc + "</td>"
+
+        $('#' + id_table + '').prepend(tr);
+
+
+}
+
+function  create_row_personaggi_luoghi(personaggi, id_table){
+
+    nome = personaggi['nome']
+    cognome = personaggi['cognome']
+    id_personaggio = personaggi['id']
+
+        tr = "<tr id='" + id_personaggio + "'>  " +
+            "<td>" + id_personaggio + " </td>" +
+            " <td>" + cognome + "</td>" +
+            "<td>" + nome + "</td>"
+
+
+        $('#' + id_table + '').prepend(tr);
+
 
 }
 
@@ -267,6 +320,7 @@ function open_form_personaggio(element) {
     id_tr = element.id
     id = id_tr.substr(12, id_tr.length)
     personaggio = get_info_personaggio(id)
+
 }
 
 function show_hide_module(list_show, list_hide) {
@@ -565,7 +619,6 @@ function drag(ev) {
 function drop(ev) {
     ev.preventDefault();
     var data = ev.dataTransfer.getData("text");
-    alert(data + " " + ev.target.id)
     document.getElementById(ev.target.id).appendChild(document.getElementById(data));
 
 
@@ -660,7 +713,6 @@ $(document).ready(function () {
         coniuge3 = $("#coniuge3_casella").find("a").html()
         id_coniuge3 = ($("#coniuge3_casella").find("a").attr("id")).substr(12, 13)
 
-        dinastia = '{"class": "go.TreeModel","nodeDataArray": [{"key":"1", "name":"' + padre + '"},{"key":"2", "name":"' + madre + '"},{"key":"3", "name":"' + personaggio + '", "coniuge1":"' + coniuge1 + '", "coniuge1":"' + coniuge2 + '", "coniuge1":"' + coniuge3 + '","parent":"1","parent":"2"}]}'
 
 
         $("input[name=label_padre]").val(padre);
@@ -681,9 +733,15 @@ $(document).ready(function () {
         $("input[name=coniuge3]").val(id_coniuge3);
 
 
-        document.getElementById("mySavedModel").innerHTML = dinastia
-        init()
-        load()
+        document.getElementById("mySavedModel").innerHTML = ""
+
+        var formData = {
+            "nome": $('#idNome').val(),
+            "cognome": $('#idCognome').val(),
+            "padre_id": id_padre
+        }
+        open
+
     })
 
     $("#id_search_personaggio").keyup(function () {
@@ -749,9 +807,7 @@ $(document).ready(function () {
         document.getElementById("id_nuovo_tipo_evento").value = ""
         document.getElementById("id_nuovo_sub_tipo_evento").value = ""
 
-        var formData = {
-            "tipo_evento": $("#idTipoEvento").val(),
-        }
+        id_l
         var my_url = "get_sub_eventi";
         var type = "POST"; //for creating new resource
 

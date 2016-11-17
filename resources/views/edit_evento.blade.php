@@ -17,7 +17,9 @@
     <div class="">
         <div class="row">
             <div class="col-xs-12 col-md-12">
-                <div class="panel panel-success" style="">
+                <div class="panel panel-success scroll_table" style="">
+                    <div class="modal-header">
+
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-xs-6 col-md-6">
@@ -31,6 +33,7 @@
                         </div>
 
                     </div>
+                        </div>
                     <div class="panel-body">
 
 
@@ -71,6 +74,7 @@
 
 
             </div>
+        </div>
         </div>
     </div>
     <div id="id_scheda_personaggio" style="display: none">

@@ -18,7 +18,7 @@ Route::get('prova2', function () {
     return evento::all();
 });
 
-Route::get('prova', ['uses' => 'PersonaggioController@get_personaggio']);
+Route::get('prova', ['uses' => 'PersonaggioController@get_dinastia']);
 
 
 Route::get('insert_personaggio', ['uses' => 'PersonaggioController@getForm']);
@@ -26,6 +26,8 @@ Route::get('insert_personaggio', ['uses' => 'PersonaggioController@getForm']);
 Route::get('edit_personaggio', ['uses' => 'PersonaggioController@get_form_edit']);
 
 Route::post('get_personaggio', ['uses' => 'PersonaggioController@get_personaggio']);
+Route::post('get_dinastia', ['uses' => 'PersonaggioController@get_dinastia']);
+
 
 Route::post('store', ['uses' => 'PersonaggioController@store']);
 Route::post('store_ajax', ['uses' => 'PersonaggioController@store_ajax']);
@@ -36,6 +38,8 @@ Route::post('update', ['uses' => 'PersonaggioController@update']);
 Route::post('luogo', ['uses' => 'LuogoController@insert_luogo']);
 Route::get('edit_luogo', ['uses' => 'LuogoController@get_form_edit']);
 Route::post('get_luogo', ['uses' => 'LuogoController@get_luogo']);
+Route::post('update_luogo', ['uses' => 'LuogoController@update']);
+
 
 
 Route::post('get_sub_luoghi', ['uses' => 'LuogoController@get_sub_luoghi']);

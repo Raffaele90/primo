@@ -12,7 +12,7 @@ class Personaggio extends Model
     protected $table = 'personaggio';
 
     protected $fillable = [
-        'nome', 'cognome', 'data_nascita', 'luogo_nascita', 'data_morte', 'luogo_morte', 'descrizione', 'tipo','nome_dinastia','padre_id','madre_id','coniuge1_id','coniuge2_id','coniuge3_id'];
+        'nome', 'cognome', 'data_nascita', 'luogo_nascita', 'data_morte', 'luogo_morte', 'descrizione', 'tipo','nome_dinastia','padre_id','madre_id','coniuge1_id','coniuge2_id','coniuge3_id','dinastia'];
 
     public function eventi()
     {

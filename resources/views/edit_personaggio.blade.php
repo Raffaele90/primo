@@ -15,7 +15,7 @@
     <div class="container">
         <div class="row">
             <div class="col-xs-12 col-md-12">
-                <div class="panel panel-success" style=""
+                <div class="panel panel-success scroll_table" style=""
                      id="id_dinastia">
                     <div class="panel-heading">
                         <div class="row">
