@@ -28,6 +28,7 @@
 
 
                     <div class="modal-body">
+
                         <div class="panel panel-default scroll_table" style="display: block;">
                             <div class="panel-heading">Luoghi
                             </div>
@@ -75,6 +76,10 @@
 
 
                                         <div class="row">
+                                            <div id="form_errors_luogo"></div>
+                                            <div id="form_success_luogo"></div>
+
+
                                             <div class="col-xs-6 col-md-6">
 
                                                 <div class="form-group">
@@ -129,11 +134,15 @@
 
                                                     <input type="text" class="form-control" name="nuovo_tipo_luogo"
                                                            id="tipo_luogo">
+                                                    <button type="button" id=""
+                                                            onclick="add_tipo('tipo_luogo','id_tipo_luoghi')"> +
+                                                    </button>
                                                 </div>
+
                                             </div>
 
-                                            <div class="col-xs-3 col-md-3" id="col_sub_luogo1"
-                                                 style="visibility: hidden;">
+
+                                            <div class="col-xs-3 col-md-3" id="col_sub_luogo1">
 
                                                 <div class="form-group">
                                                     <label for="sel1">Sub luogo:</label>
@@ -144,14 +153,16 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-xs-3 col-md-3" id="col_sub_luogo2"
-                                                 style="visibility: hidden;">
+                                            <div class="col-xs-3 col-md-3" id="col_sub_luogo2">
 
                                                 <div class="form-group">
                                                     <label for="sel1">Nuovo Tipo sub luogo</label>
 
                                                     <input type="text" class="form-control" name="nuovo_sub_tipo_luogo"
                                                            id="nuovo_sub_tipo_luogo">
+                                                    <button type="button" id=""
+                                                            onclick="add_tipo('nuovo_sub_tipo_luogo','id_sub_luoghi')"> +
+                                                    </button>
                                                 </div>
                                             </div>
 
@@ -179,8 +190,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                            <button type="button" class="btn btn-primary">Salva</button>
+
                         </div>
                     </div>
                 </div>

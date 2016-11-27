@@ -1,4 +1,6 @@
-<div class="row">
+<div class="modal-content">
+
+<div class="row ">
 
     <div class="col-xs-12 col-md-12">
         <div class="panel panel-success"
@@ -150,7 +152,7 @@
 
                 <button type="submit" class="btn btn-default">Salva Evento
                 </button>
-                <button type="submit" onclick="show_hide_module()"
+                <button type="button" onclick="show_hide_module('id_personaggi','vuota'),goToByScroll('id_personaggi')"
                         class="btn btn-default">Collega Personaggi
                 </button>
 
@@ -163,7 +165,7 @@
 
 
 </div>
-<div id="id_personaggi">
+<div id="id_personaggi" style="display: none;">
     <div class="row" id="id_collega_eventi">
         <div class="col-xs-6 col-md-6">
             <div class="panel panel-info scroll_table">
@@ -193,15 +195,16 @@
                         </thead>
                         <tbody id="lista_personaggi">
 
-                        @if(Request::path() == 'insert_evento')
+                        @if(Request::path() == 'insert_evento' or Request::path() == 'insert_personaggio')
                             @foreach($data['personaggi'] as $personaggio)
                                 <tr id="personaggio_{{$personaggio->id}}">
 
                                     <td><span class="replaceme"></span>{{$personaggio->id}}</td>
+
                                     <td>{{$personaggio->nome}}</td>
                                     <td>{{$personaggio->cognome}}</td>
                                     <td>
-                                        <button type="button" id="s" class="sposta" value="ee"
+                                        <button type="button"  class="sposta" value="ee"
                                                 onclick="sposta_row_personaggio(this)"> sposta
                                         </button>
                                     </td>
@@ -220,7 +223,7 @@
             @if(Request::path() == 'insert_evento')
 
                 <button type="button" class="btn btn-primary dropdown-toggle"
-                        onclick="show_hide_module('novo_evento','vuota'), goToByScroll('new_evento')">+ Add
+                        onclick="show_hide_module('nuovo_personaggio','vuota'), goToByScroll('nuovo_personaggio')">+ Add
                     Personaggio
                 </button>
             @endif
@@ -256,9 +259,14 @@
 
             <button type="submit" class="btn btn-danger btn_update_raf">Aggiorna Evento</button>
         @endif
+        @if (Request::path() =='insert_personaggio')
+
+            <button type="button" onclick="insert_Evento(), " class="btn btn-danger btn_update_raf">Aggiungi Evento</button>
+        @endif
     </div>
 </div>
 
+</div>
 </div>
 <div id="form_errors_personaggio"></div>
 <div id="alert_insert_personaggio" class="alert alert-success alert_raf fade in" role="alert" style="display: none;">

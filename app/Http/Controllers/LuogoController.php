@@ -25,8 +25,18 @@ class LuogoController extends Controller
         return view('edit_luogo')->with('data', $data);
     }
 
+    private function validate_luogo($request)
+    {
+        $this->validate($request, [
+            'denominazione_luogo' => 'required|max:25|',
+            'localizzazione_luogo' => 'required|max:25',
+
+        ]);
+    }
+
     public function insert_luogo(Request $request)
     {
+        $this->validate_luogo($request);
 
         $luogo = new luogo();
 
@@ -41,7 +51,7 @@ class LuogoController extends Controller
 
         $success = $luogo->save();
 
-        return redirect()->route('edit_luogo');
+        return $luogo;
     }
 
 

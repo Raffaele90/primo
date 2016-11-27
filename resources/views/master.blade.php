@@ -11,7 +11,7 @@
     <script src="go-debug.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gojs/1.6.7/go-debug.js"></script>
 
-    <link rel="stylesheet" href="css/bootstrap.css" type="text/css"
+    <link rel="stylesheet" href="../css/bootstrap.css" type="text/css"
           media="all">
     <link rel="stylesheet" href="css/raf.css" type="text/css"
           media="all">

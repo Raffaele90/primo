@@ -2,6 +2,33 @@
  * Created by raffaeleschiavone on 21/10/16.
  */
 
+function load_dinastia(formData) {
+
+
+
+    document.getElementById("mySavedModel").innerHTML = ""
+
+    $.ajax({
+        type: "post",
+        url: "get_dinastia",
+        data: formData,
+        dataType: 'text',
+        success: function (data) {
+
+            dinastia = data //'{"class": "go.TreeModel","nodeDataArray":[{"key":"2", "name":"sasa Raf", "title": "padre", "parent":"7"},{"key":"9", "name":"Trimarco Pasquale", "title": "padre", "parent":"7"},{"key":"7", "name":"Trimarco Vincenzo", "title": "padre", "parent":"22"},{"key":"22", "name" :"qqqqqnome:qqqqqqqqqq", "title": "padre"}]}'
+            document.getElementById("mySavedModel").innerHTML = dinastia
+            init()
+            load()
+
+        },
+        error: function (data) {
+            console.log('Error:', data);
+        }
+
+
+    });
+
+}
 
 function show_hide_module_with_scroll(id_show, id_hide, id_scroll) {
     show_hide_module(id_show, id_hide)
@@ -9,7 +36,7 @@ function show_hide_module_with_scroll(id_show, id_hide, id_scroll) {
 
 }
 function add_tipo(idInput, idSelect) {
-    newTipo = $("#id_nuovo_tipo_evento").val()
+    newTipo = $("#" + idInput).val()
     opt = "<option>" + newTipo + "</option>"
     $('#' + idSelect)
         .prepend($("<option selected></option>")
@@ -142,25 +169,8 @@ function get_info_personaggio(id_personaggio) {
         }
     });
 
-    $.ajax({
-        type: "post",
-        url: "get_dinastia",
-        data: formData,
-        dataType: 'text',
-        success: function (data) {
+    load_dinastia(formData)
 
-            dinastia = data //'{"class": "go.TreeModel","nodeDataArray":[{"key":"2", "name":"sasa Raf", "title": "padre", "parent":"7"},{"key":"9", "name":"Trimarco Pasquale", "title": "padre", "parent":"7"},{"key":"7", "name":"Trimarco Vincenzo", "title": "padre", "parent":"22"},{"key":"22", "name" :"qqqqqnome:qqqqqqqqqq", "title": "padre"}]}'
-            document.getElementById("mySavedModel").innerHTML = dinastia
-            init()
-            load()
-
-        },
-        error: function (data) {
-            console.log('Error:', data);
-        }
-
-
-    });
 }
 
 function get_evento_db(id_evento) {
@@ -202,7 +212,7 @@ function get_evento_db(id_evento) {
 
 }
 
-function  set_form_luoghi(luogo){
+function set_form_luoghi(luogo) {
 
     $("#lista_personaggi").empty();
     $("#corpo_lista_eventi").empty();
@@ -233,36 +243,36 @@ function  set_form_luoghi(luogo){
 
 }
 
-function  create_row_event_luoghi(eventi, id_table){
+function create_row_event_luoghi(eventi, id_table) {
 
     nome = eventi['denominazione_evento']
     desc = eventi['descrizione_evento']
-    id_evento =  eventi['id']
+    id_evento = eventi['id']
 
 
-        tr = "<tr id='" + id_evento + "'>  " +
-            "<td><span class='replaceme'></span>" + id_evento + "</td>" +
-            " <td>" + nome + "</td>" +
-            "<td>" + desc + "</td>"
+    tr = "<tr id='" + id_evento + "'>  " +
+        "<td><span class='replaceme'></span>" + id_evento + "</td>" +
+        " <td>" + nome + "</td>" +
+        "<td>" + desc + "</td>"
 
-        $('#' + id_table + '').prepend(tr);
+    $('#' + id_table + '').prepend(tr);
 
 
 }
 
-function  create_row_personaggi_luoghi(personaggi, id_table){
+function create_row_personaggi_luoghi(personaggi, id_table) {
 
     nome = personaggi['nome']
     cognome = personaggi['cognome']
     id_personaggio = personaggi['id']
 
-        tr = "<tr id='" + id_personaggio + "'>  " +
-            "<td>" + id_personaggio + " </td>" +
-            " <td>" + cognome + "</td>" +
-            "<td>" + nome + "</td>"
+    tr = "<tr id='" + id_personaggio + "'>  " +
+        "<td>" + id_personaggio + " </td>" +
+        " <td>" + cognome + "</td>" +
+        "<td>" + nome + "</td>"
 
 
-        $('#' + id_table + '').prepend(tr);
+    $('#' + id_table + '').prepend(tr);
 
 
 }
@@ -320,6 +330,7 @@ function open_form_personaggio(element) {
     id_tr = element.id
     id = id_tr.substr(12, id_tr.length)
     personaggio = get_info_personaggio(id)
+
 
 }
 
@@ -613,24 +624,35 @@ function allowDrop(ev) {
 }
 
 function drag(ev) {
-    ev.dataTransfer.setData("text", ev.target.id);
+    $('.list-group-item > a').each(function(){
+        $(this).attr("checked","false")
+        $(this).attr("style","background:white;")
+
+    })
+    document.getElementById(ev.target.id).setAttribute("checked","true")
+    document.getElementById(ev.target.id).setAttribute("style","background:green;")
+
 }
 
 function drop(ev) {
-    ev.preventDefault();
-    var data = ev.dataTransfer.getData("text");
-    document.getElementById(ev.target.id).appendChild(document.getElementById(data));
+    toRemove = $("#"+ev.target.id +" > a").detach()
+    $("#id_personaggi_dinastia").append(toRemove)
 
+    a = $("#id_personaggi_dinastia > a[checked='true']")
 
+    a.attr("checked","false")
+    a.attr("style","background:white;")
+
+    $("#"+ev.target.id).append(a)
 }
 
 function sposta_row(ele) {
 
     idTr = (ele.parentNode.parentNode).id
+    alert(idTr)
     var tr = $("#" + idTr).clone();
     if ($('#corpo_lista_eventi').find('#' + idTr).length > 0) {
         cell2 = tr.find('td').eq(0).text()
-
         tr.find("td").eq(0).html("<input name='eventi[]' value='" + cell2 + "'>")
         $("#corpo_lista_eventi_personaggio").append(tr);
         $('#corpo_lista_eventi').find('#' + idTr).remove()
@@ -645,11 +667,13 @@ function sposta_row(ele) {
 
 function sposta_row_personaggio(ele) {
 
-    idTr = (ele.parentNode.parentNode).id
+    var idTr = (ele.parentNode.parentNode).id
     var tr = $("#" + idTr).clone();
     if ($('#lista_personaggi').find('#' + idTr).length > 0) {
-        cell2 = tr.find('td').eq(0).text()
-        cell2 = cell2.replace("personaggio_", "");
+        var cell2 = tr.find('td').eq(0).text()
+        alert(tr.find('td').eq(0).text())
+
+        //  cell2 = cell2.replace("personaggio_", "");
 
         tr.find("td").eq(0).html("<input name='personaggi[]' value='personaggio_" + cell2 + "'>")
         $("#lista_personaggi_associati").append(tr);
@@ -692,55 +716,69 @@ $(document).ready(function () {
         $("#" + id_label_input_luogo).val(denominazione)
         $("#" + id_input_luogo).val(id_luogo)
 
-
+        $('#modalLuoghi').modal('hide')
     })
 
 
     $("#id_load_dinastia").click(function () {
-        personaggio = $("#idCognome").val() + " " + $("#idNome").val()
-        padre = $("#padre_casella").find("a").html()
-        id_padre = ($("#padre_casella").find("a").attr("id")).substr(12, 13)
 
-        madre = $("#madre_casella").find("a").html()
-        id_madre = ($("#madre_casella").find("a").attr("id")).substr(12, 13)
-
-        coniuge1 = $("#coniuge1_casella").find("a").html()
-        id_coniuge1 = ($("#coniuge1_casella").find("a").attr("id")).substr(12, 13)
-
-        coniuge2 = $("#coniuge2_casella").find("a").html()
-        id_coniuge2 = ($("#coniuge2_casella").find("a").attr("id")).substr(12, 13)
-
-        coniuge3 = $("#coniuge3_casella").find("a").html()
-        id_coniuge3 = ($("#coniuge3_casella").find("a").attr("id")).substr(12, 13)
-
-
-
-        $("input[name=label_padre]").val(padre);
-        $("input[name=padre]").val(id_padre);
-
-
-        $("input[name=label_madre]").val(madre);
-        $("input[name=madre]").val(id_madre);
-
-
-        $("input[name=label_coniuge1]").val(coniuge1);
-        $("input[name=coniuge1]").val(id_coniuge1);
-
-        $("input[name=label_coniuge2]").val(coniuge2);
-        $("input[name=coniuge2]").val(id_coniuge2);
-
-        $("input[name=label_coniuge3]").val(coniuge3);
-        $("input[name=coniuge3]").val(id_coniuge3);
-
-
-        document.getElementById("mySavedModel").innerHTML = ""
-
-        var formData = {
-            "nome": $('#idNome').val(),
-            "cognome": $('#idCognome').val(),
-            "padre_id": id_padre
+        dinastia = $("#id_dinastia").val()
+        if (dinastia == "Scegli Dinastia") {
+            dinastia = ""
         }
-        open
+
+        $("input[name=dinastia]").val(dinastia);
+
+        personaggio = $("#idCognome").val() + " " + $("#idNome").val()
+
+        if ($("#padre_casella").find("a") > 0) {
+            padre = $("#padre_casella").find("a").html()
+            id_padre = ($("#padre_casella").find("a").attr("id")).substr(12, 13)
+            $("input[name=label_padre]").val(padre);
+            $("input[name=padre]").val(id_padre);
+
+            var formData = {
+                nome: $("#idCognome").val(),
+                cognome: ("#idNome").val(),
+                padre_id: id_padre
+            }
+
+            load_dinastia(formData)
+        }
+        if ($("#madre_casella").find("a") > 0) {
+
+            madre = $("#madre_casella").find("a").html()
+            id_madre = ($("#madre_casella").find("a").attr("id")).substr(12, 13)
+            $("input[name=label_madre]").val(madre);
+            $("input[name=madre]").val(id_madre);
+
+        }
+
+        if ($("#coniuge1_casella").find("a") > 0) {
+
+            coniuge1 = $("#coniuge1_casella").find("a").html()
+            id_coniuge1 = ($("#coniuge1_casella").find("a").attr("id")).substr(12, 13)
+
+            $("input[name=label_coniuge1]").val(coniuge1);
+            $("input[name=coniuge1]").val(id_coniuge1);
+        }
+        if ($("#coniuge2_casella").find("a") > 0) {
+
+            coniuge2 = $("#coniuge2_casella").find("a").html()
+            id_coniuge2 = ($("#coniuge2_casella").find("a").attr("id")).substr(12, 13)
+            $("input[name=label_coniuge2]").val(coniuge2);
+            $("input[name=coniuge2]").val(id_coniuge2);
+        }
+        if ($("#coniuge3_casella").find("a") > 0) {
+
+            coniuge3 = $("#coniuge3_casella").find("a").html()
+            id_coniuge3 = ($("#coniuge3_casella").find("a").attr("id")).substr(12, 13)
+            $("input[name=label_coniuge3]").val(coniuge3);
+            $("input[name=coniuge3]").val(id_coniuge3);
+
+        }
+
+        $("#modalDinastia").modal("hide")
 
     })
 
@@ -836,21 +874,6 @@ $(document).ready(function () {
 
     });
 
-    $("#tipo_luogo").keyup(function () {
-        //alert("'"+ $("#id_tipo_luoghi").val()+"'")
-        text = $("#tipo_luogo").val()
-        if (text.length == 0) {
-            if ($("#id_tipo_luoghi").val() == "Scegli tipo luogo") {
-                document.getElementById("col_sub_luogo1").style.visibility = "hidden";
-                document.getElementById("col_sub_luogo2").style.visibility = "hidden";
-            }
-        }
-        else {
-            document.getElementById("col_sub_luogo1").style.visibility = "visible";
-            document.getElementById("col_sub_luogo2").style.visibility = "visible";
-        }
-    });
-
 
     $("#id_tipo_luoghi").change(function () {
         document.getElementById("col_sub_luogo1").style.visibility = "visible";
@@ -894,14 +917,19 @@ $(document).ready(function () {
         });
 
 
-        select_tipo_luogo = $("#id_tipo_luoghi").val()
-        nuovo_tipo_luogo = $("#tipo_luogo").val()
-        var tipo_luogo = ((nuovo_tipo_luogo.length > 0) ? nuovo_tipo_luogo : select_tipo_luogo);
+        var tipo_luogo = $("#id_tipo_luoghi").val()
 
-        select_tipo_sub_luogo = $("#id_sub_luoghi").val()
-        nuovo_tipo_sub_luogo = $("#nuovo_sub_tipo_luogo").val()
+        var tipo_sub_luogo = $("#id_sub_luoghi").val()
 
-        var tipo_sub_luogo = ((nuovo_tipo_sub_luogo.length > 0) ? nuovo_tipo_sub_luogo : select_tipo_sub_luogo);
+        if (tipo_luogo == "Scegli tipo luogo") {
+            tipo_luogo = ""
+            tipo_sub_luogo = ""
+        }
+        else {
+            if (tipo_sub_luogo == "Scegli sub tipo luogo" || tipo_sub_luogo == "") {
+                tipo_sub_luogo = ""
+            }
+        }
 
         var formData = {
             denominazione_luogo: $('#denominazione_luogo').val(),
@@ -939,9 +967,44 @@ $(document).ready(function () {
                 table.insertBefore(tr, table.firstChild);
                 document.getElementById("form_luogo").reset();
 
+                successHtml = '<div class="alert alert-success"><ul>';
+
+                successHtml += '<li> Luogo inserito con successo </li>'
+                successHtml += '</ul></div>'
+
+                $('#form_success_luogo').html(successHtml); //appending to a <div id="form-errors"></div> inside form
+
+                $("#form_success_luogo").fadeTo(5000, 500).slideUp(500, function () {
+                    $("#form_success_luogo").slideUp(500);
+                });
                 //alert(JSON.stringify(data))
             },
             error: function (data) {
+                if (data.status === 422) {
+                    //process validation errors here.
+                    errors = data.responseJSON; //this will get the errors response data.
+                    //show them somewhere in the markup
+                    //e.g
+
+                    errors = JSON.parse(data['responseText'])
+
+                    errorsHtml = '<div class="alert alert-danger"><ul>';
+
+                    $.each(errors, function (key, value) {
+                        errorsHtml += '<li>' + value[0] + '</li>'; //showing only the first error.
+                    });
+                    errorsHtml += '</ul></di>';
+
+                    $('#form_errors_luogo').html(errorsHtml); //appending to a <div id="form-errors"></div> inside form
+
+                    $("#form_errors_luogo").fadeTo(5000, 500).slideUp(500, function () {
+                        $("#form_errors_luogo").slideUp(500);
+                    });
+                } else {
+                    /// do some thing else
+                }
+
+
                 console.log('Error:', data);
             }
         });

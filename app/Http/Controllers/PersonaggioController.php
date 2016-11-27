@@ -80,7 +80,7 @@ class PersonaggioController extends Controller
 
     public function store(Request $request)
     {
-        dd($request);
+        //dd($request);
         $this->validate_personaggio($request);
         $personaggio = $this->get_info($request);
         $personaggio->save();

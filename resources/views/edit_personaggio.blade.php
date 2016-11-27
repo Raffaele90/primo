@@ -50,7 +50,7 @@
                                 @foreach($data['personaggi'] as $personaggio)
 
                                     <a href="#id_form_personaggio">
-                                        <tr id="personaggio_{{$personaggio->id}}" onclick="open_form_personaggio(this)" data-href="id_form_personaggio/"
+                                        <tr id="personaggio_{{$personaggio->id}}" onclick="open_form_personaggio(this),show_hide_module('id_form_personaggi','vuota'),goToByScroll('id_form_personaggi')" data-href="id_form_personaggio/"
                                             class="select_row_genitori clickable-row">
                                             <td>{{$personaggio->id}}</td>
                                             <td>{{$personaggio->cognome}}</td>
@@ -73,11 +73,9 @@
         </div>
     </div>
 
-    <div class="container">
-        @yield('content_personaggio')
-    </div>
 
-    <div class="container">
+
+    <div class="container" id="id_form_personaggi" style="display: none;">
         @include('personaggio')
     </div>
 

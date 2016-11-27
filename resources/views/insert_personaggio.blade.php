@@ -12,12 +12,12 @@
 @section('content')
 
     <div class="container">
-        @include('personaggio')
-    </div>
+    @include('personaggio')
 
     <!-- Large modal -->
-    <div id="novo_evento" style="display: none">
-        @include('modal_evento')
+        <div id="novo_evento" style="display: none">
+            @include('modal_evento')
+        </div>
     </div>
 
 @endsection
