@@ -18,6 +18,15 @@
             <div class="col-xs-12 col-md-12">
                 <form method="POST" action="insert_evento">
                     {{ csrf_field() }}
+                    @if(Session::has('success'))
+                        <div class="alert alert-success">
+                            <ul>
+
+                                <li> Evento Inserito </li>
+
+                            </ul>
+                        </div>
+                    @endif
                     @if(count($errors)>0)
                         <div class="alert alert-danger">
                             <ul>

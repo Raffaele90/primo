@@ -14,7 +14,7 @@ class Personaggio extends Migration
     public function up()
     {
         Schema::create('personaggio', function (Blueprint $table) {
-            $table->increments('idPersonaggio');
+            $table->increments('id');
             $table->string('nome');
             $table->string('cognome');
             $table->date('data_nascita')->nullable();

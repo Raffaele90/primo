@@ -13,7 +13,8 @@
 
     <link rel="stylesheet" href="../css/bootstrap.css" type="text/css"
           media="all">
-    <link rel="stylesheet" href="css/raf.css" type="text/css"
+
+    <link rel="stylesheet" href="../css/raf.css" type="text/css"
           media="all">
 
     <title>App Name - @yield('title')</title>

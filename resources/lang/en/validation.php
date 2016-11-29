@@ -81,6 +81,9 @@ return [
     'timezone'             => 'The :attribute must be a valid zone.',
     'unique'               => 'The :attribute has already been taken.',
     'url'                  => 'The :attribute format is invalid.',
+    'isDescendant'         => 'Hai selezionato un padre presente già nei discendenti del personaggio.',
+    'checkPersonaggio'     => 'Personaggio già esistente con lo stesso : Nome, Cognome e Data di nascita',
+
 
     /*
     |--------------------------------------------------------------------------

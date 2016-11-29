@@ -11,6 +11,16 @@
             </ul>
         </div>
     @endif
+
+    @if(Session::has('success'))
+        <div class="alert alert-success">
+            <ul>
+
+                    <li> Personaggio inserito </li>
+
+            </ul>
+        </div>
+    @endif
     <div class="modal-content">
 
         <div class="row">
@@ -46,13 +56,13 @@
                             <div class="col-xs-6 col-md-6">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Luogo di nascita</label> <input
-                                            type="text" class="form-control" data-target="#modalLuoghi"
+                                            type="text" readonly class="form-control" data-target="#modalLuoghi"
                                             data-toggle="modal"
                                             name="label_luogo_nascita" onclick="set_modal_value('modalLuoghi',this.id)"
                                             id="label_idLuogoNascita"
                                             placeholder="Luogo">
                                     <input
-                                            type="text" class="form-control input_hidden" data-target="#modalLuoghi"
+                                            type="text"  class="form-control input_hidden" data-target="#modalLuoghi"
                                             data-toggle="modal"
                                             name="luogo_nascita" id="idLuogoNascita"
                                             placeholder="id luogo">
@@ -70,7 +80,7 @@
                             <div class="col-xs-6 col-md-6">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Luogo di morte</label> <input
-                                            type="text" class="form-control" data-target="#modalLuoghi"
+                                            type="text" readonly class="form-control" data-target="#modalLuoghi"
                                             data-toggle="modal"
                                             name="label_luogo_morte" id="label_idLuogoMorte"
                                             onclick="set_modal_value('modalLuoghi',this.id)"
@@ -86,7 +96,7 @@
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Data morte</label> <input
                                             type="date" class="form-control" name="data_morte" id="idMorte"
-                                            value="2012/11/25" placeholder="Data di morte">
+                                             placeholder="Data di morte">
                                 </div>
                             </div>
 
@@ -297,7 +307,7 @@
                                 @foreach($data['eventi'] as $evento)
                                     <tr id="evento_{{$evento->id}}">
 
-                                        <td><span class="replaceme"></span>{{$evento->id}}</td>
+                                        <td><span class="replaceme"></span>evento_{{$evento->id}}</td>
                                         <td>{{$evento->denominazione_evento}}</td>
                                         <td>{{$evento->descrizione_evento}}</td>
                                         <td>
@@ -415,26 +425,40 @@
 
                                     <div class="list-group">
 
-                                        <a href="#" class="list-group-item active">
+                                        <a class="list-group-item active">
                                             Padre
+                                            <button type="button" class="btn btn-default"
+                                                    onclick="drop('padre_casella')"><span
+                                                        class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                            </button>
+                                            <button type="button" class="btn btn-default"
+                                                    onclick="remove_pers('padre_casella')"><span
+                                                        class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                            </button>
                                         </a>
 
                                         <div class="list-group-item panel_dinastia" id="padre_casella"
                                              onclick="drop(event)">
-                                            Drop here
 
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-xs-6 col-md-6">
                                     <div class="list-group">
-                                        <a href="#" class="list-group-item active">
+                                        <a class="list-group-item active">
                                             Madre
+                                            <button type="button" class="btn btn-default"
+                                                    onclick="drop('madre_casella')"><span
+                                                        class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                            </button>
+                                            <button type="button" class="btn btn-default"
+                                                    onclick="remove_pers('madre_casella')"><span
+                                                        class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                            </button>
                                         </a>
                                         <div class="list-group-item panel_dinastia" id="madre_casella"
                                              ondrop="drop(event)"
                                              ondragover="allowDrop(event)">
-                                            Drop here
 
                                         </div>
 
@@ -447,16 +471,16 @@
 
                             </div>
                             <div class="row">
-                                <div class="col-xs-12 col-md-12">
+                                <div class="col-xs-12 col-md-12" style="height: 40%; overflow: auto;">
                                     <div class="panel panel-default">
-                                        <div id="id_personaggi_dinastia" class="list-group" >
-                                            <a href="#" class="list-group-item active">
+                                        <div id="id_personaggi_dinastia" class="list-group">
+                                            <a class="list-group-item active">
                                                 Personaggi
                                             </a>
                                             @foreach($data['personaggi'] as $personaggio)
 
                                                 <a id="personaggio_din{{$personaggio->id}}" name="pippo"
-                                                   class="list-group-item"
+                                                   class="list-group-item pers_dinastia"
                                                    checked="false"
                                                    onclick="drag(event)">{{$personaggio->cognome}} {{$personaggio->nome}}  </a>
                                                 @endforeach
@@ -469,13 +493,20 @@
                             <div class="row">
                                 <div class="col-xs-4 col-md-4">
                                     <div class="list-group">
-                                        <a href="#" class="list-group-item active">
+                                        <a  class="list-group-item active">
                                             Coniuge 1
+                                            <button type="button" class="btn btn-default"
+                                                    onclick="drop('coniuge1_casella')"><span
+                                                        class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                            </button>
+                                            <button type="button" class="btn btn-default"
+                                                    onclick="remove_pers('coniuge1_casella')"><span
+                                                        class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                            </button>
                                         </a>
                                         <div class="list-group-item panel_dinastia" id="coniuge1_casella"
                                              ondrop="drop(event)"
                                              ondragover="allowDrop(event)">
-                                            Drop here
 
                                         </div>
 
@@ -484,13 +515,20 @@
                                 </div>
                                 <div class="col-xs-4 col-md-4">
                                     <div class="list-group">
-                                        <a href="#" class="list-group-item active">
+                                        <a class="list-group-item active">
                                             Coniuge 2
+                                            <button type="button" class="btn btn-default"
+                                                    onclick="drop('coniuge2_casella')"><span
+                                                        class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                            </button>
+                                            <button type="button" class="btn btn-default"
+                                                    onclick="remove_pers('coniuge2_casella')"><span
+                                                        class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                            </button>
                                         </a>
                                         <div class="list-group-item panel_dinastia" id="coniuge2_casella"
                                              ondrop="drop(event)"
                                              ondragover="allowDrop(event)">
-                                            Drop here
 
                                         </div>
 
@@ -499,13 +537,20 @@
                                 </div>
                                 <div class="col-xs-4 col-md-4">
                                     <div class="list-group">
-                                        <a href="#" class="list-group-item active">
+                                        <a  class="list-group-item active">
                                             Coniuge 3
+                                            <button type="button" class="btn btn-default"
+                                                    onclick="drop('coniuge3_casella')"><span
+                                                        class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                            </button>
+                                            <button type="button" class="btn btn-default"
+                                                    onclick="remove_pers('coniuge3_casella')"><span
+                                                        class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                            </button>
                                         </a>
                                         <div class="list-group-item panel_dinastia" id="coniuge3_casella"
                                              ondrop="drop(event)"
                                              ondragover="allowDrop(event)">
-                                            Drop here
 
                                         </div>
 

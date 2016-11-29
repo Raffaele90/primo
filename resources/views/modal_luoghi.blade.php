@@ -45,7 +45,7 @@
                                 <tbody id="id_table_luoghi">
                                 @foreach($data['luoghi'] as $luogo)
 
-                                    <tr class="select_row_genitori" id="luogo_{{$luogo->id}}">
+                                    <tr class="select_row_genitori" onclick="click_row_luogo()" id="luogo_{{$luogo->id}}">
                                         <td style="visibility: hidden">{{$luogo->idLuogo}}</td>
                                         <td>{{$luogo->denominazione_luogo}}</td>
                                         <td>{{$luogo->localizzazione_luogo}}</td>

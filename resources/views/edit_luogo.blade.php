@@ -15,7 +15,10 @@
 
 
     <form id="form_luogo" method="post" action="update_luogo">
+
         {{ csrf_field() }}
+        <div id="form_success">
+        </div>
         @if(count($errors)>0)
             <div class="alert alert-danger">
                 <ul>
@@ -69,12 +72,28 @@
                         <tbody id="id_table_luoghi">
                         @foreach($data['luoghi'] as $luogo)
 
-                            <tr class="select_row_genitori" id="luogo_{{$luogo->id}}"
-                                onclick="open_form_luogo(this),show_hide_module_with_scroll('id_form_luogo','vuota','id_form_luogo')">
-                                <td style="visibility: hidden">{{$luogo->idLuogo}}</td>
+                            <tr class="select_row_genitori" id="tr_luogo_{{$luogo->id}}">
+                                <td>{{$luogo->id}}</td>
                                 <td>{{$luogo->denominazione_luogo}}</td>
                                 <td>{{$luogo->localizzazione_luogo}}</td>
                                 <td>{{$luogo->tipo_luogo}}</td>
+                                <td>
+                                    <button type="button" class="btn btn-default"
+                                            id="luogo_{{$luogo->id}}"
+                                            onclick="open_form_luogo(this),show_hide_module_with_scroll('id_form_luogo','vuota','id_form_luogo')"
+                                            data-href="id_form_luogo/">
+                                                    <span class="glyphicon glyphicon-cog"
+                                                          aria-hidden="true"></span>
+                                    </button>
+                                    <button type="button" class="btn btn-default"
+                                            luogo="{{$luogo->denominazione_luogo}}"
+                                            toRemove="{{$luogo->id}}"
+                                            onclick="remove_luogo(this)" aria-label="Left Align">
+                                                    <span class="glyphicon glyphicon-trash"
+                                                          aria-hidden="true"></span>
+                                    </button>
+
+                                </td>
                             </tr>
                         @endforeach
 
@@ -271,7 +290,7 @@
                                                 <tr>
                                                     <th>#</th>
                                                     <th>Nome</th>
-                                                    <th>Tipo </th>
+                                                    <th>Tipo</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody id="corpo_lista_eventi">

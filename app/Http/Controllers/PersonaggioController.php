@@ -22,10 +22,10 @@ class PersonaggioController extends Controller
 
         $data['luoghi'] = luogo::orderBy('denominazione_luogo', 'ASC')->get();
         $data['tipo_luoghi'] = $luogo->get_tipo_luoghi();
-        $data['dinastia'] = Personaggio::select('dinastia')->where('dinastia','<>','null')->orderBy('dinastia', 'ASC')->get();
+        $data['dinastia'] = Personaggio::select('dinastia')->where('dinastia', '<>', 'null')->distinct()->orderBy('dinastia', 'ASC')->get();
         $data['personaggi'] = personaggio::orderBy('cognome', 'ASC')->get();
         $data['eventi'] = evento::orderBy('tipo_evento', 'ASC')->get();
-        $data['tipo_eventi'] = evento::orderBy('tipo_evento', 'ASC')->get();
+        $data['tipo_eventi'] = evento::distinct()->select('tipo_evento')->orderBy('tipo_evento', 'ASC')->get();
 
         return view('insert_personaggio')->with('data', $data);
     }
@@ -36,10 +36,10 @@ class PersonaggioController extends Controller
 
         $data['luoghi'] = luogo::orderBy('denominazione_luogo', 'ASC')->get();
         $data['tipo_luoghi'] = $luogo->get_tipo_luoghi();
-        $data['dinastia'] = Personaggio::select('dinastia')->where('dinastia','<>','null')->orderBy('dinastia', 'ASC')->get();
+        $data['dinastia'] = Personaggio::select('dinastia')->where('dinastia', '<>', 'null')->orderBy('dinastia', 'ASC')->get();
         $data['personaggi'] = personaggio::orderBy('cognome', 'ASC')->get();
         $data['eventi'] = evento::orderBy('tipo_evento', 'ASC')->get();
-        $data['tipo_eventi'] = evento::orderBy('tipo_evento', 'ASC')->get();
+        $data['tipo_eventi'] = evento::distinct()->select('tipo_evento')->orderBy('tipo_evento', 'ASC')->get();
 
         $data['personaggi'] = personaggio::orderBy('cognome', 'ASC')->get();
         return view('edit_personaggio')->with('data', $data);
@@ -48,8 +48,11 @@ class PersonaggioController extends Controller
     private function validate_personaggio($request)
     {
         $this->validate($request, [
-            'nome' => 'required|max:25|',
+            'nome' => 'required|max:25',
             'cognome' => 'required|max:25',
+            'data_nascita' => 'required'//|checkPersonaggio:'.$request["nome"].','.$request["cognome"]
+
+            //'padre_id' => 'isDescendant:'.$request['id']
 
         ]);
     }
@@ -60,16 +63,16 @@ class PersonaggioController extends Controller
         $personaggio->nome = $request['nome'];
         $personaggio->cognome = $request['cognome'];
         $personaggio->luogo_nascita = $request['luogo_nascita'];
-        $personaggio->data_nascita = $request['data_nascita'];
-        $personaggio->data_morte = $request['data_morte'];
+        $personaggio->data_nascita = $request['data_nascita'] == "" ? null : $request['data_nascita'];
+        $personaggio->data_morte = $request['data_morte'] == "" ? null : $request['data_morte'];
         $personaggio->luogo_morte = $request['luogo_morte'];
         $personaggio->descrizione = $request['descrizione'];
         $personaggio->nome_dinastia = $request['nome_dinastia'];
-        $personaggio->padre_id =  $request['padre'] == null ? null : $request['padre'];
+        $personaggio->padre_id = $request['padre'] == null ? null : $request['padre'];
         $personaggio->madre_id = $request['madre'] == null ? null : $request['madre'];
         $personaggio->coniuge1_id = $request['coniuge1'] == null ? null : $request['coniuge1'];
-        $personaggio->coniuge2_id =  $request['coniuge2'] == null ? null : $request['coniuge2'];
-        $personaggio->coniuge3_id =  $request['coniuge3'] == null ? null : $request['coniuge3'];
+        $personaggio->coniuge2_id = $request['coniuge2'] == null ? null : $request['coniuge2'];
+        $personaggio->coniuge3_id = $request['coniuge3'] == null ? null : $request['coniuge3'];
         $personaggio->tipo = $request['tipo'];
         $personaggio->dinastia = $request['dinastia'];
 
@@ -80,25 +83,33 @@ class PersonaggioController extends Controller
 
     public function store(Request $request)
     {
-        //dd($request);
         $this->validate_personaggio($request);
         $personaggio = $this->get_info($request);
         $personaggio->save();
 
-        return redirect()->action('PersonaggioController@getForm');
+        $eventi_ass = [];
+        for ($i = 0; $i < count($request['eventi']); $i++) {
+            $id_evento = substr($request['eventi'][$i], 7);
+            array_push($eventi_ass, $id_evento);
+        }
+        $personaggio->eventi()->sync($eventi_ass);
+
+        if ($request->ajax()) {
+            return $personaggio;
+        } else {
+
+            return redirect('insert_personaggio')->with("success", "as");
+        }
+
     }
 
-    public function store_ajax(Request $request)
-    {
-        $this->validate_personaggio($request);
-        $personaggio = $this->get_info($request);
-        $personaggio->save();
-        return $personaggio;
-    }
+
 
 
     public function update(Request $request)
     {
+
+        //dd($request);
 
         $this->validate_personaggio($request);
 
@@ -107,30 +118,29 @@ class PersonaggioController extends Controller
         $personaggio->nome = $request['nome'];
         $personaggio->cognome = $request['cognome'];
         $personaggio->luogo_nascita = $request['luogo_nascita'];
-        $personaggio->data_nascita = $request['data_nascita'];
-        $personaggio->data_morte = $request['data_morte'];
+        $personaggio->data_nascita = $request['data_nascita'] == "" ? null : $request['data_nascita'];
+        $personaggio->data_morte = $request['data_morte'] == "" ? null : $request['data_morte'];
         $personaggio->luogo_morte = $request['luogo_morte'];
         $personaggio->descrizione = $request['descrizione'];
         $personaggio->nome_dinastia = $request['nome_dinastia'];
-        $personaggio->padre_id =  $request['padre'] == null ? null : $request['padre'];
+        $personaggio->padre_id = $request['padre'] == null ? null : $request['padre'];
         $personaggio->madre_id = $request['madre'] == null ? null : $request['madre'];
         $personaggio->coniuge1_id = $request['coniuge1'] == null ? null : $request['coniuge1'];
-        $personaggio->coniuge2_id =  $request['coniuge2'] == null ? null : $request['coniuge2'];
-        $personaggio->coniuge3_id =  $request['coniuge3'] == null ? null : $request['coniuge3'];
+        $personaggio->coniuge2_id = $request['coniuge2'] == null ? null : $request['coniuge2'];
+        $personaggio->coniuge3_id = $request['coniuge3'] == null ? null : $request['coniuge3'];
         $personaggio->tipo = $request['tipo'];
 
 
         $personaggio->save();
 
         $eventi_ass = [];
-        for ($i=0; $i<count($request['eventi']);$i++){
-            $id_evento = substr($request['eventi'][$i],7);
-            array_push($eventi_ass,$id_evento);
+        for ($i = 0; $i < count($request['eventi']); $i++) {
+            $id_evento = substr($request['eventi'][$i], 7);
+            array_push($eventi_ass, $id_evento);
         }
-
         $personaggio->eventi()->sync($eventi_ass);
 
-        return  $eventi_ass;
+        return redirect('edit_personaggio')->with("success", "suc");
 
     }
 
@@ -146,6 +156,7 @@ class PersonaggioController extends Controller
         }
         $pers['eventi_non_associati'] = evento::whereNotIn('id', $arr)->get()->toArray();
         $pers['anagrafica'] = Personaggio::find($request['id']);
+
 
         $pers['dinastia'] = [];
 
@@ -177,9 +188,12 @@ class PersonaggioController extends Controller
     }
 
 
-    public function get_dinastia (Request $request){
+    public function get_dinastia(Request $request)
+    {
 
-        if ($request['id'] != null ) { // Se la dinastia è stata richiesta nella edit
+        //dd($request);
+
+        if ($request['id'] != null) { // Se la dinastia è stata richiesta nella edit
 
 
             $personaggio = Personaggio::find($request['id']);
@@ -188,8 +202,7 @@ class PersonaggioController extends Controller
             $cognome = $personaggio['cognome'];
 
             $id_padre = $personaggio['padre_id'];
-        }
-        else{ // Se la dinastia è stata richiesta nella insert
+        } else { // Se la dinastia è stata richiesta nella insert
             $id_pers = "-1";
             $nome = $request['nome'];
             $cognome = $request['cognome'];
@@ -199,16 +212,16 @@ class PersonaggioController extends Controller
         $json_dinastia = "{\"class\": \"go.TreeModel\",\"nodeDataArray\":[";
         $padre = Personaggio::find($id_padre);
 
-        if ($id_padre ==null or $id_padre == ""){
+        if ($id_padre == null or $id_padre == "") {
 
-            $json_dinastia .= "{\"key\":\"".$id_pers."\", \"name\" :\"".$cognome."nome:". $nome."\", \"title\": \"padre\"}]}";
+            $json_dinastia .= "{\"key\":\"" . $id_pers . "\", \"name\" :\"" . $cognome . "nome:" . $nome . "\", \"title\": \"padre\"}]}";
             return ($json_dinastia);
         }
-        while ($padre['id'] !=null and $padre['id'] != ""){
+        while ($padre['id'] != null and $padre['id'] != "") {
 
-            $fratelli = Personaggio::where('padre_id','=',$id_padre)->get();
-            foreach ($fratelli as $fratello){
-                $json_dinastia .= "{\"key\":\"".$fratello['id']."\", \"name\" :\"".$fratello['cognome']." ". $fratello['nome']."\", \"title\": \"padre\", \"parent\":\"".$fratello['padre_id']."\"},";
+            $fratelli = Personaggio::where('padre_id', '=', $id_padre)->get();
+            foreach ($fratelli as $fratello) {
+                $json_dinastia .= "{\"key\":\"" . $fratello['id'] . "\", \"name\" :\"" . $fratello['cognome'] . " " . $fratello['nome'] . "\", \"title\": \"padre\", \"parent\":\"" . $fratello['padre_id'] . "\"},";
 
             }
             $id = $padre['id'];
@@ -219,9 +232,22 @@ class PersonaggioController extends Controller
 
         }
 
-        $json_dinastia .= "{\"key\":\"".$id."\", \"name\" :\"".$cognome."nome:". $nome."\", \"title\": \"padre\"}]}";
+        $json_dinastia .= "{\"key\":\"" . $id . "\", \"name\" :\"" . $cognome . " " . $nome . "\", \"title\": \"padre\"}]}";
 
 
         return ($json_dinastia);
+    }
+
+
+    public function remove_personaggio(Request $request)
+    {
+
+        $result = Personaggio::where('id', $request['remove_id'])->delete();
+
+        if ($result) {
+            return $request['remove_id'];
+        } else {
+            return $request['remove_id'];
+        }
     }
 }

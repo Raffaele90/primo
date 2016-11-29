@@ -97,4 +97,16 @@ class LuogoController extends Controller
 
 
 
+    public function remove_luogo(Request $request){
+
+        $result = luogo::where('id', $request['remove_id'])->delete();
+
+        if ($result){
+            return $request['remove_id'];
+        }
+        else{
+            return $request['remove_id'];
+        }
+    }
+
 }

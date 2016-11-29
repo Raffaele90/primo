@@ -2,8 +2,104 @@
  * Created by raffaeleschiavone on 21/10/16.
  */
 
-function load_dinastia(formData) {
+flag_init = 0
 
+function remove_personaggio(element) {
+
+    personaggio = element.getAttribute('personaggio')
+    id_to_remove = element.getAttribute('toRemove')
+    if (confirm('Sicuro di eliminare il personaggio ' + personaggio + '?')) {
+        $.ajax({
+            url: 'remove_personaggio',
+            type: "POST",
+            data: {
+                remove_id: id_to_remove
+            },
+            success: function (data) {
+                successHtml = '<div class="alert alert-success"><ul>';
+
+
+                successHtml += '<li> Personaggio rimosso </li>'; //showing only the first error.
+
+                successHtml += '</ul></di>';
+
+                $('#form_success').html(successHtml); //appending to a <div id="form-errors"></div> inside form
+
+                $("#form_success").fadeTo(5000, 500).slideUp(500, function () {
+                    $("#form_success").slideUp(500);
+                });
+                goToByScroll("form_success")
+                $('#lista_personaggi tr#tr_personaggio_' + id_to_remove).remove();
+
+            }
+        });
+    }
+}
+function remove_evento(element) {
+
+    evento = element.getAttribute('evento')
+    id_to_remove = element.getAttribute('toRemove')
+    if (confirm('Sicuro di eliminare l\'evento ' + evento + '?')) {
+        $.ajax({
+            url: 'remove_evento',
+            type: "POST",
+            data: {
+                remove_id: id_to_remove
+            },
+            success: function (data) {
+                successHtml = '<div class="alert alert-success"><ul>';
+
+
+                successHtml += '<li> Evento rimosso </li>'; //showing only the first error.
+
+                successHtml += '</ul></di>';
+
+                $('#form_success').html(successHtml); //appending to a <div id="form-errors"></div> inside form
+
+                $("#form_success").fadeTo(5000, 500).slideUp(500, function () {
+                    $("#form_success").slideUp(500);
+                });
+                goToByScroll("form_success")
+                $('#corpo_lista_eventi tr#tr_evento_' + id_to_remove).remove();
+
+            }
+        });
+    }
+}
+
+function remove_luogo(element) {
+
+    luogo = element.getAttribute('luogo')
+    id_to_remove = element.getAttribute('toRemove')
+    if (confirm('Sicuro di eliminare il luogo ' + luogo + '?')) {
+        $.ajax({
+            url: 'remove_luogo',
+            type: "POST",
+            data: {
+                remove_id: id_to_remove
+            },
+            success: function (data) {
+                successHtml = '<div class="alert alert-success"><ul>';
+
+
+                successHtml += '<li> Luogo rimosso </li>'; //showing only the first error.
+
+                successHtml += '</ul></di>';
+
+                $('#form_success').html(successHtml); //appending to a <div id="form-errors"></div> inside form
+
+                $("#form_success").fadeTo(5000, 500).slideUp(500, function () {
+                    $("#form_success").slideUp(500);
+                });
+                goToByScroll("form_success")
+                $('#id_table_luoghi tr#tr_luogo_' + id_to_remove).remove();
+
+            }
+        });
+    }
+}
+
+function load_dinastia(formData) {
 
 
     document.getElementById("mySavedModel").innerHTML = ""
@@ -17,8 +113,13 @@ function load_dinastia(formData) {
 
             dinastia = data //'{"class": "go.TreeModel","nodeDataArray":[{"key":"2", "name":"sasa Raf", "title": "padre", "parent":"7"},{"key":"9", "name":"Trimarco Pasquale", "title": "padre", "parent":"7"},{"key":"7", "name":"Trimarco Vincenzo", "title": "padre", "parent":"22"},{"key":"22", "name" :"qqqqqnome:qqqqqqqqqq", "title": "padre"}]}'
             document.getElementById("mySavedModel").innerHTML = dinastia
-            init()
-            load()
+            if (flag_init == 0) {
+                init()
+                flag_init = 1
+            }
+            else {
+                load()
+            }
 
         },
         error: function (data) {
@@ -69,6 +170,7 @@ function set_form_personaggio(personaggio) {
     $("#idNome").val(check(personaggio['anagrafica']['nome']))
     $("#idCognome").val(check(personaggio['anagrafica']['cognome']))
 
+    $("#idDinastia").val(check(personaggio['anagrafica']['dinastia']))
     if (personaggio['luogo_nascita'] != "" && personaggio['luogo_nascita'] != null) {
         $("#label_idLuogoNascita").val(check(personaggio['luogo_nascita']['denominazione_luogo']))
         $("#idLuogoNascita").val(check(personaggio['luogo_nascita']['id']))
@@ -425,6 +527,7 @@ function insert_Evento() {
         dataType: 'text',
         success: function (data) {
 
+
             data = JSON.parse(data);
 
             id_table = "corpo_lista_eventi"
@@ -475,7 +578,7 @@ function insert_personaggio() {
     console.log(json_personaggio);
 
     var type = "POST"; //for creating new resource
-    url = "store_ajax"
+    url = "store"
     $.ajax({
 
         type: type,
@@ -624,32 +727,55 @@ function allowDrop(ev) {
 }
 
 function drag(ev) {
-    $('.list-group-item > a').each(function(){
-        $(this).attr("checked","false")
-        $(this).attr("style","background:white;")
+    //Se li è cheked allora unchecked
+    if (document.getElementById(ev.target.id).getAttribute("checked") == "true") {
+        document.getElementById(ev.target.id).setAttribute("checked", "false")
+        document.getElementById(ev.target.id).setAttribute("style", "background:white;")
 
+        return
+    }
+    $('.pers_dinastia').each(function () {
+        $(this).attr("checked", "false")
+        $(this).attr("style", "background:white;")
     })
-    document.getElementById(ev.target.id).setAttribute("checked","true")
-    document.getElementById(ev.target.id).setAttribute("style","background:green;")
+    document.getElementById(ev.target.id).setAttribute("checked", "true")
+    document.getElementById(ev.target.id).setAttribute("style", "background:#f7e49d;")
 
 }
+function remove_pers(id_casella) {
 
-function drop(ev) {
-    toRemove = $("#"+ev.target.id +" > a").detach()
-    $("#id_personaggi_dinastia").append(toRemove)
+    //controllo se la casella ha un elemento
 
-    a = $("#id_personaggi_dinastia > a[checked='true']")
+    if ($('#' + id_casella).find('a').length != 0) {
+        a = $("#" + id_casella).find('a')
+        $("#id_personaggi_dinastia").append(a)
+        return;
+    }
+}
 
-    a.attr("checked","false")
-    a.attr("style","background:white;")
+function drop(id_casella) {
+    //controllo se la casella ha un elemento
 
-    $("#"+ev.target.id).append(a)
+    if ($('#' + id_casella).find('a').length != 0) {
+        alert("Personaggio inserito")
+        return;
+    }
+    //se è stato selezionato un persaggio
+    a = $("a[checked='true']")
+    if (a.text() == "") {
+        alert("Non hai selezionato un personaggio")
+        return;
+    }
+    // spostare personaggio nella casella
+    a.attr("checked", "false")
+    a.attr("style", "background:white;")
+
+    $('#' + id_casella).append(a)
 }
 
 function sposta_row(ele) {
 
     idTr = (ele.parentNode.parentNode).id
-    alert(idTr)
     var tr = $("#" + idTr).clone();
     if ($('#corpo_lista_eventi').find('#' + idTr).length > 0) {
         cell2 = tr.find('td').eq(0).text()
@@ -671,7 +797,6 @@ function sposta_row_personaggio(ele) {
     var tr = $("#" + idTr).clone();
     if ($('#lista_personaggi').find('#' + idTr).length > 0) {
         var cell2 = tr.find('td').eq(0).text()
-        alert(tr.find('td').eq(0).text())
 
         //  cell2 = cell2.replace("personaggio_", "");
 
@@ -696,16 +821,7 @@ function goToByScroll(id) {
     }, 'slow');
 }
 
-
-$(document).ready(function () {
-
-    $(".clickable-row").click(function (e) {
-        // Prevent a page reload when a link is pressed
-        e.preventDefault();
-        // Call the scroll function
-        goToByScroll("id_form_personaggio");
-    });
-
+function click_row_luogo() {
     $("#id_table_luoghi tr").click(function (event) {
         id_label_input_luogo = document.getElementById("modalLuoghi").getAttribute("value_call")
         id_input_luogo = id_label_input_luogo.substr(6, id_label_input_luogo.length)
@@ -718,6 +834,15 @@ $(document).ready(function () {
 
         $('#modalLuoghi').modal('hide')
     })
+}
+$(document).ready(function () {
+
+    $(".clickable-row").click(function (e) {
+        // Prevent a page reload when a link is pressed
+        e.preventDefault();
+        // Call the scroll function
+        goToByScroll("id_form_personaggio");
+    });
 
 
     $("#id_load_dinastia").click(function () {
@@ -731,48 +856,47 @@ $(document).ready(function () {
 
         personaggio = $("#idCognome").val() + " " + $("#idNome").val()
 
-        if ($("#padre_casella").find("a") > 0) {
+        if ($("#padre_casella").find("a").length > 0) {
             padre = $("#padre_casella").find("a").html()
-            id_padre = ($("#padre_casella").find("a").attr("id")).substr(12, 13)
+            id_padre = ($("#padre_casella").find("a").attr("id")).substr(15)
             $("input[name=label_padre]").val(padre);
             $("input[name=padre]").val(id_padre);
 
             var formData = {
                 nome: $("#idCognome").val(),
-                cognome: ("#idNome").val(),
-                padre_id: id_padre
+                cognome: $("#idNome").val(),
+                padre_id: id_padre // perhè l'id è din3233
             }
-
             load_dinastia(formData)
         }
-        if ($("#madre_casella").find("a") > 0) {
+        if ($("#madre_casella").find("a").length > 0) {
 
             madre = $("#madre_casella").find("a").html()
-            id_madre = ($("#madre_casella").find("a").attr("id")).substr(12, 13)
+            id_madre = ($("#madre_casella").find("a").attr("id")).substr(15)
             $("input[name=label_madre]").val(madre);
             $("input[name=madre]").val(id_madre);
 
         }
 
-        if ($("#coniuge1_casella").find("a") > 0) {
+        if ($("#coniuge1_casella").find("a").length > 0) {
 
             coniuge1 = $("#coniuge1_casella").find("a").html()
-            id_coniuge1 = ($("#coniuge1_casella").find("a").attr("id")).substr(12, 13)
+            id_coniuge1 = ($("#coniuge1_casella").find("a").attr("id")).substr(15)
 
             $("input[name=label_coniuge1]").val(coniuge1);
             $("input[name=coniuge1]").val(id_coniuge1);
         }
-        if ($("#coniuge2_casella").find("a") > 0) {
+        if ($("#coniuge2_casella").find("a").length > 0) {
 
             coniuge2 = $("#coniuge2_casella").find("a").html()
-            id_coniuge2 = ($("#coniuge2_casella").find("a").attr("id")).substr(12, 13)
+            id_coniuge2 = ($("#coniuge2_casella").find("a").attr("id")).substr(15)
             $("input[name=label_coniuge2]").val(coniuge2);
             $("input[name=coniuge2]").val(id_coniuge2);
         }
-        if ($("#coniuge3_casella").find("a") > 0) {
+        if ($("#coniuge3_casella").find("a").length > 0) {
 
             coniuge3 = $("#coniuge3_casella").find("a").html()
-            id_coniuge3 = ($("#coniuge3_casella").find("a").attr("id")).substr(12, 13)
+            id_coniuge3 = ($("#coniuge3_casella").find("a").attr("id")).substr(15)
             $("input[name=label_coniuge3]").val(coniuge3);
             $("input[name=coniuge3]").val(id_coniuge3);
 
@@ -833,7 +957,6 @@ $(document).ready(function () {
                 $(this).closest('a').hide()
 
             }
-            //alert($(this).text());
 
         });
     });
@@ -845,10 +968,12 @@ $(document).ready(function () {
         document.getElementById("id_nuovo_tipo_evento").value = ""
         document.getElementById("id_nuovo_sub_tipo_evento").value = ""
 
-        id_l
+
         var my_url = "get_sub_eventi";
         var type = "POST"; //for creating new resource
-
+        var formData = {
+            tipo_evento: $("#idTipoEvento").val()
+        }
         $.ajax({
             type: type,
             url: my_url,
@@ -958,8 +1083,10 @@ $(document).ready(function () {
                 loc = data['localizzazione_luogo']
                 tipo = data['tipo_luogo']
                 tr = document.createElement("tr");
-                tr.setAttribute('id', "");
+                tr.setAttribute('id', 'luogo_' + id);
                 tr.setAttribute('checked', 'false')
+                tr.setAttribute('onclick', 'click_row_luogo()')
+
                 tr.setAttribute('class', 'select_row_genitori')
                 cells = "<td style='visibility: hidden;'>" + id + "</td><td>" + den_luogo + "</td><td>" + loc + "</td><td>" + tipo + "</td>"
                 tr.innerHTML = cells

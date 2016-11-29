@@ -1332,3 +1332,427 @@ paypal
 google-drive
 linux-foundation
 ebay
+
+
+
+
+
+
+15.12.2015
+==========================================
+GLYPHICONS 1.9.2
+-----------------------------------
+ * 190 new icons in GLYPHICONS Basic set
+ * 40 new icons in GLYPHICONS Halflings set
+ * 10 new icons in GLYPHICONS Filetypes set
+ * 13 new icons in GLYPHICONS Social set
+ * over 50 icons were improved, they look much better now
+ * fixed issue when certain GLYPHICONS were rendered as emoji in some browsers
+ * because of fix above, some icons have now a new UTF codes and new names
+ * improved full text search between icons on www.glyphicons.com 
+ * recreated and updated Handbook (new content, better layout)
+ * polished and udpated license (just cosmetic changes)
+ 
+
+------------
+Updated icons:
+
+
+home
+file
+file-import
+file-export
+cleaning
+bin
+fire (in Basic set and Halflings as well)
+ban (this "ban" icon was mirrored all the time in both sets, sorry for this bug guys - but funny thing is, that my "competitor", who copied in his first version all Halflings, still have this icon also mirrored as I created this icon in 2010. The lesson: you should never copy anything blindly :)
+message-ban
+database-ban
+server-ban
+user-ban
+electrical-plug
+webcam
+underwear
+boat
+mosquito
+snowflake
+family
+invoice
+newspaper
+building
+briefcase
+person
+google_maps
+binoculars
+luggage
+bed-alt
+cart-tick
+pool
+buoy
+router
+user-add
+user-remove
+clock
+stopwatch
+tree-conifer
+tree-deciduous
+floppy-disk
+floppy-saved
+floppy-remove
+floppy-save
+floppy-open
+fax
+nameplate
+nameplate-alt
+copy
+paste
+address-book
+projector
+coffee-cup
+french-press
+male (now together with a new gender icons as "gender-male")
+female (now together with a new gender icons as "gender-female")
+edit (just re-positioned)
+new-window (just re-positioned)
+check (just re-positioned)
+unchecked (just re-positioned)
+google-plus (in Social)   
+map-marker (in Halflings)
+alert (in Halflings)
+
+
+
+------------
+Renamed icons:
+
+
+souncloud 				-> soundcloud (in Social set)
+hotspot 				-> paired (in basic set)
+airplane 				-> plane (in basic set)
+bed 					-> bed-alt (in basic set)
+bed-alt 				-> bed (in basic set)
+remove-2 				-> remove (in basic set)
+remove 					-> remove-circle (in basic set)
+ok						-> ok-circle (in basic set)
+ok-2					-> ok (in basic set)
+circle-remove 			-> remove-sign (in basic set)
+circle-plus				-> plus-sign (in basic set)
+circle-minus			-> minus-sign (in basic set)
+circle-ok				-> ok-sign (in basic set)
+circle-question-mark 	-> question-sign (in basic set)
+circle-info				-> info-sign (in basic set)
+circle-exclamation-mark	-> exclamation-sign (in basic set)
+ban						-> ban-circle (in basic set)
+google-maps				-> map-marker (in basic set)
+left-arrow				-> arrow-left(in basic set)
+right-arrow				-> arrow-right(in basic set)
+down-arrow				-> arrow-down (in basic set)
+up-arrow				-> arrow-up(in basic set)
+ruller					-> ruler (in basic set)
+paragraph				-> paragraph-alt (in basic set)
+note					-> music-alt (in basic set)
+mosquito-net			-> mosquito (in basic set)
+
+glyph-lock				-> lock (in Halflings set, only change of CSS class)
+glyph-bookmark			-> bookmark (in Halflings set, only change of CSS class)
+glyph-camera			-> camera (in Halflings set, only change of CSS class)
+glyph-fire				-> fire (in Halflings set, only change of CSS class)
+glyph-calendar			-> calendar (in Halflings set, only change of CSS class)
+glyph-bell				-> bell (in Halflings set, only change of CSS class)
+glyph-wrench			-> wrench (in Halflings set, only change of CSS class)
+glyph-briefcase			-> briefcase (in Halflings set, only change of CSS class)
+glyph-paperclip			-> paperclip (in Halflings set, only change of CSS class)
+glyph-pushpin			-> pushpin (in Halflings set, only change of CSS class)
+
+(To explain changes above: it may seems crazy to rename such an amount of icons, but I had to sync these names between Basic and Halflings set - my apology, I should have done this long time before. On top of that, I've found a better way how to optimize certain icon names for older browsers inside the font file itself, so these tweaks with names are no longer necessary)
+
+
+------------
+New icons (Basic set):
+
+
+camping
+camping-benches
+forest
+park
+field
+mountains
+fees-payments
+small-payments
+mixed-buildings
+industrial-zone
+visitor-tag
+businessman
+meditation
+bath
+donate
+sauna
+bedroom-nightstand
+bedroom-lamp
+doctor
+engineering-networks
+washing-machine
+dryer
+dishwasher
+luggage-group
+teenager
+person-stick
+person-stick-old
+traveler
+veteran
+group-chat
+elections
+law-justice
+judiciary
+house-fire
+firefighters
+police
+ambulance
+light-beacon
+important-day
+bike-park
+object-align-top
+object-align-bottom
+object-align-horizontal
+object-align-left
+object-align-vertical
+object-align-right
+reflect-y
+reflect-x
+tick
+lawnmower
+call-redirect
+call-ip
+call-record
+call-ringtone
+call-traffic
+call-hold
+call-incoming
+call-outgoing
+call-video
+call-missed
+theater
+heartbeat
+kettlebell
+fireplace
+street-lights
+pedestrian
+flood
+open-water
+for-sale
+dustbin
+door
+camp-fire
+fleur-de-lis
+temperature-settings
+article
+sunbath
+balanced-diet
+ticket
+parking-ticket
+parking-meter
+laptop
+tree-structure
+weather-warning
+temperature-low
+temperature-high
+temperature-low-warning
+temperature-high-warning
+hurricane
+storm
+sorted-waste
+ear
+ear-deaf
+file-plus
+file-minus
+file-lock
+file-cloud
+file-cloud-download
+file-cloud-upload
+paragraph
+list-numbered
+donate-heart
+government
+maze
+chronicle
+user-structure
+recycle
+gas
+waste-pipe
+water-pipe
+parking
+closed
+mouse
+mouse-double-click
+mouse-left-click
+mouse-right-click
+mouse-middle-click
+mouse-scroll
+resize-vertical
+resize-horizontal
+temperature
+puzzle
+puzzle-2
+puzzle-3
+nearby-square
+nearby-circle
+rotate-right
+rotate-left
+pictures
+photo-album
+cadastral-map
+fingerprint-scan
+fingerprint
+fingerprint-lock
+fingerprint-ok
+fingerprint-remove
+fingerprint-reload
+pending-notifications
+synchronization
+synchronization-ban
+hash
+gender-male
+gender-female
+gender-virgin-female
+gender-intersex
+gender-transgender
+gender-ori-lesbian
+gender-ori-gay
+gender-ori-hetero
+gender-other
+gender-unknown
+scanner
+multifunction-printer
+lasso
+view-360
+battery-charging
+battery-full
+battery-75
+battery-50
+battery-25
+battery-10
+satellite
+satellite-dish
+satellite-dish-alt
+auction
+directions
+race
+robot
+ruler-alt
+cube-empty
+cube-black
+move-square
+drop
+vr-headset
+vr-charging
+vr-low-battery
+vr-paired
+vr-settings
+vr-maintenance
+filter-remove
+filter-applied
+one-day
+user-vr
+user-vr-add
+user-vr-remove
+dice-1
+dice-2
+dice-3
+dice-4
+dice-5
+dice-6
+
+
+------------
+New icons (Halflings set):
+
+
+building
+tick
+star-half
+hash
+directions
+gas
+snowflake
+sunlight
+selectbox
+sortable
+note-empty
+note
+direction-right
+direction-left
+direction-down
+direction-up
+parking
+coffee-cup
+record-empty
+move-square
+bug
+display
+direction
+group
+reflect-y
+reflect-x
+battery-charging
+battery-full
+battery-75
+battery-50
+battery-25
+battery-10
+paired
+rotate-right
+rotate-left
+list-numbered
+paragraph
+list-plus
+synchronization
+cube-black
+
+
+------------
+New icons (Social set):
+
+
+e-mail-envelope
+gmail
+open-id
+bitbucket
+whatsapp
+buffer
+medium
+stackoverflowearlier
+linux (finally Linux icon which works, sorry that I wasn't able to create it earlier)
+vk
+snapchat
+etsy
+stackexchange
+
+
+------------
+New icons (Filetypes set):
+
+
+json
+site
+xap
+api
+ico
+webp
+bpg
+flac
+ogg
+unknown
+
+
+------------
+Removed icons:
+
+
+zootol (from Social, because service has been shut down, now it's "e-mail-envelope")
+forrst (from Social, because service has been shut down, now it's "gmail")
+skitch (from Social, because service has been acquired by Evernote, now it's "open-id")
+
+
+
+
+

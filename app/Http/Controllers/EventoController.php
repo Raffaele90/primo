@@ -6,11 +6,14 @@ use App\evento;
 use Illuminate\Http\Request;
 use App\luogo;
 use App\Personaggio;
+use Illuminate\Support\Facades\DB;
+
 
 use App\Http\Requests;
 
 
 class EventoController extends Controller
+
 {
 
 
@@ -31,15 +34,11 @@ class EventoController extends Controller
         $evento['vecchio_luogo'] = $origine_luogo['denominazione_luogo'];
 
 
-        $evento['personaggi_associati'] = evento::find($request['id'])->personaggi()->get();
+        $evento['personaggi_associati'] = DB::table('evento_personaggio')->where('evento_id', '=', $request["id"])->pluck('personaggio_id');//evento::find($request['id'])->personaggi()->get();
 
+        $arr = $evento['personaggi_associati'];
 
-        $arr = [];
-        for ($i = 0; $i < count($evento['personaggi_associati']); $i++) {
-            array_push($arr, $evento['personaggi_associati'][$i]['id']);
-
-        }
-        $evento['personaggi_associati'] = Personaggio::find($arr);
+        $evento['personaggi_associati'] = Personaggio::findMany($evento['personaggi_associati']);
         $evento['personaggi_non_associati'] = Personaggio::whereNotIn('id', $arr)->get()->toArray();
 
         return $evento;
@@ -56,7 +55,7 @@ class EventoController extends Controller
         $data['dinastia'] = [];
         $data['personaggi'] = personaggio::orderBy('cognome', 'ASC')->get();
         $data['eventi'] = evento::orderBy('denominazione_evento', 'ASC')->get();
-        $data['tipo_eventi'] = evento::orderBy('tipo_evento', 'ASC')->get();
+        $data['tipo_eventi'] = evento::distinct()->select('tipo_evento')->orderBy('tipo_evento', 'ASC')->get();
 
         return view('edit_evento')->with('data', $data);
 
@@ -71,7 +70,7 @@ class EventoController extends Controller
         $data['dinastia'] = [];
         $data['personaggi'] = personaggio::orderBy('cognome', 'ASC')->get();
         $data['eventi'] = evento::orderBy('denominazione_evento', 'ASC')->get();
-        $data['tipo_eventi'] = evento::orderBy('tipo_evento', 'ASC')->get();
+        $data['tipo_eventi'] = evento::distinct()->select('tipo_evento')->orderBy('tipo_evento', 'ASC')->get();
 
         return view('insert_evento')->with('data', $data);
     }
@@ -119,8 +118,13 @@ class EventoController extends Controller
 
         $evento->personaggi()->attach($personaggi_ass);
 
-        return $personaggi_ass;
+        if ($request->ajax()) {
+            return $evento;
+        } else {
 
+            return redirect('insert_evento')->with("success", "suc"); //$personaggi_ass;
+
+        }
 
     }
 
@@ -137,7 +141,6 @@ class EventoController extends Controller
         $this->validate_evento($request);
 
 
-
         $evento = evento::find($request['id']);
 
         $evento->denominazione_evento = $request['denominazione_evento'];
@@ -150,7 +153,6 @@ class EventoController extends Controller
         $evento->ulteriore_caratterizzazione = $request['ulteriore_caratterizzazione'];
 
         $evento->descrizione_movimento_opera = $request['descrizione_movimento_opera'];
-        $evento->dinastia = $request['dinastia'];
 
         $evento->save();
 
@@ -161,8 +163,20 @@ class EventoController extends Controller
         }
 
         $evento->personaggi()->sync($persnaggi_ass);
-
-        return $evento;
+        return redirect('edit_evento')->with("success", "suc");
 
     }
+
+
+    public function remove_evento(Request $request)
+    {
+        $result = evento::where('id', $request['remove_id'])->delete();
+
+        if ($result) {
+            return $request['remove_id'];
+        } else {
+            return $request['remove_id'];
+        }
+    }
+
 }
