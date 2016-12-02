@@ -21,7 +21,7 @@ class CreateEventoTable extends Migration
             $table->string('origine_luogo_id')->nullable();
             $table->string('nuovo_luogo_id')->nullable();
             $table->text('descrizione_evento')->nullable();
-            $table->integer('anno_evento')->nullable();
+            $table->integer('data_evento')->nullable();
             $table->text('descrizione_movimento_opera')->nullable();
             $table->string('tipo_sub_evento')->nullable();
             $table->text('ulteriore_caratterizzazione')->nullable();

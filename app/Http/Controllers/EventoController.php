@@ -19,16 +19,18 @@ class EventoController extends Controller
 
     public function get_evento(Request $request)
     {
-
+        $modal_evento = new evento();
         $evento = evento::find($request['id']);
+        $evento['tipo_sub_eventi'] = $modal_evento->get_sub_eventi($evento['tipo_evento']);
 
+        $evento['tipo_eventi'] = $this->get_eventi();
         $origine_luogo = null;
         $nuovo_luogo = null;
-        if ($evento['origine_luogo_id'] != null or $evento['origine_luogo_id'] != "")
+        if ($evento['origine_luogo_id'] != null and $evento['origine_luogo_id'] != "")
             $origine_luogo = luogo::find($evento['origine_luogo_id']);
 
-        if ($evento['nuovo_luogo_id'] != null or $evento['nuovo_luogo_id'] != "")
-            $nuovo_luogo = luogo::find($evento['origine_luogo_id']);
+        if ($evento['nuovo_luogo_id'] != null and $evento['nuovo_luogo_id'] != "")
+            $nuovo_luogo = luogo::find($evento['nuovo_luogo_id']);
 
         $evento['nuovo_luogo'] = $nuovo_luogo['denominazione_luogo'];
         $evento['vecchio_luogo'] = $origine_luogo['denominazione_luogo'];
@@ -79,7 +81,7 @@ class EventoController extends Controller
     private function validate_evento(Request $request)
     {
         $this->validate($request, [
-            'denominazione_evento' => 'required|max:25',
+            'denominazione_evento' => 'required',
             'tipo_evento' => 'required|max:25',
 
         ]);
@@ -88,21 +90,20 @@ class EventoController extends Controller
     public function insert_evento(Request $request)
     {
 
-
         $this->validate_evento($request);
         $evento = new evento();
 
 
         $evento->denominazione_evento = $request['denominazione_evento'];
-        $evento->anno_evento = $request['anno_costruzione'] == null ? null : $request['anno_costruzione'];
+        $evento->data_evento = $request['data_costruzione'] == null ? null : $request['data_costruzione'];
         $evento->tipo_evento = $request['tipo_evento'];
         $evento->tipo_sub_evento = $request['tipo_sub_evento'];
 
         $evento->descrizione_evento = $request['descrizione_evento'];
-        $evento->origine_luogo_id = $request['denominazione_luogo'] == null ? null : $request['denominazione_luogo'];
-        $evento->nuovo_luogo_id = $request['nuovo_luogo_id'] == null ? null : $request['nuovo_luogo_id'];
+        $evento->origine_luogo_id = $request['origine_luogo_id'] == null ? null : $request['origine_luogo_id'];
+        $evento->nuovo_luogo_id = $request['nuovo_luogo_id_evento'] == null ? null : $request['nuovo_luogo_id_evento'];
 
-        $evento->ulteriore_caratterizzazione = $request['ulteriore_caratterizzazione'];
+        $evento->ulteriore_caratterizzazione = $request['ulteriore_caratterizzazione_evento'];
         $evento->descrizione_movimento_opera = $request['descrizione_movimento_opera'];
 
 
@@ -131,9 +132,16 @@ class EventoController extends Controller
     public function get_sub_eventi(Request $request)
     {
         $evento = new evento();
-
-        return $evento->get_sub_eventi($request['tipo_evento']);
+        $tipo_evento = $request['tipo_evento'];
+        return $evento->get_sub_eventi($tipo_evento);
     }
+
+    public function get_eventi()
+    {
+
+        return DB::table('evento')->select('tipo_evento')->distinct()->orderBy('tipo_evento', 'ASC')->get();
+    }
+
 
     public function update(Request $request)
     {
@@ -145,12 +153,12 @@ class EventoController extends Controller
 
         $evento->denominazione_evento = $request['denominazione_evento'];
         $evento->tipo_evento = $request['tipo_evento'];
-        $evento->anno_evento = $request['anno_costruzione'] == null ? null : $request['anno_costruzione'];
+        $evento->data_evento = $request['data_costruzione'] == null ? null : $request['data_costruzione'];
         $evento->tipo_sub_evento = $request['tipo_sub_evento'];
         $evento->descrizione_evento = $request['descrizione_evento'];
-        $evento->origine_luogo_id = $request['denominazione_luogo'] == null ? null : $request['denominazione_luogo'];
-        $evento->nuovo_luogo_id = $request['nuovo_luogo_id'] == null ? null : $request['nuovo_luogo_id'];
-        $evento->ulteriore_caratterizzazione = $request['ulteriore_caratterizzazione'];
+        $evento->origine_luogo_id = $request['origine_luogo_id'] == null ? null : $request['origine_luogo_id'];
+        $evento->nuovo_luogo_id = $request['nuovo_luogo_id_evento'] == null ? null : $request['nuovo_luogo_id_evento'];
+        $evento->ulteriore_caratterizzazione = $request['ulteriore_caratterizzazione_evento'];
 
         $evento->descrizione_movimento_opera = $request['descrizione_movimento_opera'];
 

@@ -25,7 +25,7 @@
                                     <div class="col-xs-6 col-md-6">
                                         <label for="exampleInputEmail1">Tipo Evento</label>
                                         <select class="form-control" id="idTipoEvento" name="tipo_evento">
-                                            <option value="" disabled selected>Seleziona tipo evento</option>
+                                            <option disabled selected>Seleziona tipo evento</option>
 
                                             @foreach($data['tipo_eventi'] as $tipo)
                                                 <option> {{$tipo->tipo_evento}}</option>
@@ -52,16 +52,16 @@
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Denominazione luogo</label>
                                 <input type="text" class="form-control" data-toggle="modal" data-target="#modalLuoghi"
-                                       id="label_id_denominazione_luogo" placeholder="Denominazione"
+                                       id="label_id_denominazione_luogo_evento" placeholder="Denominazione"
                                        readonly onclick="set_modal_value('modalLuoghi',this.id)">
                                 <input type="text" class="form-control input_hidden"
-                                       readonly id="id_denominazione_luogo" name="denominazione_luogo"
+                                       readonly id="id_denominazione_luogo_evento"
                                        placeholder="Denominazione ID" name="origine_luogo_id">
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Anno di Costruzione</label>
-                                <input class="form-control" type="number" min="0" step="1" id="id_anno_costruzione"
-                                       placeholder="Anno costruzione" name="anno_costruzione"/>
+                                <input class="form-control" type="date" min="0" step="1" id="id_data_evento"
+                                       placeholder="Anno costruzione" name="data_costruzione"/>
 
                             </div>
                             <div class="form-group">
@@ -83,8 +83,8 @@
                                 <div class="row">
                                     <div class="col-xs-6 col-md-6">
                                         <label for="exampleInputEmail1"> Tipo Sub Evento</label>
-                                        <select class="form-control" id="idTipoSubEvento">
-                                            <option value="" disabled selected>Seleziona tipo sub evento</option>
+                                        <select class="form-control" name="tipo_sub_evento" id="idTipoSubEvento">
+                                            <option disabled selected>Seleziona tipo sub evento</option>
 
                                         </select>
 
@@ -94,7 +94,7 @@
                                         <label for="exampleInputEmail1">Add</label>
 
                                         <input class="form-control" type="text" id="id_nuovo_sub_tipo_evento"
-                                               placeholder="Nuovo sub evento" name="tipo_sub_evento"/>
+                                               placeholder="Nuovo sub evento"/>
                                         <button type="button" id="id_add_btn_tipo"
                                                 onclick="add_tipo('id_nuovo_sub_tipo_evento','idTipoSubEvento')"> +
                                         </button>
@@ -105,15 +105,15 @@
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Ulteriore
                                     caratterizzazione</label> <textarea type="text" class="form-control"
-                                                                        name="ulteriore_caratterizzazione"
-                                                                        id="id_ulteriore_caratterizzazione" rows="5"
+                                                                        name="ulteriore_caratterizzazione_evento"
+                                                                        id="id_ulteriore_caratterizzazione_evento" rows="5"
                                                                         placeholder="Caratterizzazione"></textarea>
                             </div>
 
                         </div>
                     </div>
 
-                    <div class="col-xs-12 col-md-12" style="display: none" id="id_form_nuovo_evento">
+                    <div class="col-xs-12 col-md-12" style="" id="id_form_nuovo_evento">
                         <div class="col-xs-6 col-md-6">
 
                             <div class="list-group">
@@ -121,12 +121,12 @@
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Nuova Denominazione luogo</label>
                                     <input type="text" class="form-control"
-                                           readonly id="label_id_nuova_denominazione_luogo" data-toggle="modal"
+                                           readonly id="label_id_nuova_denominazione_luogo_evento" data-toggle="modal"
                                            data-target="#modalLuoghi"
                                            onclick="set_modal_value('modalLuoghi',this.id)" placeholder="Denominazione">
                                     <input type="text" class="form-control input_hidden"
-                                           readonly id="id_nuova_denominazione_luogo"
-                                           placeholder="Denominazione ID" name="nuovo_luogo_id">
+                                           readonly id="id_nuova_denominazione_luogo_evento"
+                                           placeholder="Denominazione ID" name="nuovo_luogo_id_evento">
                                 </div>
                                 <!--<div class="form-group">
                                     <label for="exampleInputEmail1">Nuovo Anno di Costruzione</label>
@@ -196,7 +196,7 @@
                             </thead>
                             <tbody id="lista_personaggi">
 
-                            @if(Request::path() == 'insert_evento' or Request::path() == 'insert_personaggio')
+                            @if(Request::path() == 'insert_evento' or Request::path() == 'insert_personaggio' or Request::path() == 'edit_personaggio')
                                 @foreach($data['personaggi'] as $personaggio)
                                     <tr id="personaggio_{{$personaggio->id}}">
 
@@ -221,12 +221,11 @@
                     </div>
 
                 </div>
-                @if(Request::path() == 'insert_evento')
+                @if(Request::path() == 'insert_evento' or Request::path() == 'edit_evento')
 
                     <button type="button" class="btn btn-primary dropdown-toggle"
                             onclick="show_hide_module('nuovo_personaggio','vuota'), goToByScroll('nuovo_personaggio')">+
-                        Add
-                        Personaggio
+                        Add Personaggio
                     </button>
                 @endif
 
@@ -242,8 +241,8 @@
                             <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Nome evento</th>
-                                <th>Descrizione</th>
+                                <th>Nome </th>
+                                <th>Cognome</th>
                             </tr>
                             </thead>
                             <tbody id="lista_personaggi_associati" ondrop="drop(event)"
@@ -261,7 +260,7 @@
 
                 <button type="submit" class="btn btn-danger btn_update_raf">Aggiorna Evento</button>
             @endif
-            @if (Request::path() =='insert_personaggio')
+            @if (Request::path() =='insert_personaggio' or Request::path() =='edit_personaggio')
 
                 <button type="button" onclick="insert_Evento() " class="btn btn-danger btn_update_raf">Aggiungi Evento
                 </button>

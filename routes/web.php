@@ -13,9 +13,10 @@
 
 use App\evento;
 use App\luogo;
+use App\Personaggio;
 
 Route::get('prova2', function () {
-    return evento::all();
+    return Personaggio::whereNotIn('id', [73,67])->orderBy("cognome", "ASC")->get();
 });
 
 Route::get('prova', ['uses' => 'EventoController@get_evento']);
@@ -32,7 +33,6 @@ Route::post('get_dinastia', ['uses' => 'PersonaggioController@get_dinastia']);
 
 Route::post('store', ['uses' => 'PersonaggioController@store']);
 Route::post('store_ajax', ['uses' => 'PersonaggioController@store_ajax']);
-
 Route::post('update', ['uses' => 'PersonaggioController@update']);
 
 

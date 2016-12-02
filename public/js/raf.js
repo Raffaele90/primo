@@ -101,9 +101,7 @@ function remove_luogo(element) {
 
 function load_dinastia(formData) {
 
-
     document.getElementById("mySavedModel").innerHTML = ""
-
     $.ajax({
         type: "post",
         url: "get_dinastia",
@@ -156,21 +154,48 @@ function check(value) {
         return value
 
 }
+
+
+function riempi_casella_dinastia(id_pers, id_casella, nome) {
+    a = "<a id=personaggio_din" + id_pers + " class='list-group-item pers_dinastia' checked='checked' onclick='drag(event)' style='background: white;'  >  " + nome + " </a>"
+    $("#" + id_casella).append(a)
+}
 function set_form_personaggio(personaggio) {
 
 
-    //Reset Form e table eventi ed eventi ass
+
+    //Reset Form
     document.getElementById("id_form_personaggio").reset();
     $("#corpo_lista_eventi").empty();
     $("#corpo_lista_eventi_personaggio").empty();
+    $("#id_nome_dinastia").empty()
+    $(".panel_dinastia").empty()
+    $(".pers_dinastia").empty()
 
+
+
+    //Aggiungo option nella select Dinastia
+    add_option("id_nome_dinastia", personaggio['anagrafica']['nome_dinastia'])
+    for (i = 0; i < personaggio['dinastie'].length; i++) {
+        din_pers = personaggio['anagrafica']['nome_dinastia']
+        if (din_pers != personaggio['dinastie'][i]['nome_dinastia'])
+            add_option("id_nome_dinastia", personaggio['dinastie'][i]['nome_dinastia'])
+    }
+
+    //Inserisco personaggi nella sezione dinastia
+    for (i = 0; i < personaggio['personaggi'].length; i++) {
+        nome = personaggio['personaggi'][i]['cognome'] + " " + personaggio['personaggi'][i]['nome']
+        id = personaggio['personaggi'][i]['id']
+        riempi_casella_dinastia(id, "id_personaggi_dinastia", nome)
+
+    }
+    $("#idDinastia").val(check(personaggio['anagrafica']['nome_dinastia']))
 
     $("#idPersonaggio").val(check(personaggio['anagrafica']['id']))
 
     $("#idNome").val(check(personaggio['anagrafica']['nome']))
     $("#idCognome").val(check(personaggio['anagrafica']['cognome']))
 
-    $("#idDinastia").val(check(personaggio['anagrafica']['dinastia']))
     if (personaggio['luogo_nascita'] != "" && personaggio['luogo_nascita'] != null) {
         $("#label_idLuogoNascita").val(check(personaggio['luogo_nascita']['denominazione_luogo']))
         $("#idLuogoNascita").val(check(personaggio['luogo_nascita']['id']))
@@ -183,38 +208,47 @@ function set_form_personaggio(personaggio) {
 
     }
 
-    if (personaggio['dinastia'][0]['padre'] != "" && personaggio['dinastia'][0]['padre'] != null) {
+    if (personaggio['dinastia']['padre'] != "" && personaggio['dinastia']['padre'] != null) {
 
-        nomePadre = check(personaggio['dinastia'][0]['padre']['cognome']) + " " + check(personaggio['dinastia'][0]['padre']['nome'])
+        nomePadre = check(personaggio['dinastia']['padre']['cognome']) + " " + check(personaggio['dinastia']['padre']['nome'])
         $("#label_idPadre").val(check(nomePadre))
         $("#idPadre").val(check(personaggio['anagrafica']['padre_id']))
-
+        riempi_casella_dinastia($("#idPadre").val(), "padre_casella", nomePadre)
     }
-    if (personaggio['dinastia'][0]['madre'] != "" && personaggio['dinastia'][0]['madre'] != null) {
+    if (personaggio['dinastia']['madre'] != "" && personaggio['dinastia']['madre'] != null) {
 
-        nomeMadre = check(personaggio['dinastia'][0]['madre']['cognome']) + " " + check(personaggio['dinastia'][0]['madre']['nome'])
+        nomeMadre = check(personaggio['dinastia']['madre']['cognome']) + " " + check(personaggio['dinastia']['madre']['nome'])
         $("#label_idMadre").val(check(nomeMadre))
         $("#idMadre").val(check(personaggio['anagrafica']['madre_id']))
+        riempi_casella_dinastia($("#idMadre").val(), "madre_casella", nomeMadre)
 
     }
 
-    if (personaggio['dinastia'][0]['coniuge1'] != "" && personaggio['dinastia'][0]['coniuge1'] != null) {
+    if (personaggio['dinastia']['coniuge1'] != "" && personaggio['dinastia']['coniuge1'] != null) {
 
-        $("#label_idConiuge1").val(check(personaggio['coniuge1_id']))
+        nomeConiuge1 = check(personaggio['dinastia']['coniuge1']['cognome']) + " " + check(personaggio['dinastia']['coniuge1']['nome'])
+        $("#label_idConiuge1").val(check(nomeConiuge1))
         $("#idConiuge1").val(check(personaggio['anagrafica']['coniuge1_id']))
-
+        riempi_casella_dinastia($("#idconiuge1").val(), "coniuge1_casella", nomeConiuge1)
 
     }
-    if (personaggio['dinastia'][0]['coniuge2'] != "" && personaggio['dinastia'][0]['coniuge2'] != null) {
+    if (personaggio['dinastia']['coniuge2'] != "" && personaggio['dinastia']['coniuge2'] != null) {
 
-        $("#label_idConiuge2").val(check(personaggio['coniuge2_id']))
+        nomeConiuge2 = check(personaggio['dinastia']['coniuge2']['cognome']) + " " + check(personaggio['dinastia']['coniuge2']['nome'])
+
+        $("#label_idConiuge2").val(nomeConiuge2)
         $("#idConiuge2").val(check(personaggio['anagrafica']['coniuge2_id']))
+        riempi_casella_dinastia($("#idconiuge2").val(), "coniuge2_casella", nomeConiuge2)
 
 
     }
-    if (personaggio['dinastia'][0]['coniuge3'] != "" && personaggio['dinastia'][0]['coniuge3'] != null) {
-        $("#label_idConiuge3").val(check(personaggio['coniuge3_id']))
+    if (personaggio['dinastia']['coniuge3'] != "" && personaggio['dinastia']['coniuge3'] != null) {
+
+        nomeConiuge3 = check(personaggio['dinastia']['coniuge3']['cognome']) + " " + check(personaggio['dinastia']['coniuge3']['nome'])
+
+        $("#label_idConiuge3").val(nomeConiuge3)
         $("#idConiuge3").val(check(personaggio['anagrafica']['coniuge3_id']))
+        riempi_casella_dinastia($("#idconiuge3").val(), "coniuge3_casella", nomeConiuge3)
 
     }
 
@@ -252,9 +286,9 @@ function get_info_personaggio(id_personaggio) {
         url: url,
         data: formData,
         dataType: 'text',
+        async: false,
         success: function (data) {
             data = JSON.parse(data);
-
             set_form_personaggio(data)
 
         },
@@ -267,7 +301,6 @@ function get_info_personaggio(id_personaggio) {
                 /// do some thing else
             }
 
-            console.log('Error:', data);
         }
     });
 
@@ -308,7 +341,6 @@ function get_evento_db(id_evento) {
                 /// do some thing else
             }
 
-            console.log('Error:', data);
         }
     });
 
@@ -378,8 +410,20 @@ function create_row_personaggi_luoghi(personaggi, id_table) {
 
 
 }
+function add_option(id_select, option_value) {
+    var select = $("#" + id_select)
+    var options = ""
+
+    options = options + "<option>" + option_value + "</option>"
+
+    select.append(options)
+}
 
 function set_form_eventi(evento) {
+    remove_option_select("idTipoEvento")
+    remove_option_select("idTipoSubEvento")
+
+    $("#id_form_evento")[0].reset()
 
     $("#lista_personaggi").empty();
     $("#lista_personaggi_associati").empty();
@@ -389,16 +433,35 @@ function set_form_eventi(evento) {
     $('#id_denominazione_evento').val(evento['denominazione_evento'])
     $('#idTipoEvento').val(evento['tipo_evento'])
 
-    $('#label_id_denominazione_luogo').val(evento['vecchio_luogo'])
+    add_option("idTipoEvento", evento['tipo_evento'])
 
-    $('#id_denominazione_luogo').val(evento['origine_luogo_id'])
-    $('#id_anno_costruzione').val(evento['anno_evento'])
-    $('#id_ulteriore_caratterizzazione').val(evento['ulteriore_caratterizzazione'])
+    for (i = 0; i < evento['tipo_eventi'].length; i++) {
+        var sub_evento = evento['tipo_eventi'][i]['tipo_evento']
+        if (sub_evento != evento['tipo_evento'])
+            add_option("idTipoEvento", sub_evento)
+    }
+
+    //SELECT SUB EVENTI aggiunto prima quello selezionato e poi tutti quelli per quel evento
+    add_option("idTipoSubEvento", evento['tipo_sub_evento'])
+
+    for (i = 0; i < evento['tipo_sub_eventi'].length; i++) {
+        var sub_evento = evento['tipo_sub_eventi'][i]['tipo_sub_evento']
+        if (sub_evento != evento['tipo_sub_evento'])
+            add_option("idTipoSubEvento", sub_evento)
+    }
+
+
+    $('#label_id_denominazione_luogo_evento').val(evento['vecchio_luogo'])
+
+    $('#id_denominazione_luogo_evento').val(evento['origine_luogo_id'])
+    $('#id_data_evento').val(evento['data_evento'])
+    $('#id_ulteriore_caratterizzazione_evento').val(evento['ulteriore_caratterizzazione'])
     $('#idDescrizioneEvento').val(evento['descrizione_evento'])
-    $('#id_anno_costruzione').val(evento['anno_evento'])
+    $('#id_data_costruzione').val(evento['data_costruzione'])
 
-    $('#label_id_nuova_denominazione_luogo').val(evento['nuovo_luogo'])
-    $('#id_nuova_denominazione_luogo').val(evento['nuovo_luogo_id'])
+    $('#label_id_nuova_denominazione_luogo_evento').val(evento['nuovo_luogo'])
+    $('#id_nuova_denominazione_luogo_evento').val(evento['nuovo_luogo_id'])
+
     $('#id_descrizione_movimento_opera').val(evento['descrizione_movimento_opera'])
     show_hide_module('id_form_nuovo_evento', 'vuota')
 
@@ -417,11 +480,14 @@ function set_form_eventi(evento) {
 }
 
 function open_form_luogo(element) {
+
     id_tr = element.id
     id = id_tr.substr(6, id_tr.length)
     get_luogo_db(id)
 }
 function open_form_evento(element) {
+
+
     id_tr = element.id
     id = id_tr.substr(7, id_tr.length)
     get_evento_db(id)
@@ -434,6 +500,12 @@ function open_form_personaggio(element) {
     personaggio = get_info_personaggio(id)
 
 
+}
+
+function remove_option_select(id_select) {
+    $("#" + id_select + " > option").each(function () {
+        $(this).remove();
+    });
 }
 
 function show_hide_module(list_show, list_hide) {
@@ -503,13 +575,13 @@ function get_info_evento() {
         tipo_evento: tipo_evento,
         sub_tipo_evento: sub_tipo_evento,
         descrizione_evento: document.getElementById("idDescrizioneEvento").value,
-        denominazione_luogo: document.getElementById("id_denominazione_luogo").value,
-        anno_di_costruzione: document.getElementById("id_anno_costruzione").value,
+        denominazione_luogo_evento: document.getElementById("id_denominazione_luogo_evento").value,
+        data_di_costruzione: document.getElementById("id_data_evento").value,
 //        "descrizione_monumento": document.getElementById("id_descrizione_monumento").value,
-        ulteriore_caratterizzazione: document.getElementById("id_ulteriore_caratterizzazione").value,
+        ulteriore_caratterizzazione_evento: document.getElementById("id_ulteriore_caratterizzazione_evento").value,
 //        "nuova_denominazione_luogo": document.getElementById("id_nuova_denominazione_luogo").value,
         descrizione_movimento_opera: document.getElementById("id_descrizione_movimento_opera").value,
-        nuova_localizzazione: document.getElementById("id_nuova_denominazione_luogo").value,
+        nuovo_luogo_id: document.getElementById("id_nuova_denominazione_luogo_evento").value,
 
     }
     return json_evento;
@@ -847,8 +919,8 @@ $(document).ready(function () {
 
     $("#id_load_dinastia").click(function () {
 
-        dinastia = $("#id_dinastia").val()
-        if (dinastia == "Scegli Dinastia") {
+        dinastia = $("#id_nome_dinastia").val()
+        if (dinastia == "Scegli Dinastia" || dinastia == "" || dinastia == null) {
             dinastia = ""
         }
 
@@ -856,18 +928,18 @@ $(document).ready(function () {
 
         personaggio = $("#idCognome").val() + " " + $("#idNome").val()
 
+        id_padre = "-1"
+
         if ($("#padre_casella").find("a").length > 0) {
             padre = $("#padre_casella").find("a").html()
             id_padre = ($("#padre_casella").find("a").attr("id")).substr(15)
             $("input[name=label_padre]").val(padre);
             $("input[name=padre]").val(id_padre);
 
-            var formData = {
-                nome: $("#idCognome").val(),
-                cognome: $("#idNome").val(),
-                padre_id: id_padre // perhè l'id è din3233
-            }
-            load_dinastia(formData)
+
+        } else {
+            $("input[name=label_padre]").val("");
+            $("input[name=padre]").val("");
         }
         if ($("#madre_casella").find("a").length > 0) {
 
@@ -876,6 +948,9 @@ $(document).ready(function () {
             $("input[name=label_madre]").val(madre);
             $("input[name=madre]").val(id_madre);
 
+        } else {
+            $("input[name=label_madre]").val("");
+            $("input[name=madre]").val("");
         }
 
         if ($("#coniuge1_casella").find("a").length > 0) {
@@ -885,6 +960,9 @@ $(document).ready(function () {
 
             $("input[name=label_coniuge1]").val(coniuge1);
             $("input[name=coniuge1]").val(id_coniuge1);
+        } else {
+            $("input[name=label_coniuge1]").val("");
+            $("input[name=coniuge1]").val("");
         }
         if ($("#coniuge2_casella").find("a").length > 0) {
 
@@ -892,6 +970,10 @@ $(document).ready(function () {
             id_coniuge2 = ($("#coniuge2_casella").find("a").attr("id")).substr(15)
             $("input[name=label_coniuge2]").val(coniuge2);
             $("input[name=coniuge2]").val(id_coniuge2);
+        }
+        else {
+            $("input[name=label_coniuge2]").val("");
+            $("input[name=coniuge2]").val("");
         }
         if ($("#coniuge3_casella").find("a").length > 0) {
 
@@ -901,7 +983,17 @@ $(document).ready(function () {
             $("input[name=coniuge3]").val(id_coniuge3);
 
         }
-
+        else {
+            $("input[name=label_coniuge3]").val("");
+            $("input[name=coniuge3]").val("");
+        }
+        var formData = {
+            id: $("#idPersonaggio").val(),
+            nome: $("#idCognome").val(),
+            cognome: $("#idNome").val(),
+            nuovo_id_padre:  id_padre// perhè l'id è din3233
+        }
+        load_dinastia(formData)
         $("#modalDinastia").modal("hide")
 
     })
@@ -990,7 +1082,6 @@ $(document).ready(function () {
 
                 }
                 select.innerHTML = options
-                //alert(JSON.stringify(data))
             },
             error: function (data) {
                 console.log('Error:', data);

@@ -1,6 +1,7 @@
 <form action="{{ Request::path()=='insert_personaggio' ? 'store' : 'update' }}" method="post" id="id_form_personaggio">
 
     <input id="idPersonaggio" class="input_hidden" name="id" value="">
+    <p></p>
     {{ csrf_field() }}
     @if(count($errors)>0)
         <div class="alert alert-danger">
@@ -16,7 +17,7 @@
         <div class="alert alert-success">
             <ul>
 
-                    <li> Personaggio inserito </li>
+                <li> Personaggio inserito</li>
 
             </ul>
         </div>
@@ -62,7 +63,7 @@
                                             id="label_idLuogoNascita"
                                             placeholder="Luogo">
                                     <input
-                                            type="text"  class="form-control input_hidden" data-target="#modalLuoghi"
+                                            type="text" class="form-control input_hidden" data-target="#modalLuoghi"
                                             data-toggle="modal"
                                             name="luogo_nascita" id="idLuogoNascita"
                                             placeholder="id luogo">
@@ -96,7 +97,7 @@
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Data morte</label> <input
                                             type="date" class="form-control" name="data_morte" id="idMorte"
-                                             placeholder="Data di morte">
+                                            placeholder="Data di morte">
                                 </div>
                             </div>
 
@@ -252,7 +253,7 @@
                                         Visualizza Eventi
 
                                     </button>
-                                @elseif (Request::path() == 'insert_evento')
+                                @elseif (Request::path() == 'insert_evento' or Request::path() == 'edit_evento')
                                     <button type="button" onclick="insert_personaggio()"
                                             class="btn btn-default">Salva Personaggio
                                     </button>
@@ -327,7 +328,7 @@
                     </div>
 
                 </div>
-                @if(Request::path() == 'insert_personaggio')
+                @if(Request::path() == 'insert_personaggio' or Request::path() == 'edit_personaggio')
 
                     <button type="button" class="btn btn-primary dropdown-toggle"
                             onclick="show_hide_module('novo_evento','vuota'), goToByScroll('new_evento')">+ Add evento
@@ -394,13 +395,13 @@
                                     <div class="form-group">
 
                                         <label> Dinastia </label>
-                                        <select class="form-control" style="display: block;" id="id_dinastia"
+                                        <select class="form-control" style="display: block;" id="id_nome_dinastia"
                                                 name="">
-                                            <option> Scegli Dinastia</option>
-
-                                            @foreach($data['dinastia'] as $dinastia)
-                                                <option> {{$dinastia['dinastia']}}</option>
-                                            @endforeach
+                                            @if (Request::path()=='insert_personaggio')
+                                                @foreach($data['dinastie'] as $dinastia)
+                                                    <option> {{$dinastia['nome_dinastia']}}</option>
+                                                @endforeach
+                                            @endif
                                         </select>
 
                                     </div>
@@ -477,14 +478,17 @@
                                             <a class="list-group-item active">
                                                 Personaggi
                                             </a>
-                                            @foreach($data['personaggi'] as $personaggio)
+                                            @if (Request::path()=='insert_personaggio')
 
-                                                <a id="personaggio_din{{$personaggio->id}}" name="pippo"
-                                                   class="list-group-item pers_dinastia"
-                                                   checked="false"
-                                                   onclick="drag(event)">{{$personaggio->cognome}} {{$personaggio->nome}}  </a>
+                                                @foreach($data['personaggi'] as $personaggio)
+
+                                                    <a id="personaggio_din{{$personaggio->id}}" name="pippo"
+                                                       class="list-group-item pers_dinastia"
+                                                       checked="false"
+                                                       onclick="drag(event)">{{$personaggio->cognome}} {{$personaggio->nome}}  </a>
                                                 @endforeach
-                                                </ul>
+                                            @endif
+
 
                                         </div>
                                     </div>
@@ -493,7 +497,7 @@
                             <div class="row">
                                 <div class="col-xs-4 col-md-4">
                                     <div class="list-group">
-                                        <a  class="list-group-item active">
+                                        <a class="list-group-item active">
                                             Coniuge 1
                                             <button type="button" class="btn btn-default"
                                                     onclick="drop('coniuge1_casella')"><span
@@ -537,7 +541,7 @@
                                 </div>
                                 <div class="col-xs-4 col-md-4">
                                     <div class="list-group">
-                                        <a  class="list-group-item active">
+                                        <a class="list-group-item active">
                                             Coniuge 3
                                             <button type="button" class="btn btn-default"
                                                     onclick="drop('coniuge3_casella')"><span

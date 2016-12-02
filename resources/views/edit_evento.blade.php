@@ -108,7 +108,7 @@
     </div>
     <div id="id_scheda_personaggio" style="display: none">
 
-        <form method="POST" action="update_evento">
+        <form method="POST" id="id_form_evento" action="update_evento">
             {{ csrf_field() }}
             @if(count($errors)>0)
                 <div class="alert alert-danger">
@@ -121,9 +121,12 @@
             @endif
 
         <!-- Large modal -->
-            <input type="text" name="id" id="id_evento">
+            <input type="text" name="id" class="input_hidden" id="id_evento">
+            <p></p>
             @include('modal_evento')
-
+            <div id="nuovo_personaggio" style="display: none">
+                @include('personaggio')
+            </div>
         </form>
 
     </div>

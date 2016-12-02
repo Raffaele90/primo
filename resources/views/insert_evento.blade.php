@@ -14,40 +14,42 @@
 
 
     <div class="container">
-        <div class="row">
-            <div class="col-xs-12 col-md-12">
-                <form method="POST" action="insert_evento">
-                    {{ csrf_field() }}
-                    @if(Session::has('success'))
-                        <div class="alert alert-success">
-                            <ul>
+        <div class="modal-content">
+            <div class="row">
+                <div class="col-xs-12 col-md-12">
+                    <form method="POST" action="insert_evento">
+                        {{ csrf_field() }}
+                        @if(Session::has('success'))
+                            <div class="alert alert-success">
+                                <ul>
 
-                                <li> Evento Inserito </li>
+                                    <li> Evento Inserito</li>
 
-                            </ul>
+                                </ul>
+                            </div>
+                        @endif
+                        @if(count($errors)>0)
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach($errors->all() as $error)
+                                        <li>{{$error}}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+
+                        <div id="form_errors"></div>
+
+                        <div id="alert_insert_evento" class="alert alert-success alert_raf fade in" role="alert"
+                             style="display: none;">
+                            Evento
+                            inserito
                         </div>
-                    @endif
-                    @if(count($errors)>0)
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach($errors->all() as $error)
-                                    <li>{{$error}}</li>
-                                @endforeach
-                            </ul>
+                        <div id="nuovo_evento">
+                            @include('modal_evento')
                         </div>
-                    @endif
-
-                    <div id="form_errors"></div>
-
-                    <div id="alert_insert_evento" class="alert alert-success alert_raf fade in" role="alert"
-                         style="display: none;">
-                        Evento
-                        inserito
-                    </div>
-                    <div id="nuovo_evento">
-                        @include('modal_evento')
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
         <div class="row">

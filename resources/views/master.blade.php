@@ -8,7 +8,6 @@
 
     <script type="text/javascript" src="js/raf.js"></script>
 
-    <script src="go-debug.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gojs/1.6.7/go-debug.js"></script>
 
     <link rel="stylesheet" href="../css/bootstrap.css" type="text/css"
@@ -64,8 +63,8 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                            aria-expanded="false">Luoghi <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="#">Insert Luogo <span
-                                            class="sr-only">(current)</span></a></li>
+                            <!--<li><a href="#">Insert Luogo <span
+                                            class="sr-only">(current)</span></a></li>-->
                             <li><a href="edit_luogo">Edit Luogo</a></li>
 
                         </ul>
