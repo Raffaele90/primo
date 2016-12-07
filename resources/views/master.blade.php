@@ -2,11 +2,11 @@
 <head>
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 
-    <script src="js/jquery-1.9.1.js"></script>
-    <script type="text/javascript" src="js/bootstrap.js"></script>
-    <script type="text/javascript" src="js/graph.js"></script>
+    <script src="../js/jquery-1.9.1.js"></script>
+    <script type="text/javascript" src="../js/bootstrap.js"></script>
+    <script type="text/javascript" src="../js/graph.js"></script>
 
-    <script type="text/javascript" src="js/raf.js"></script>
+    <script type="text/javascript" src="../js/raf.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gojs/1.6.7/go-debug.js"></script>
 

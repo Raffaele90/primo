@@ -105,14 +105,14 @@
 
                 <input id="id_luogo" name="id" class="input_hidden">
                 <div id="id_form_luogo" style="display:none;">
-                    <div class="panel-group" id="" role="tablist" aria-multiselectable="false">
+                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false">
                         <div class="panel panel-default">
                             <div class="panel-heading" role="tab" id="headingOne">
                                 <h4 class="panel-title">
                                     <a role="button" data-toggle="collapse" data-parent="#accordion"
                                        href="#collapseOne"
                                        aria-expanded="false" aria-controls="collapseOne">
-                                        Scheda Luogo
+                                        Inserisci nuovo luogo
                                     </a>
                                 </h4>
                             </div>
@@ -122,6 +122,10 @@
 
 
                                     <div class="row">
+                                        <div id="form_errors_luogo"></div>
+                                        <div id="form_success_luogo"></div>
+
+
                                         <div class="col-xs-6 col-md-6">
 
                                             <div class="form-group">
@@ -130,7 +134,7 @@
                                                        id="denominazione_luogo">
                                             </div>
                                         </div>
-                                        <div class="col-xs-6 col-md-6">
+                                        <div class="col-xs-2 col-md-2">
 
                                             <div class="form-group">
                                                 <label for="pwd">Anno costruzione</label>
@@ -138,16 +142,40 @@
                                                        id="anno_costruzione">
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-xs-6 col-md-6">
+                                        <div class="col-xs-1 col-md-1">
                                             <div class="form-group">
-                                                <label for="email">Descrizione monumento</label>
-                                                <input type="text" class="form-control" name="descrizione_monumento"
-                                                       id="descrizione_monumento">
+                                                <div class="radio">
+
+                                                    <label>
+                                                        <input name="ac_dc" type="radio" value="ac">
+                                                        <span>a.C.</span>
+                                                        <input name="ac_dc" type="radio" value="dc">
+                                                        <span>d.C.</span>
+                                                    </label>
+                                                </div>
+                                            </div><!-- /input-group -->
+                                        </div>
+                                        <div class="col-xs-3 col-md-3">
+
+                                            <div class="form-group">
+                                                <label for="pwd">Dinastia appartenenza</label>
+                                                <select type="text" class="form-control" name="dinastia_appartenenza"
+                                                        id="id_dinastia_appartenenza">
+
+                                                </select>
                                             </div>
                                         </div>
-                                        <div class="col-xs-6 col-md-6">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12 col-md-12">
+                                            <div class="form-group">
+                                                <label for="email">Descrizione monumento</label>
+                                                <textarea rows="10" type="text" class="form-control"
+                                                          name="descrizione_monumento"
+                                                          id="descrizione_monumento"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-12">
                                             <div class="form-group">
                                                 <label for="pwd"> Localizzazione</label>
                                                 <input type="text" class="form-control" name="localizzazione_luogo"
@@ -176,11 +204,15 @@
 
                                                 <input type="text" class="form-control" name="nuovo_tipo_luogo"
                                                        id="tipo_luogo">
+                                                <button type="button" id=""
+                                                        onclick="add_tipo('tipo_luogo','id_tipo_luoghi')"> +
+                                                </button>
                                             </div>
+
                                         </div>
 
-                                        <div class="col-xs-3 col-md-3" id="col_sub_luogo1"
-                                             style="visibility: hidden;">
+
+                                        <div class="col-xs-3 col-md-3" id="col_sub_luogo1">
 
                                             <div class="form-group">
                                                 <label for="sel1">Sub luogo:</label>
@@ -191,14 +223,16 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-xs-3 col-md-3" id="col_sub_luogo2"
-                                             style="visibility: hidden;">
+                                        <div class="col-xs-3 col-md-3" id="col_sub_luogo2">
 
                                             <div class="form-group">
                                                 <label for="sel1">Nuovo Tipo sub luogo</label>
 
                                                 <input type="text" class="form-control" name="nuovo_sub_tipo_luogo"
                                                        id="nuovo_sub_tipo_luogo">
+                                                <button type="button" id=""
+                                                        onclick="add_tipo('nuovo_sub_tipo_luogo','id_sub_luoghi')"> +
+                                                </button>
                                             </div>
                                         </div>
 
@@ -209,16 +243,25 @@
                                         <div class="col-xs-12 col-md-12">
                                             <div class="form-group">
                                                 <label for="email">Ulteriore caratterizzazione </label>
-                                                <textarea type="text" class="form-control"
+                                                <textarea rows="10" type="text" class="form-control"
                                                           name="ulteriore_caratterizzazione"
                                                           id="ulteriore_caratterizzazione"></textarea>
                                             </div>
                                         </div>
 
                                     </div>
+                                    <div class="row">
 
+                                        <div class="col-xs-12 col-md-12">
+                                            <div class="form-group">
+                                                <label for="email">Attualmente ospita </label>
+                                                <textarea rows="10" type="text" class="form-control"
+                                                          id="id_attuale_destinazione" name="attuale_destinazione"></textarea>
+                                            </div>
+                                        </div>
+
+                                    </div>
                                     <meta name="_token" content="{!! csrf_token() !!}"/>
-
 
                                 </div>
                             </div>

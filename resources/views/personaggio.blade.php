@@ -53,55 +53,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-xs-6 col-md-6">
-                                <div class="form-group">
-                                    <label for="exampleInputEmail1">Luogo di nascita</label> <input
-                                            type="text" readonly class="form-control" data-target="#modalLuoghi"
-                                            data-toggle="modal"
-                                            name="label_luogo_nascita" onclick="set_modal_value('modalLuoghi',this.id)"
-                                            id="label_idLuogoNascita"
-                                            placeholder="Luogo">
-                                    <input
-                                            type="text" class="form-control input_hidden" data-target="#modalLuoghi"
-                                            data-toggle="modal"
-                                            name="luogo_nascita" id="idLuogoNascita"
-                                            placeholder="id luogo">
-                                </div>
-                            </div>
-                            <div class="col-xs-6 col-md-6">
-                                <div class="form-group">
-                                    <label for="exampleInputEmail1">Data nascita</label> <input
-                                            type="date" class="form-control" name="data_nascita" id="idNascita"
-                                            placeholder="Data di nascita">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6 col-md-6">
-                                <div class="form-group">
-                                    <label for="exampleInputEmail1">Luogo di morte</label> <input
-                                            type="text" readonly class="form-control" data-target="#modalLuoghi"
-                                            data-toggle="modal"
-                                            name="label_luogo_morte" id="label_idLuogoMorte"
-                                            onclick="set_modal_value('modalLuoghi',this.id)"
-                                            placeholder="Luogo">
-                                    <input
-                                            type="text" class="form-control input_hidden" data-target="#modalLuoghi"
-                                            data-toggle="modal"
-                                            name="luogo_morte" id="idLuogoMorte"
-                                            placeholder="id luogo">
-                                </div>
-                            </div>
-                            <div class="col-xs-6 col-md-6">
-                                <div class="form-group">
-                                    <label for="exampleInputEmail1">Data morte</label> <input
-                                            type="date" class="form-control" name="data_morte" id="idMorte"
-                                            placeholder="Data di morte">
-                                </div>
-                            </div>
 
-                        </div>
 
 
                         <div class="row">
@@ -116,7 +68,7 @@
                                                     type="text" class="form-control" data-toggle="modal"
                                                     data-target="#modalDinastia" readonly id="idDinastia"
                                                     placeholder="Dinastia"
-                                                    name="dinastia">
+                                                    name="nome_dinastia">
 
                                             <label for="exampleInputEmail1">Padre</label>
 
@@ -211,6 +163,55 @@
 
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-xs-6 col-md-6">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Luogo di nascita</label> <input
+                                            type="text" readonly class="form-control" data-target="#modalLuoghi"
+                                            data-toggle="modal"
+                                            name="label_luogo_nascita" onclick="set_modal_value('modalLuoghi',this.id)"
+                                            id="label_idLuogoNascita"
+                                            placeholder="Luogo">
+                                    <input
+                                            type="text" class="form-control input_hidden" data-target="#modalLuoghi"
+                                            data-toggle="modal"
+                                            name="luogo_nascita" id="idLuogoNascita"
+                                            placeholder="id luogo">
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-md-6">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Data nascita</label> <input
+                                            type="date" class="form-control" name="data_nascita" id="idNascita"
+                                            placeholder="Data di nascita">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6 col-md-6">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Luogo di morte</label> <input
+                                            type="text" readonly class="form-control" data-target="#modalLuoghi"
+                                            data-toggle="modal"
+                                            name="label_luogo_morte" id="label_idLuogoMorte"
+                                            onclick="set_modal_value('modalLuoghi',this.id)"
+                                            placeholder="Luogo">
+                                    <input
+                                            type="text" class="form-control input_hidden" data-target="#modalLuoghi"
+                                            data-toggle="modal"
+                                            name="luogo_morte" id="idLuogoMorte"
+                                            placeholder="id luogo">
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-md-6">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Data morte</label> <input
+                                            type="date" class="form-control" name="data_morte" id="idMorte"
+                                            placeholder="Data di morte">
+                                </div>
+                            </div>
+
+                        </div>
 
                         <div class="row">
 
@@ -297,7 +298,7 @@
                         <table class="table">
                             <thead>
                             <tr>
-                                <th>#</th>
+                                <th class="input_hidden">#</th>
                                 <th>Nome evento</th>
                                 <th>Descrizione</th>
                             </tr>
@@ -308,7 +309,8 @@
                                 @foreach($data['eventi'] as $evento)
                                     <tr id="evento_{{$evento->id}}">
 
-                                        <td><span class="replaceme"></span>evento_{{$evento->id}}</td>
+                                        <td class="input_hidden"><span class="replaceme"></span>evento_{{$evento->id}}
+                                        </td>
                                         <td>{{$evento->denominazione_evento}}</td>
                                         <td>{{$evento->descrizione_evento}}</td>
                                         <td>
@@ -345,13 +347,12 @@
                         <table class="table">
                             <thead>
                             <tr>
-                                <th>#</th>
+                                <th class="input_hidden">#</th>
                                 <th>Nome evento</th>
                                 <th>Descrizione</th>
                             </tr>
                             </thead>
-                            <tbody id="corpo_lista_eventi_personaggio" ondrop="drop(event)"
-                                   ondragover="allowDrop(event)">
+                            <tbody id="corpo_lista_eventi_personaggio" ondrop="drop(event)">
 
 
                             </tbody>
@@ -398,7 +399,7 @@
                                         <select class="form-control" style="display: block;" id="id_nome_dinastia"
                                                 name="">
                                             @if (Request::path()=='insert_personaggio')
-                                                @foreach($data['dinastie'] as $dinastia)
+                                                @foreach($data['dinastia'] as $dinastia)
                                                     <option> {{$dinastia['nome_dinastia']}}</option>
                                                 @endforeach
                                             @endif
@@ -414,7 +415,7 @@
                                         <input type="text" class="form-control" name="nuova_dinastia"
                                                id="id_nuova_dinastia">
                                         <button type="button" id=""
-                                                onclick="add_tipo('id_nuova_dinastia','id_dinastia')"> +
+                                                onclick="add_tipo('id_nuova_dinastia','id_nome_dinastia'),add_tipo('id_nuova_dinastia','id_dinastia_appartenenza')"> +
                                         </button>
                                     </div>
                                 </div>

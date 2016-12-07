@@ -28,7 +28,7 @@ Route::get('edit_personaggio', ['uses' => 'PersonaggioController@get_form_edit']
 Route::post('get_personaggio', ['uses' => 'PersonaggioController@get_personaggio']);
 Route::post('remove_personaggio', ['uses' => 'PersonaggioController@remove_personaggio']);
 
-Route::post('get_dinastia', ['uses' => 'PersonaggioController@get_dinastia']);
+Route::get('get_dinastia', ['uses' => 'PersonaggioController@get_dinastia']);
 
 
 Route::post('store', ['uses' => 'PersonaggioController@store']);

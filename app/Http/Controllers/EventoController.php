@@ -105,6 +105,8 @@ class EventoController extends Controller
 
         $evento->ulteriore_caratterizzazione = $request['ulteriore_caratterizzazione_evento'];
         $evento->descrizione_movimento_opera = $request['descrizione_movimento_opera'];
+        $evento->importanza = $request['importanza_evento'] == "Opera di maggiore rilevanza" ? "alta" : "bassa";
+        $evento->stato = strtolower($request['stato']);
 
 
         $evento->save();
@@ -161,7 +163,8 @@ class EventoController extends Controller
         $evento->ulteriore_caratterizzazione = $request['ulteriore_caratterizzazione_evento'];
 
         $evento->descrizione_movimento_opera = $request['descrizione_movimento_opera'];
-
+        $evento->importanza = $request['importanza_evento'] == "Opera di maggiore rilevanza" ? "alta" : "bassa";
+        $evento->stato = strtolower($request['stato']);
         $evento->save();
 
         $persnaggi_ass = [];

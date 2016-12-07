@@ -23,6 +23,7 @@ class CreateLuogosTable extends Migration
             $table->string('tipo_luogo');
             $table->string('ulteriore_caratterizzazione')->nullable();
             $table->string('tipo_sub_luogo');
+            $table->string('nome_dinastia')->nullable();
 
         });
     }

@@ -23,8 +23,7 @@ class PersonaggioController extends Controller
 
         $data['luoghi'] = luogo::orderBy('denominazione_luogo', 'ASC')->get();
         $data['tipo_luoghi'] = $luogo->get_tipo_luoghi();
-        $data['dinastie'] = Personaggio::distinct()->select('nome_dinastia')->orderBy('nome_dinastia', 'ASC')->get();
-        $data['dinastia'] = Personaggio::select('dinastia')->where('dinastia', '<>', 'null')->distinct()->orderBy('dinastia', 'ASC')->get();
+        $data['dinastia'] = Personaggio::select('nome_dinastia')->where('nome_dinastia', '<>', 'null')->distinct()->orderBy('nome_dinastia', 'ASC')->get();
         $data['personaggi'] = Personaggio::orderBy('cognome', 'ASC')->get();
         $data['eventi'] = evento::orderBy('tipo_evento', 'ASC')->get();
         $data['tipo_eventi'] = evento::distinct()->select('tipo_evento')->orderBy('tipo_evento', 'ASC')->get();
@@ -38,7 +37,7 @@ class PersonaggioController extends Controller
 
         $data['luoghi'] = luogo::orderBy('denominazione_luogo', 'ASC')->get();
         $data['tipo_luoghi'] = $luogo->get_tipo_luoghi();
-        $data['dinastie'] = Personaggio::distinct()->select('nome_dinastia')->orderBy('nome_dinastia', 'ASC')->get();
+        $data['dinastia'] = Personaggio::select('nome_dinastia')->where('nome_dinastia', '<>', 'null')->distinct()->orderBy('nome_dinastia', 'ASC')->get();
         $data['personaggi'] = Personaggio::orderBy('cognome', 'ASC')->get();
         $data['eventi'] = evento::orderBy('tipo_evento', 'ASC')->get();
         $data['tipo_eventi'] = evento::distinct()->select('tipo_evento')->orderBy('tipo_evento', 'ASC')->get();
@@ -77,7 +76,6 @@ class PersonaggioController extends Controller
         $personaggio->coniuge2_id = $request['coniuge2'] == null ? null : $request['coniuge2'];
         $personaggio->coniuge3_id = $request['coniuge3'] == null ? null : $request['coniuge3'];
         $personaggio->tipo = $request['tipo'];
-        $personaggio->dinastia = $request['dinastia'];
 
 
         return $personaggio;
@@ -86,6 +84,7 @@ class PersonaggioController extends Controller
 
     public function store(Request $request)
     {
+        //dd($request);
         $this->validate_personaggio($request);
         $personaggio = $this->get_info($request);
         $personaggio->save();
@@ -226,19 +225,20 @@ class PersonaggioController extends Controller
 
         //dd($request);
 
-        if ($request['id'] != null) { // Se la dinastia è stata richiesta nella edit oppure non ha un padre associato nella dinastia
+        if ($request['id'] != null and $request['id'] != "") { // Se la dinastia è stata richiesta nella edit oppure non ha un padre associato nella dinastia
 
 
             $personaggio = Personaggio::find($request['id']);
             $id_pers = $request['id'];
-            $nome = $request['nome'];
-            $cognome = $request['cognome'];
+
             if (isset($request['nuovo_id_padre'])) {
                 $id_padre = $request['padre_id'];
-
+                $nome = $request['nome'];
+                $cognome = $request['cognome'];
             } else {
                 $id_padre = $personaggio['padre_id'];
-
+                $nome = $personaggio['nome'];
+                $cognome = $personaggio['cognome'];
             }
 
         } else { // Se la dinastia è stata richiesta nella insert

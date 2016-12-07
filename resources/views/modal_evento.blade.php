@@ -72,12 +72,33 @@
                         </div>
 
                         <div class="col-xs-6 col-md-6">
+                            <div class="row">
+                                <div class="col-xs-6 col-md-6">
 
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Descrizione
-                                    monumento</label> <input type="text" class="form-control"
-                                                             id="id_descrizione_monumento"
-                                                             placeholder="Descrizione">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Importanza</label>
+                                        <select class="form-control" name="importanza_evento" id="id_importanza_evento">
+                                            <option selected></option>
+                                            <option>Opera di maggiore rilevanza</option>
+                                            <option>Opera di minore rilevanza</option>
+
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 col-md-6">
+
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Stato</label>
+                                        <select class="form-control" name="stato" id="id_stato">
+                                            <option selected></option>
+                                            <option>Pubblica</option>
+                                            <option>Privata</option>
+
+
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <div class="row">
@@ -106,7 +127,8 @@
                                 <label for="exampleInputEmail1">Ulteriore
                                     caratterizzazione</label> <textarea type="text" class="form-control"
                                                                         name="ulteriore_caratterizzazione_evento"
-                                                                        id="id_ulteriore_caratterizzazione_evento" rows="5"
+                                                                        id="id_ulteriore_caratterizzazione_evento"
+                                                                        rows="5"
                                                                         placeholder="Caratterizzazione"></textarea>
                             </div>
 
@@ -189,7 +211,7 @@
                         <table class="table">
                             <thead>
                             <tr>
-                                <th>#</th>
+                                <th class="input_hidden">#</th>
                                 <th>Nome</th>
                                 <th>Cognome</th>
                             </tr>
@@ -200,7 +222,8 @@
                                 @foreach($data['personaggi'] as $personaggio)
                                     <tr id="personaggio_{{$personaggio->id}}">
 
-                                        <td><span class="replaceme"></span>{{$personaggio->id}}</td>
+                                        <td class="input_hidden"><span class="replaceme"></span>{{$personaggio->id}}
+                                        </td>
 
                                         <td>{{$personaggio->nome}}</td>
                                         <td>{{$personaggio->cognome}}</td>
@@ -240,8 +263,8 @@
                         <table class="table">
                             <thead>
                             <tr>
-                                <th>#</th>
-                                <th>Nome </th>
+                                <th class="input_hidden">#</th>
+                                <th>Nome</th>
                                 <th>Cognome</th>
                             </tr>
                             </thead>

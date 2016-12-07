@@ -21,7 +21,7 @@ class LuogoController extends Controller
 
         $data['luoghi'] = luogo::orderBy('denominazione_luogo', 'ASC')->get();
         $data['tipo_luoghi'] = $luogo->get_tipo_luoghi();
-
+        $data['dinastie'] = Personaggio::distinct()->select('nome_dinastia')->orderBy('nome_dinastia', 'ASC')->get();
         return view('edit_luogo')->with('data', $data);
     }
 
@@ -30,6 +30,7 @@ class LuogoController extends Controller
         $this->validate($request, [
             'denominazione_luogo' => 'required|max:25|',
             'localizzazione_luogo' => 'required|max:25',
+            'ac_dc' => 'required',
 
         ]);
     }
@@ -48,6 +49,10 @@ class LuogoController extends Controller
         $luogo->ulteriore_caratterizzazione = $request['ulteriore_caratterizzazione'];
         $luogo->localizzazione_luogo = $request['localizzazione_luogo'];
         $luogo->tipo_sub_luogo = $request['tipo_sub_luogo'];
+        $luogo->nome_dinastia = $request['dinastia_appartenenza'];
+        $luogo->ac_dc = $request['ac_dc'];
+        $luogo->attuale_destinazione = $request['attuale_destinazione'];
+
 
         $success = $luogo->save();
 
@@ -68,15 +73,20 @@ class LuogoController extends Controller
     {
 
         $luogo = luogo::find($request['id']);
+        $luogo['tipi_luoghi'] = luogo::distinct()->select('tipo_luogo')->whereNotIn('id',[$request['id']])->where('tipo_luogo','<>',$luogo['tipo_luogo'])->get();
+        $luogo['tipi_sub_luoghi'] = luogo::distinct()->select('tipo_sub_luogo')->whereNotIn('id',[$request['id']])->where('tipo_luogo',$luogo['tipo_luogo'])->where('tipo_sub_luogo','<>',$luogo['tipo_sub_luogo'])->get();
         $luogo['personaggi'] = Personaggio::where('luogo_nascita','=',$request['id'])->orWhere('luogo_morte','=',$request['id'])->get();
         $luogo['eventi'] = evento::where('origine_luogo_id','=',$request['id'])->orWhere('nuovo_luogo_id','=',$request['id'])->get();
-
+        $luogo['nomi_dinastie'] = luogo::distinct()->select('nome_dinastia')->whereNotIn('id',[$request['id']])->where('nome_dinastia','<>',$luogo['nome_dinastia'])->get();
         return $luogo;
     }
 
     public function update(Request $request)
     {
 
+      //  dd($request);
+
+        $this->validate_luogo($request);
         $luogo = luogo::find($request['id']);
 
 
@@ -87,6 +97,9 @@ class LuogoController extends Controller
         $luogo->ulteriore_caratterizzazione = $request['ulteriore_caratterizzazione'];
         $luogo->localizzazione_luogo = $request['localizzazione_luogo'];
         $luogo->tipo_sub_luogo = $request['tipo_sub_luogo'];
+        $luogo->nome_dinastia = $request['dinastia_appartenenza'];
+        $luogo->ac_dc = $request['ac_dc'];
+        $luogo->attuale_destinazione = $request['attuale_destinazione'];
 
         $success = $luogo->save();
 
