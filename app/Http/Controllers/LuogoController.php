@@ -15,6 +15,10 @@ class LuogoController extends Controller
 {
 
 
+//    private static $regioni = ["Piemonte","Valle d'Aosta","Lombardia","Trentino-Alto Adige","Veneto","Friuli-Venezia Giulia","Liguria","Emilia-Romagna","Toscana","Umbria","Marche","Lazio","Abruzzo","Molise","Campania","Puglia","Basilicata","Calabria","Sicilia","Sardegna"];
+//    private static $prov = ["Piemonte","Valle d'Aosta","Lombardia","Trentino-Alto Adige","Veneto","Friuli-Venezia Giulia","Liguria","Emilia-Romagna","Toscana","Umbria","Marche","Lazio","Abruzzo","Molise","Campania","Puglia","Basilicata","Calabria","Sicilia","Sardegna"];
+//    private static $regioni = ["Piemonte","Valle d'Aosta","Lombardia","Trentino-Alto Adige","Veneto","Friuli-Venezia Giulia","Liguria","Emilia-Romagna","Toscana","Umbria","Marche","Lazio","Abruzzo","Molise","Campania","Puglia","Basilicata","Calabria","Sicilia","Sardegna"];
+
     public function get_form_edit()
     {
         $luogo = new luogo();
@@ -73,18 +77,18 @@ class LuogoController extends Controller
     {
 
         $luogo = luogo::find($request['id']);
-        $luogo['tipi_luoghi'] = luogo::distinct()->select('tipo_luogo')->whereNotIn('id',[$request['id']])->where('tipo_luogo','<>',$luogo['tipo_luogo'])->get();
-        $luogo['tipi_sub_luoghi'] = luogo::distinct()->select('tipo_sub_luogo')->whereNotIn('id',[$request['id']])->where('tipo_luogo',$luogo['tipo_luogo'])->where('tipo_sub_luogo','<>',$luogo['tipo_sub_luogo'])->get();
-        $luogo['personaggi'] = Personaggio::where('luogo_nascita','=',$request['id'])->orWhere('luogo_morte','=',$request['id'])->get();
-        $luogo['eventi'] = evento::where('origine_luogo_id','=',$request['id'])->orWhere('nuovo_luogo_id','=',$request['id'])->get();
-        $luogo['nomi_dinastie'] = luogo::distinct()->select('nome_dinastia')->whereNotIn('id',[$request['id']])->where('nome_dinastia','<>',$luogo['nome_dinastia'])->get();
+        $luogo['tipi_luoghi'] = luogo::distinct()->select('tipo_luogo')->whereNotIn('id', [$request['id']])->where('tipo_luogo', '<>', $luogo['tipo_luogo'])->get();
+        $luogo['tipi_sub_luoghi'] = luogo::distinct()->select('tipo_sub_luogo')->whereNotIn('id', [$request['id']])->where('tipo_luogo', $luogo['tipo_luogo'])->where('tipo_sub_luogo', '<>', $luogo['tipo_sub_luogo'])->get();
+        $luogo['personaggi'] = Personaggio::where('luogo_nascita', '=', $request['id'])->orWhere('luogo_morte', '=', $request['id'])->get();
+        $luogo['eventi'] = evento::where('origine_luogo_id', '=', $request['id'])->orWhere('nuovo_luogo_id', '=', $request['id'])->get();
+        $luogo['nomi_dinastie'] = luogo::distinct()->select('nome_dinastia')->whereNotIn('id', [$request['id']])->where('nome_dinastia', '<>', $luogo['nome_dinastia'])->get();
         return $luogo;
     }
 
     public function update(Request $request)
     {
 
-      //  dd($request);
+        //  dd($request);
 
         $this->validate_luogo($request);
         $luogo = luogo::find($request['id']);
@@ -110,14 +114,14 @@ class LuogoController extends Controller
 
 
 
-    public function remove_luogo(Request $request){
+    public function remove_luogo(Request $request)
+    {
 
         $result = luogo::where('id', $request['remove_id'])->delete();
 
-        if ($result){
+        if ($result) {
             return $request['remove_id'];
-        }
-        else{
+        } else {
             return $request['remove_id'];
         }
     }

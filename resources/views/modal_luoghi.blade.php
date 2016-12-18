@@ -114,9 +114,7 @@
                                                 <label for="pwd">Dinastia appartenenza</label>
                                                 <select type="text" class="form-control" name="dinastia_appartenenza"
                                                         id="id_dinastia_appartenenza">
-                                                    @foreach($data['dinastia'] as $dinastia)
-                                                        <option> {{$dinastia['nome_dinastia']}}</option>
-                                                    @endforeach
+
                                                 </select>
                                             </div>
                                         </div>

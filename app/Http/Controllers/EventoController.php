@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Dinastia;
 use App\evento;
 use Illuminate\Http\Request;
 use App\luogo;
@@ -43,6 +44,7 @@ class EventoController extends Controller
         $evento['personaggi_associati'] = Personaggio::findMany($evento['personaggi_associati']);
         $evento['personaggi_non_associati'] = Personaggio::whereNotIn('id', $arr)->get()->toArray();
 
+        $evento['dinastie'] = $this->get_JSON_dinastie_associate($request['id']);
         return $evento;
 
 
@@ -54,7 +56,7 @@ class EventoController extends Controller
 
         $data['luoghi'] = luogo::orderBy('denominazione_luogo', 'ASC')->get();
         $data['tipo_luoghi'] = $luogo->get_tipo_luoghi();
-        $data['dinastia'] = [];
+        $data['dinastie'] = Dinastia::distinct()->orderBy('nome_dinastia', 'ASC')->get();
         $data['personaggi'] = personaggio::orderBy('cognome', 'ASC')->get();
         $data['eventi'] = evento::orderBy('denominazione_evento', 'ASC')->get();
         $data['tipo_eventi'] = evento::distinct()->select('tipo_evento')->orderBy('tipo_evento', 'ASC')->get();
@@ -69,7 +71,8 @@ class EventoController extends Controller
 
         $data['luoghi'] = luogo::orderBy('denominazione_luogo', 'ASC')->get();
         $data['tipo_luoghi'] = $luogo->get_tipo_luoghi();
-        $data['dinastia'] = [];
+        $data['dinastie'] = Dinastia::distinct()->orderBy('nome_dinastia', 'ASC')->get();
+        //  dd($data['dinastie'][0]['nome_dinastia']);
         $data['personaggi'] = personaggio::orderBy('cognome', 'ASC')->get();
         $data['eventi'] = evento::orderBy('denominazione_evento', 'ASC')->get();
         $data['tipo_eventi'] = evento::distinct()->select('tipo_evento')->orderBy('tipo_evento', 'ASC')->get();
@@ -83,19 +86,21 @@ class EventoController extends Controller
         $this->validate($request, [
             'denominazione_evento' => 'required',
             'tipo_evento' => 'required|max:25',
-
+            'tipologia' => 'required'
         ]);
     }
 
     public function insert_evento(Request $request)
     {
+        $json_dinastia = json_decode($request['dinastie_periodi'], true);
+        //dd($json_dinastia['dinastie'][0]['id_dinastia']);
 
         $this->validate_evento($request);
         $evento = new evento();
 
-
+        $evento->tipologia = $request['tipologia'];
         $evento->denominazione_evento = $request['denominazione_evento'];
-        $evento->data_evento = $request['data_costruzione'] == null ? null : $request['data_costruzione'];
+        $evento->data_evento = $this->format_data($request['anno'], $request['mese'], $request['giorno']);
         $evento->tipo_evento = $request['tipo_evento'];
         $evento->tipo_sub_evento = $request['tipo_sub_evento'];
 
@@ -108,10 +113,23 @@ class EventoController extends Controller
         $evento->importanza = $request['importanza_evento'] == "Opera di maggiore rilevanza" ? "alta" : "bassa";
         $evento->stato = strtolower($request['stato']);
 
-
         $evento->save();
 
-        $evento2 = evento::where('denominazione_evento', '=', $request['denominazione_evento'])->firstOrFail();
+        for ($i = 0; $i < count($json_dinastia['dinastie']); $i++) {
+            //Se sto scorrendo una dinastia nuova inserisco sia nella tabella dinastia che nella tabella intermedia
+            if ($json_dinastia['dinastie'][$i]['id_dinastia'] == "-1") {
+                $dinastia = new Dinastia();
+                $dinastia->nome_dinastia = $json_dinastia['dinastie'][$i]['nome_dinastia'];
+                $dinastia->save();
+                //Inserisco le dinastie con il periodo nella tabella pivot
+                $evento->dinastie()->attach($dinastia->id, ['dal' => $json_dinastia['dinastie'][$i]['dal'], 'ac_dc_1' => $json_dinastia['dinastie'][$i]['ac_dc'], 'al' => $json_dinastia['dinastie'][$i]['al'], 'ac_dc_2' => $json_dinastia['dinastie'][$i]['ac_dc2']]);
+            } else {
+                //Inserisco le dinastie con il periodo nella tabella pivot
+                // dd(['dal' => $json_dinastia['dinastie'][$i]['dal'], 'ac_dc_1' => $json_dinastia['dinastie'][$i]['ac_dc'], 'al' => $json_dinastia['dinastie'][$i]['al'], 'ac_dc_2' => $json_dinastia['dinastie'][$i]['ac_dc2']]);
+                $evento->dinastie()->attach($json_dinastia['dinastie'][$i]['id_dinastia'], ['dal' => $json_dinastia['dinastie'][$i]['dal'], 'ac_dc_1' => $json_dinastia['dinastie'][$i]['ac_dc'], 'al' => $json_dinastia['dinastie'][$i]['al'], 'ac_dc_2' => $json_dinastia['dinastie'][$i]['ac_dc2']]);
+            }
+        }
+//        $evento2 = evento::where('denominazione_evento', '=', $request['denominazione_evento'])->firstOrFail();
 
         $personaggi_ass = [];
         for ($i = 0; $i < count($request['personaggi']); $i++) {
@@ -128,6 +146,7 @@ class EventoController extends Controller
             return redirect('insert_evento')->with("success", "suc"); //$personaggi_ass;
 
         }
+
 
     }
 
@@ -167,6 +186,28 @@ class EventoController extends Controller
         $evento->stato = strtolower($request['stato']);
         $evento->save();
 
+        $json_dinastia = json_decode($request['dinastie_periodi'], true);
+        //dd($json_dinastia);
+        $array_for_sync = [];
+        for ($i = 0; $i < count($json_dinastia['dinastie']); $i++) {
+            //Se sto scorrendo una dinastia nuova inserisco sia nella tabella dinastia che nella tabella intermedia
+            if ($json_dinastia['dinastie'][$i]['id_dinastia'] == "-1") {
+                $dinastia = new Dinastia();
+                $dinastia->nome_dinastia = $json_dinastia['dinastie'][$i]['nome_dinastia'];
+                $dinastia->save();
+
+                //Inserisco le dinastie con il periodo nella tabella pivot
+                $array_for_sync[$dinastia->id] = ['dal' => $json_dinastia['dinastie'][$i]['dal'], 'ac_dc_1' => $json_dinastia['dinastie'][$i]['ac_dc'], 'al' => $json_dinastia['dinastie'][$i]['al'], 'ac_dc_2' => $json_dinastia['dinastie'][$i]['ac_dc2']];
+
+            } else {
+                //Inserisco le dinastie con il periodo nella tabella pivot
+                $array_for_sync[$json_dinastia['dinastie'][$i]['id_dinastia']] = ['dal' => $json_dinastia['dinastie'][$i]['dal'], 'ac_dc_1' => $json_dinastia['dinastie'][$i]['ac_dc'], 'al' => $json_dinastia['dinastie'][$i]['al'], 'ac_dc_2' => $json_dinastia['dinastie'][$i]['ac_dc2']];
+
+
+            }
+        }
+        //dd($array_for_sync);
+        $evento->dinastie()->sync($array_for_sync);
         $persnaggi_ass = [];
         for ($i = 0; $i < count($request['personaggi']); $i++) {
             $id_pers = substr($request['personaggi'][$i], 12);
@@ -190,4 +231,48 @@ class EventoController extends Controller
         }
     }
 
+
+    private function format_data($anno, $mese, $giorno)
+    {
+        if ($anno == null or $anno == "") {
+            return null;
+        } elseif ($mese == null or $mese == "") {
+            return $anno;
+        } elseif ($giorno == null or $giorno == "") {
+            return $anno . "-" . $mese;
+        } else {
+            return $anno . "-" . $mese . "-" . $giorno;
+
+        }
+    }
+
+
+    public function get_JSON_dinastie_associate($id_evento)
+    {
+
+        $toReuturn_JSON = [];
+        $toReuturn_JSON['dinastie'] = [];
+        $dinastie_ass = evento::find($id_evento)->dinastie()->get();
+
+        $len = count($dinastie_ass);
+        for ($i = 0; $i < $len; $i++) {
+            $item['id_dinastia'] = $dinastie_ass[$i]['original']['pivot_dinastia_id'];
+
+            $item['nome_dinastia'] = $dinastie_ass[$i]['original']['nome_dinastia'];
+            $item['dal'] = $dinastie_ass[$i]['original']['pivot_dal'];
+            $item['ac_dc'] = $dinastie_ass[$i]['original']['pivot_ac_dc_1'];
+            $item['al'] = $dinastie_ass[$i]['original']['pivot_al'];
+            $item['ac_dc2'] = $dinastie_ass[$i]['original']['pivot_ac_dc_2'];
+
+
+            // $item['nome_dinastie'] = $dinastie_ass[0]['nome_dinastia'];
+            //$item_app = json_encode($item);
+
+            array_push($toReuturn_JSON['dinastie'], $item);
+        }
+        $toReuturn_JSON = json_encode($toReuturn_JSON);
+        //dd($toReuturn_JSON);
+
+        return $toReuturn_JSON;
+    }
 }

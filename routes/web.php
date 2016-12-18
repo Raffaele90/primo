@@ -14,12 +14,14 @@
 use App\evento;
 use App\luogo;
 use App\Personaggio;
+use App\Dinastia;
+
 
 Route::get('prova2', function () {
-    return Personaggio::whereNotIn('id', [73,67])->orderBy("cognome", "ASC")->get();
+    return Dinastia::find(3);
 });
 
-Route::get('prova', ['uses' => 'EventoController@get_evento']);
+Route::get('prova', ['uses' => 'EventoController@get_JSON_dinastie_associate']);
 
 
 Route::get('insert_personaggio', ['uses' => 'PersonaggioController@getForm']);

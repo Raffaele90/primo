@@ -2,7 +2,118 @@
  * Created by raffaeleschiavone on 21/10/16.
  */
 
+var dinastie_ass = '{ "dinastie" : []}';
 flag_init = 0
+
+
+function add_row_dinastia_parameter(id_dinastia, nome_dinastia, dal, al, ac_dc, ac_dc2) {
+
+    var tr = "<tr> " +
+        "<td> " + +"</td> " +
+        "<td class='nome'>" + nome_dinastia + "</td> " +
+        "<td class='dal'>" + dal + "</td>" +
+        "<td class='ac_dc'>" + ac_dc + "</td>" +
+        "<td class='al'>" + al + "</td>" +
+        "<td class='ac_dc2'>" + ac_dc2 + "</td>" +
+        "<td> " +
+        "   <button type='button' class='btn btn-default' toremove='' onclick='' nome_dinastia='" + nome_dinastia + "' aria-label='Left Align'> " +
+        "       <span class='glyphicon glyphicon-cog' aria-hidden='true'></span> " +
+        "   </button>" +
+        "<button type='button' class='btn btn-default' toremove='' onclick='remove_row_dinastia(this)' nome_dinastia='" + nome_dinastia + "' aria-label='Left Align'> " +
+        "       <span class='glyphicon glyphicon-trash' aria-hidden='true'></span> " +
+        "   </button> " +
+        "</td>"
+    "</tr>"
+
+    $("#lista_dinastie").prepend(tr)
+
+    var json_dinastie = $("#id_json_dinastie").val()
+    var json_dinastie = JSON.parse(json_dinastie)
+    var item = {
+        id_dinastia: id_dinastia,
+        nome_dinastia: nome_dinastia,
+        dal: dal,
+        ac_dc: ac_dc,
+        al: al,
+        ac_dc2: ac_dc2,
+    }
+    json_dinastie['dinastie'].push(item)
+
+    json_dinastie = JSON.stringify(json_dinastie)
+    $("#id_json_dinastie").val(json_dinastie)
+
+}
+
+function add_row_dinastia() {
+
+
+    var id_dinastia = check($("#id_select_dinastia").children(":selected").attr("id_dinastia"));
+    var nome_dinastia = check($("#id_select_dinastia").val());
+    var dal = check($("#id_input_dal").val());
+    var ac_dc = check($("input[name=ac_dc_periodo_din]:checked").val());
+    var al = check($("#id_input_al").val());
+    var ac_dc2 = check($("input[name=ac_dc2_periodo_din]:checked").val());
+
+
+    var tr = "<tr> " +
+        "<td> " + +"</td> " +
+        "<td class='nome'>" + nome_dinastia + "</td> " +
+        "<td class='dal'>" + dal + "</td>" +
+        "<td class='ac_dc'>" + ac_dc + "</td>" +
+        "<td class='al'>" + al + "</td>" +
+        "<td class='ac_dc2'>" + ac_dc2 + "</td>" +
+        "<td> " +
+        "   <button type='button' class='btn btn-default' toremove='' onclick='remove_row_dinastia(this)' nome_dinastia='" + nome_dinastia + "' aria-label='Left Align'> " +
+        "       <span class='glyphicon glyphicon-trash' aria-hidden='true'></span> " +
+        "   </button> " +
+        "</td>"
+    "</tr>"
+
+    $("#lista_dinastie").prepend(tr)
+
+    var json_dinastie = $("#id_json_dinastie").val()
+    var json_dinastie = JSON.parse(json_dinastie)
+    var item = {
+        id_dinastia: id_dinastia,
+        nome_dinastia: nome_dinastia,
+        dal: dal,
+        ac_dc: ac_dc,
+        al: al,
+        ac_dc2: ac_dc2,
+    }
+    json_dinastie['dinastie'].push(item)
+
+    json_dinastie = JSON.stringify(json_dinastie)
+    $("#id_json_dinastie").val(json_dinastie)
+
+}
+
+//Rimuove riga dinastia in evento
+function remove_row_dinastia(element) {
+    //alert(element.getAttribute('nome_dinastia'))
+    tr = $(element).closest('tr');
+    tr.remove()
+    var nome_dinastia = $(tr).find(".nome").html()
+    var dal = $(tr).find(".dal").html()
+    var ac_dc = $(tr).find(".ac_dc").html()
+    var al = $(tr).find(".al").html()
+    var ac_dc2 = $(tr).find(".ac_dc2").html()
+
+    var json_dinastie = $("#id_json_dinastie").val()
+    json_dinastie = JSON.parse(json_dinastie)
+
+
+    len = json_dinastie['dinastie'].length
+    for (var i = 0; i < len; i++) {
+        if (json_dinastie['dinastie'][i]['nome_dinastia'] == nome_dinastia && json_dinastie['dinastie'][i]['dal'] == dal && json_dinastie['dinastie'][i]['ac_dc'] == ac_dc && json_dinastie['dinastie'][i]['al'] == al && json_dinastie['dinastie'][i]['ac_dc2'] == ac_dc2) {
+            json_dinastie['dinastie'].splice(i, 1)
+            $("#id_json_dinastie").val(JSON.stringify(json_dinastie))
+            break
+        }
+    }
+
+}
+
 
 function remove_personaggio(element) {
 
@@ -135,12 +246,24 @@ function show_hide_module_with_scroll(id_show, id_hide, id_scroll) {
 
 }
 function add_tipo(idInput, idSelect) {
+
     newTipo = $("#" + idInput).val()
-    opt = "<option>" + newTipo + "</option>"
-    $('#' + idSelect)
-        .prepend($("<option selected></option>")
-            .attr("value", newTipo)
-            .text(newTipo));
+
+    if (idSelect == "id_select_dinastia") {
+
+        $('#' + idSelect)
+            .prepend($("<option selected id_dinastia='-1'></option>")
+                .attr("value", newTipo)
+                .text(newTipo));
+    }
+    else {
+        $('#' + idSelect)
+            .prepend($("<option selected></option>")
+                .attr("value", newTipo)
+                .text(newTipo));
+
+    }
+
 
 
     //$('#' + idInput).val('')
@@ -438,12 +561,12 @@ function create_row_personaggi_luoghi(personaggi, id_table) {
 
 
 }
+
+
 function add_option(id_select, option_value) {
     var select = $("#" + id_select)
     var options = ""
-
     options = options + "<option>" + option_value + "</option>"
-
     select.append(options)
 }
 
@@ -455,11 +578,32 @@ function set_form_eventi(evento) {
 
     $("#lista_personaggi").empty();
     $("#lista_personaggi_associati").empty();
+    $("#lista_dinastie").empty();
+
+
+    if (evento['tipologia'] == "EVENTO") {
+        $("#id_tipologia").val("EVENTO")
+        $(".field_opera").attr("style", "visibility: hidden;");
+    } else {
+        $("#id_tipologia").val("OPERA")
+        $(".field_opera").attr("style", "visibility: visible;");
+    }
+
+    $("#id_nuova_tipologia").show();
 
     $('#id_evento').val(evento['id'])
-
     $('#id_denominazione_evento').val(evento['denominazione_evento'])
     $('#idTipoEvento').val(evento['tipo_evento'])
+    //$("#id_json_dinastie").val(evento['dinastie'])
+
+
+    //SET TABLE DINASTIE ASS
+    var json_dinastie = JSON.parse(evento['dinastie'])
+    var len_din = json_dinastie['dinastie'].length
+
+    for (var i = 0; i < len_din; i++) {
+        add_row_dinastia_parameter(json_dinastie['dinastie'][i]['id_dinastia'], json_dinastie['dinastie'][i]['nome_dinastia'], json_dinastie['dinastie'][i]['dal'], json_dinastie['dinastie'][i]['al'], json_dinastie['dinastie'][i]['ac_dc'], json_dinastie['dinastie'][i]['ac_dc2'])
+    }
 
     //SET STATO
     if (evento['stato'] == "pubblica") {
@@ -955,6 +1099,18 @@ function click_row_luogo() {
     })
 }
 $(document).ready(function () {
+
+    $("#id_tipologia").change(function (e) {
+
+        if (this.value == "OPERA") {
+            $(".field_opera").attr("style", "visibility: visible;");
+        } else {
+            $(".field_opera").attr("style", "visibility: hidden;");
+        }
+
+        $("#id_nuova_tipologia").show()
+    });
+
 
     $(".clickable-row").click(function (e) {
         // Prevent a page reload when a link is pressed

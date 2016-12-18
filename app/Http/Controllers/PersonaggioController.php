@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\evento;
 use App\luogo;
 use App\Personaggio;
+use App\Dinastia;
 
 use Hamcrest\Core\Set;
 use Illuminate\Http\Request;
@@ -23,7 +24,8 @@ class PersonaggioController extends Controller
 
         $data['luoghi'] = luogo::orderBy('denominazione_luogo', 'ASC')->get();
         $data['tipo_luoghi'] = $luogo->get_tipo_luoghi();
-        $data['dinastia'] = Personaggio::select('nome_dinastia')->where('nome_dinastia', '<>', 'null')->distinct()->orderBy('nome_dinastia', 'ASC')->get();
+        $data['dinastia'] = Dinastia::distinct()->orderBy('nome_dinastia', 'ASC')->get();//Personaggio::select('nome_dinastia')->where('nome_dinastia', '<>', 'null')->distinct()->orderBy('nome_dinastia', 'ASC')->get();
+        $data['dinastie'] = Dinastia::distinct()->orderBy('nome_dinastia', 'ASC')->get();//Personaggio::select('nome_dinastia')->where('nome_dinastia', '<>', 'null')->distinct()->orderBy('nome_dinastia', 'ASC')->get();
         $data['personaggi'] = Personaggio::orderBy('cognome', 'ASC')->get();
         $data['eventi'] = evento::orderBy('tipo_evento', 'ASC')->get();
         $data['tipo_eventi'] = evento::distinct()->select('tipo_evento')->orderBy('tipo_evento', 'ASC')->get();
@@ -84,7 +86,7 @@ class PersonaggioController extends Controller
 
     public function store(Request $request)
     {
-        //dd($request);
+        dd($request);
         $this->validate_personaggio($request);
         $personaggio = $this->get_info($request);
         $personaggio->save();

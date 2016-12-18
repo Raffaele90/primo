@@ -23,5 +23,10 @@ class Personaggio extends Model
         return $this->hasOne('App\luogo');
     }
 
+    public function dinastie()
+    {
+        return $this->belongsToMany('App\Dinastia', 'dinastia_personaggio', 'personaggio_id',  'dinastia_id');
+    }
+
 
 }

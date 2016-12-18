@@ -175,7 +175,43 @@
                                                           id="descrizione_monumento"></textarea>
                                             </div>
                                         </div>
-                                        <div class="col-xs-12 col-md-12">
+                                        <div class="col-xs-5 col-md-5">
+                                            <div class="form-group">
+                                                <label for="pwd"> Regione</label>
+                                                <select type="text" class="form-control" name="regione"
+                                                       id="id_regione"></select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xs-2 col-md-2">
+                                            <div class="form-group">
+                                                <label for="pwd"> Provincia</label>
+                                                <select type="text" class="form-control" name="regione"
+                                                        id="id_regione"></select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-5 col-md-5">
+                                            <div class="form-group">
+                                                <label for="pwd"> Comune</label>
+                                                <select type="text" class="form-control" name="regione"
+                                                        id="id_regione"></select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-5 col-md-5">
+                                            <div class="form-group">
+                                                <label for="pwd"> Indirizzo</label>
+                                                <input type="text" class="form-control" name="regione"
+                                                        id="id_regione">
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-2 col-md-2">
+                                            <div class="form-group">
+                                                <label for="pwd"> CAP</label>
+                                                <input type="text" class="form-control" name="regione"
+                                                        id="id_regione">
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-5 col-md-5">
                                             <div class="form-group">
                                                 <label for="pwd"> Localizzazione</label>
                                                 <input type="text" class="form-control" name="localizzazione_luogo"
