@@ -7,6 +7,14 @@ flag_init = 0
 
 //tramite l'id table ricerca se ci sono altre row checked, rimuove il check e lo mette alla nuova
 function cheked_row(id_table,id_tr){
+    //Se la riga cliccata è quella checked allora deve deselezionarla solo
+    attr = document.getElementById(id_tr).getAttribute("checked")
+    if(attr != null){
+        $("#"+id_table+" tr[checked]").removeAttr("style")
+        $("#"+id_table+" tr[checked]").removeAttr('checked')
+        return
+    }
+
     $("#"+id_table+" tr[checked]").removeAttr("style")
     $("#"+id_table+" tr[checked]").removeAttr('checked')
 
