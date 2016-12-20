@@ -463,7 +463,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-xs-6 col-md-6">
-                        <label for="exampleInputEmail1">Dinastie</label>
+                        <label  for="exampleInputEmail1">Dinastie</label>
                         <select class="form-control" id="id_select_dinastia">
                             <option selected disabled>Seleziona tipologia</option>
                             @foreach($data['dinastie'] as $dinastia)

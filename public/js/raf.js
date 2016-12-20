@@ -5,6 +5,76 @@
 var dinastie_ass = '{ "dinastie" : []}';
 flag_init = 0
 
+//tramite l'id table ricerca se ci sono altre row checked, rimuove il check e lo mette alla nuova
+function cheked_row(id_table,id_tr){
+    $("#"+id_table+" tr[checked]").removeAttr("style")
+    $("#"+id_table+" tr[checked]").removeAttr('checked')
+
+    $("#"+id_tr).attr("checked","checked")
+    $("#"+id_tr).attr("style","background:#c1e2b3;")
+
+
+}
+
+function add_row_dinastia_personaggio() {
+    var id_dinastia = $("#modal_dinastia #id_select_dinastia").val()
+    var nome_dinastia = $("#modal_dinastia #id_select_dinastia").val()
+    var id_predecessore = $("#id_table_ass_personaggio tr[checked]").attr('personaggio_id')
+    var nome_personaggio = $("#id_table_ass_personaggio tr[checked] td:eq(3)").html()
+    var cognome_personaggio = $("#id_table_ass_personaggio tr[checked] td:eq(2)").html()
+
+    tr = "<tr> </tr>" +
+        "<td></td>"+
+        "<td><input class='input_hidden' name='dinastia_personaggio[]' value='" + id_dinastia + "'/> " + nome_dinastia + "</td>" +
+        "<td><input class='input_hidden' name='predecessore_id[]' value='" + id_predecessore + "'/> " + nome_personaggio + " " + cognome_personaggio + "</td>" +
+        "<td> <button type='button' class='btn btn-default'  aria-label='Left Align'>" +
+        "       <span class='glyphicon glyphicon-eye-open' aria-hidden='true'>" +
+        "       </span></button><button type='button' class='btn btn-default' onclick='remove_row_dinastia(this)' aria-label='Left Align'>" +
+        "       <span class='glyphicon glyphicon-trash' aria-hidden='true'></span> " + "</td>" +
+        "</tr>"
+
+    $("#lista_dinastia_personaggio").append(tr)
+}
+function get_province(nome_regione, id_select) {
+
+    nome_regione = nome_regione.trim()
+    $.ajax({
+        url: 'luogo/get_province',
+        type: "GET",
+        data: {
+            nome_regione: nome_regione
+        },
+        success: function (data) {
+
+            add_option(id_select, "", true)
+            for (i = 0; i < data.length; i++) {
+                add_option(id_select, data[i]['nome'], false)
+            }
+
+        }
+    });
+
+}
+
+function get_comuni(nome_provincia, id_select) {
+
+    nome_pro = nome_provincia.trim()
+    $.ajax({
+        url: 'luogo/get_comuni',
+        type: "GET",
+        data: {
+            nome_provincia: nome_provincia
+        },
+        success: function (data) {
+
+            add_option(id_select, "", true)
+            for (i = 0; i < data.length; i++) {
+                add_option(id_select, data[i]['nome'], false)
+            }
+        }
+    });
+
+}
 
 function add_row_dinastia_parameter(id_dinastia, nome_dinastia, dal, al, ac_dc, ac_dc2) {
 
@@ -265,7 +335,6 @@ function add_tipo(idInput, idSelect) {
     }
 
 
-
     //$('#' + idInput).val('')
 
 }
@@ -297,11 +366,11 @@ function set_form_personaggio(personaggio) {
 
 
     //Aggiungo option nella select Dinastia
-    add_option("id_nome_dinastia", personaggio['anagrafica']['nome_dinastia'])
+    add_option("id_nome_dinastia", personaggio['anagrafica']['nome_dinastia'], false)
     for (i = 0; i < personaggio['dinastie'].length; i++) {
         din_pers = personaggio['anagrafica']['nome_dinastia']
         if (din_pers != personaggio['dinastie'][i]['nome_dinastia'])
-            add_option("id_nome_dinastia", personaggio['dinastie'][i]['nome_dinastia'])
+            add_option("id_nome_dinastia", personaggio['dinastie'][i]['nome_dinastia'], false)
     }
 
     //Inserisco personaggi nella sezione dinastia
@@ -473,6 +542,10 @@ function set_form_luoghi(luogo) {
     remove_option_select("id_sub_luoghi")
     remove_option_select("id_dinastia_appartenenza")
 
+    remove_option_select("id_regione")
+    remove_option_select("id_provincia")
+    remove_option_select("id_comune")
+
     $("#form_luogo")[0].reset()
 
     $("#lista_personaggi").empty();
@@ -485,6 +558,39 @@ function set_form_luoghi(luogo) {
 
     $('#localizzazione_luogo').val(luogo['localizzazione_luogo'])
     $('#id_attuale_destinazione').val(luogo['attuale_destinazione'])
+    $('#id_indirizzo').val(luogo['indirizzo'])
+    $('#id_cap').val(luogo['cap'])
+
+    //SET_REGIONE
+    var selected = false
+    for (i = 0; i < luogo['regioni'].length; i++) {
+        if (luogo['regioni'][i]['id'] == luogo['regione_id']) {
+            selected = true
+        }
+        add_option('id_regione', luogo['regioni'][i]['nome'], selected)
+        selected = false
+
+    }
+    //SET PROVINCE
+    var selected = false
+    for (i = 0; i < luogo['province'].length; i++) {
+        if (luogo['province'][i]['id'] == luogo['provincia_id']) {
+            selected = true
+        }
+        add_option('id_provincia', luogo['province'][i]['nome'], selected)
+        selected = false
+
+    }
+    //SET PROVINCE
+    var selected = false
+    for (i = 0; i < luogo['comuni'].length; i++) {
+        if (luogo['comuni'][i]['id'] == luogo['comune_id']) {
+            selected = true
+        }
+        add_option('id_comune', luogo['comuni'][i]['nome'], selected)
+        selected = false
+
+    }
 
     //SET AC_DC
     if (luogo['ac_dc'] == "ac") {
@@ -493,22 +599,22 @@ function set_form_luoghi(luogo) {
         $('input[name=ac_dc]:eq(1)', '#form_luogo').attr("checked", true)
     }
     //Select DINASTIA di appartenenza
-    add_option('id_dinastia_appartenenza', luogo['nome_dinastia'])
+    add_option('id_dinastia_appartenenza', luogo['nome_dinastia'], false)
     for (i = 0; i < luogo['nomi_dinastie'].length; i++) {
-        add_option('id_dinastia_appartenenza', luogo['nomi_dinastie'][i]['nome_dinastia'])
+        add_option('id_dinastia_appartenenza', luogo['nomi_dinastie'][i]['nome_dinastia'], false)
 
     }
 
     //SELECT tipo luogo
-    add_option('id_tipo_luoghi', luogo['tipo_luogo'])
+    add_option('id_tipo_luoghi', luogo['tipo_luogo'], false)
     for (i = 0; i < luogo['tipi_luoghi'].length; i++) {
-        add_option('id_tipo_luoghi', luogo['tipi_luoghi'][i]['tipo_luogo'])
+        add_option('id_tipo_luoghi', luogo['tipi_luoghi'][i]['tipo_luogo'], false)
 
     }
     //Select sub luogo
-    add_option('id_sub_luoghi', luogo['tipo_sub_luogo'])
+    add_option('id_sub_luoghi', luogo['tipo_sub_luogo'], false)
     for (i = 0; i < luogo['tipi_sub_luoghi'].length; i++) {
-        add_option('id_sub_luoghi', luogo['tipi_sub_luoghi'][i]['tipo_sub_luogo'])
+        add_option('id_sub_luoghi', luogo['tipi_sub_luoghi'][i]['tipo_sub_luogo'], false)
 
     }
     $('#ulteriore_caratterizzazione').val(luogo['ulteriore_caratterizzazione'])
@@ -563,10 +669,15 @@ function create_row_personaggi_luoghi(personaggi, id_table) {
 }
 
 
-function add_option(id_select, option_value) {
+function add_option(id_select, option_value, selected) {
     var select = $("#" + id_select)
     var options = ""
-    options = options + "<option>" + option_value + "</option>"
+    if (selected == true) {
+        options = options + "<option selected>" + option_value + "</option>"
+    } else {
+        options = options + "<option>" + option_value + "</option>"
+
+    }
     select.append(options)
 }
 
@@ -621,21 +732,21 @@ function set_form_eventi(evento) {
     }
 
 
-    add_option("idTipoEvento", evento['tipo_evento'])
+    add_option("idTipoEvento", evento['tipo_evento'], false)
 
     for (i = 0; i < evento['tipo_eventi'].length; i++) {
         var sub_evento = evento['tipo_eventi'][i]['tipo_evento']
         if (sub_evento != evento['tipo_evento'])
-            add_option("idTipoEvento", sub_evento)
+            add_option("idTipoEvento", sub_evento, false)
     }
 
     //SELECT SUB EVENTI aggiunto prima quello selezionato e poi tutti quelli per quel evento
-    add_option("idTipoSubEvento", evento['tipo_sub_evento'])
+    add_option("idTipoSubEvento", evento['tipo_sub_evento'], false)
 
     for (i = 0; i < evento['tipo_sub_eventi'].length; i++) {
         var sub_evento = evento['tipo_sub_eventi'][i]['tipo_sub_evento']
         if (sub_evento != evento['tipo_sub_evento'])
-            add_option("idTipoSubEvento", sub_evento)
+            add_option("idTipoSubEvento", sub_evento, false)
     }
 
 
@@ -1100,6 +1211,17 @@ function click_row_luogo() {
 }
 $(document).ready(function () {
 
+    $("#id_provincia").change(function (e) {
+        remove_option_select("id_comune")
+        get_comuni(e.target.value, "id_comune")
+    });
+
+    $("#id_regione").change(function (e) {
+        remove_option_select("id_provincia")
+        remove_option_select("id_comune")
+        get_province(e.target.value, "id_provincia")
+    });
+
     $("#id_tipologia").change(function (e) {
 
         if (this.value == "OPERA") {
@@ -1201,7 +1323,20 @@ $(document).ready(function () {
 
     })
 
-    $("#id_search_personaggio").keyup(function () {
+    $("#id_search_personaggio_for_dinastia").keyup(function (e) {
+        $("#id_table_ass_personaggio tr td:nth-child(2)").each(function () {
+            if ($(this).text().toLowerCase().indexOf($("#id_search_personaggio_for_dinastia").val()) >= 0) {
+                $(this).closest('tr').show()
+            }
+            else {
+                $(this).closest('tr').hide()
+
+            }
+            //alert($(this).text());
+
+        });
+    });
+    $("#id_search_personaggio").keyup(function (e) {
         $("#lista_personaggi tr td:nth-child(2)").each(function () {
             if ($(this).text().toLowerCase().indexOf($("#id_search_personaggio").val()) >= 0) {
                 $(this).closest('tr').show()
@@ -1361,6 +1496,13 @@ $(document).ready(function () {
             dinastia_appartenenza: $('#id_dinastia_appartenenza').val(),
             ac_dc: $('input[name=ac_dc]:checked', '#form_luogo').val(),
             attuale_destinazione: $('#id_attuale_destinazione').val(),
+            indirizzo: $('#id_indirizzo').val(),
+            cap: $('#id_cap').val(),
+            regione: $('#id_regione').val(),
+            provincia: $('#id_provincia').val(),
+            comune: $('#id_comune').val(),
+
+
         }
 
 

@@ -30,6 +30,7 @@ class PersonaggioController extends Controller
         $data['eventi'] = evento::orderBy('tipo_evento', 'ASC')->get();
         $data['tipo_eventi'] = evento::distinct()->select('tipo_evento')->orderBy('tipo_evento', 'ASC')->get();
 
+        $data['regioni'] = DB::table('regioni')->orderBy('nome','ASC')->get();
         return view('insert_personaggio')->with('data', $data);
     }
 

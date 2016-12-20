@@ -15,10 +15,6 @@ class LuogoController extends Controller
 {
 
 
-//    private static $regioni = ["Piemonte","Valle d'Aosta","Lombardia","Trentino-Alto Adige","Veneto","Friuli-Venezia Giulia","Liguria","Emilia-Romagna","Toscana","Umbria","Marche","Lazio","Abruzzo","Molise","Campania","Puglia","Basilicata","Calabria","Sicilia","Sardegna"];
-//    private static $prov = ["Piemonte","Valle d'Aosta","Lombardia","Trentino-Alto Adige","Veneto","Friuli-Venezia Giulia","Liguria","Emilia-Romagna","Toscana","Umbria","Marche","Lazio","Abruzzo","Molise","Campania","Puglia","Basilicata","Calabria","Sicilia","Sardegna"];
-//    private static $regioni = ["Piemonte","Valle d'Aosta","Lombardia","Trentino-Alto Adige","Veneto","Friuli-Venezia Giulia","Liguria","Emilia-Romagna","Toscana","Umbria","Marche","Lazio","Abruzzo","Molise","Campania","Puglia","Basilicata","Calabria","Sicilia","Sardegna"];
-
     public function get_form_edit()
     {
         $luogo = new luogo();
@@ -35,6 +31,11 @@ class LuogoController extends Controller
             'denominazione_luogo' => 'required|max:25|',
             'localizzazione_luogo' => 'required|max:25',
             'ac_dc' => 'required',
+            'regione' => 'required',
+            'provincia' => 'required',
+            'comune' => 'required',
+
+
 
         ]);
     }
@@ -64,7 +65,6 @@ class LuogoController extends Controller
     }
 
 
-
     public function get_sub_luoghi(Request $request)
     {
         $luogo = new luogo();
@@ -78,17 +78,21 @@ class LuogoController extends Controller
 
         $luogo = luogo::find($request['id']);
         $luogo['tipi_luoghi'] = luogo::distinct()->select('tipo_luogo')->whereNotIn('id', [$request['id']])->where('tipo_luogo', '<>', $luogo['tipo_luogo'])->get();
+        $luogo['regioni'] = DB::table('regioni')->orderBy("nome", "ASC")->get();
+        $luogo['province'] = DB::table('province')->orderBy("nome", "ASC")->where("id_regione", "=", $luogo['regione_id'])->get();
+
+        $luogo['comuni'] = DB::table('comuni')->orderBy("nome", "ASC")->where("id_provincia", "=", $luogo['provincia_id'])->get();
+
         $luogo['tipi_sub_luoghi'] = luogo::distinct()->select('tipo_sub_luogo')->whereNotIn('id', [$request['id']])->where('tipo_luogo', $luogo['tipo_luogo'])->where('tipo_sub_luogo', '<>', $luogo['tipo_sub_luogo'])->get();
         $luogo['personaggi'] = Personaggio::where('luogo_nascita', '=', $request['id'])->orWhere('luogo_morte', '=', $request['id'])->get();
         $luogo['eventi'] = evento::where('origine_luogo_id', '=', $request['id'])->orWhere('nuovo_luogo_id', '=', $request['id'])->get();
         $luogo['nomi_dinastie'] = luogo::distinct()->select('nome_dinastia')->whereNotIn('id', [$request['id']])->where('nome_dinastia', '<>', $luogo['nome_dinastia'])->get();
+
         return $luogo;
     }
 
     public function update(Request $request)
     {
-
-        //  dd($request);
 
         $this->validate_luogo($request);
         $luogo = luogo::find($request['id']);
@@ -104,14 +108,21 @@ class LuogoController extends Controller
         $luogo->nome_dinastia = $request['dinastia_appartenenza'];
         $luogo->ac_dc = $request['ac_dc'];
         $luogo->attuale_destinazione = $request['attuale_destinazione'];
+        $luogo->cap = $request['cap'];
+        $luogo->indirizzo = $request['indirizzo'];
+
+        $luogo->regione_id = luogo::get_id_regione($request['regione']);
+
+        $luogo->provincia_id = luogo::get_id_provincia($request['provincia']);
+
+        $luogo->comune_id = luogo::get_id_comune($request['comune']);
+
 
         $success = $luogo->save();
 
         return redirect()->back()->with($success, 1);
         //return redirect()->to('edit_luogo')->with($success);
     }
-
-
 
 
     public function remove_luogo(Request $request)
@@ -126,4 +137,19 @@ class LuogoController extends Controller
         }
     }
 
+
+    public function get_province(Request $request){
+
+        $regione = DB::table('regioni')->select('id')->where("nome", "=", $request['nome_regione'])->get();
+        return DB::table('province')->orderBy("nome", "ASC")->where("id_regione", "=", $regione[0]->id)->get();
+
+    }
+
+
+    public function get_comuni(Request $request){
+
+        $provincia = DB::table('province')->select('id')->where("nome", "=", $request['nome_provincia'])->get();
+        return DB::table('comuni')->orderBy("nome", "ASC")->where("id_provincia", "=", $provincia[0]->id)->get();
+
+    }
 }

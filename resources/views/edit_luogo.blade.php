@@ -126,7 +126,7 @@
                                         <div id="form_success_luogo"></div>
 
 
-                                        <div class="col-xs-6 col-md-6">
+                                        <div class="col-xs-5 col-md-5">
 
                                             <div class="form-group">
                                                 <label for="email">Denominazione luogo</label>
@@ -155,7 +155,7 @@
                                                 </div>
                                             </div><!-- /input-group -->
                                         </div>
-                                        <div class="col-xs-3 col-md-3">
+                                        <!--<div class="col-xs-3 col-md-3">
 
                                             <div class="form-group">
                                                 <label for="pwd">Dinastia appartenenza</label>
@@ -164,51 +164,46 @@
 
                                                 </select>
                                             </div>
-                                        </div>
+                                        </div>-->
                                     </div>
                                     <div class="row">
-                                        <div class="col-xs-12 col-md-12">
-                                            <div class="form-group">
-                                                <label for="email">Descrizione monumento</label>
-                                                <textarea rows="10" type="text" class="form-control"
-                                                          name="descrizione_monumento"
-                                                          id="descrizione_monumento"></textarea>
-                                            </div>
-                                        </div>
                                         <div class="col-xs-5 col-md-5">
                                             <div class="form-group">
                                                 <label for="pwd"> Regione</label>
                                                 <select type="text" class="form-control" name="regione"
-                                                       id="id_regione"></select>
+                                                        id="id_regione">
+
+                                                </select>
+
                                             </div>
                                         </div>
 
                                         <div class="col-xs-2 col-md-2">
                                             <div class="form-group">
                                                 <label for="pwd"> Provincia</label>
-                                                <select type="text" class="form-control" name="regione"
-                                                        id="id_regione"></select>
+                                                <select  type="text" class="form-control" name="provincia"
+                                                        id="id_provincia"></select>
                                             </div>
                                         </div>
                                         <div class="col-xs-5 col-md-5">
                                             <div class="form-group">
                                                 <label for="pwd"> Comune</label>
-                                                <select type="text" class="form-control" name="regione"
-                                                        id="id_regione"></select>
+                                                <select type="text" class="form-control" name="comune"
+                                                        id="id_comune"></select>
                                             </div>
                                         </div>
                                         <div class="col-xs-5 col-md-5">
                                             <div class="form-group">
                                                 <label for="pwd"> Indirizzo</label>
-                                                <input type="text" class="form-control" name="regione"
-                                                        id="id_regione">
+                                                <input type="text" class="form-control" name="indirizzo"
+                                                       id="id_indirizzo">
                                             </div>
                                         </div>
                                         <div class="col-xs-2 col-md-2">
                                             <div class="form-group">
                                                 <label for="pwd"> CAP</label>
-                                                <input type="text" class="form-control" name="regione"
-                                                        id="id_regione">
+                                                <input type="text" class="form-control" name="cap"
+                                                       id="id_cap">
                                             </div>
                                         </div>
                                         <div class="col-xs-5 col-md-5">
@@ -271,6 +266,15 @@
                                                 </button>
                                             </div>
                                         </div>
+                                        <div class="col-xs-12 col-md-12">
+                                            <div class="form-group">
+                                                <label for="email">Descrizione luogo</label>
+                                                <textarea rows="10" type="text" class="form-control"
+                                                          name="descrizione_monumento"
+                                                          id="descrizione_monumento"></textarea>
+                                            </div>
+                                        </div>
+
 
                                     </div>
 
@@ -286,17 +290,18 @@
                                         </div>
 
                                     </div>
-                                    <div class="row">
+                                    <!--<div class="row">
 
                                         <div class="col-xs-12 col-md-12">
                                             <div class="form-group">
                                                 <label for="email">Attualmente ospita </label>
                                                 <textarea rows="10" type="text" class="form-control"
-                                                          id="id_attuale_destinazione" name="attuale_destinazione"></textarea>
+                                                          id="id_attuale_destinazione"
+                                                          name="attuale_destinazione"></textarea>
                                             </div>
                                         </div>
 
-                                    </div>
+                                    </div>-->
                                     <meta name="_token" content="{!! csrf_token() !!}"/>
 
                                 </div>

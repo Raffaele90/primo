@@ -21,7 +21,7 @@ Route::get('prova2', function () {
     return Dinastia::find(3);
 });
 
-Route::get('prova', ['uses' => 'EventoController@get_JSON_dinastie_associate']);
+Route::get('prova', ['uses' => 'LuogoController@get_province']);
 
 
 Route::get('insert_personaggio', ['uses' => 'PersonaggioController@getForm']);
@@ -44,8 +44,8 @@ Route::post('get_luogo', ['uses' => 'LuogoController@get_luogo']);
 Route::post('update_luogo', ['uses' => 'LuogoController@update']);
 Route::post('get_sub_luoghi', ['uses' => 'LuogoController@get_sub_luoghi']);
 Route::post('remove_luogo', ['uses' => 'LuogoController@remove_luogo']);
-
-
+Route::get('luogo/get_province', ['uses' => 'LuogoController@get_province']);
+Route::get('luogo/get_comuni', ['uses' => 'LuogoController@get_comuni']);
 
 Route::post('get_sub_eventi', ['uses' => 'EventoController@get_sub_eventi']);
 Route::post('insert_evento', ['uses' => 'EventoController@insert_evento']);

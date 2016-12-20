@@ -54,7 +54,47 @@
                             </div>
                         </div>
 
+                        <div class="row">
+                            <div class="col-xs-12 col-md-12">
+                                <div class="panel panel-warning scroll_table">
+                                    <div class="panel-heading">
+                                        <div class="row">
+                                            <div class="col-xs-12 col-md-12">
+                                                <h3 class="panel-title"> Collega Dinastie </h3>
+                                            </div>
+                                            <div class="col-xs-12 col-md-12">
 
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="panel-body">
+
+
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th class="input_hidden">#</th>
+                                                <th>Dinastia</th>
+                                                <th>Predecessore</th>
+                                                <th>Preview</th>
+
+                                            </tr>
+                                            </thead>
+                                            <tbody id="lista_dinastia_personaggio">
+
+
+                                            </tbody>
+                                        </table>
+                                        <button type="button"
+                                                class="btn btn-primary" data-target="#modal_dinastia" data-toggle="modal">Associa nuova dinastia
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="row">
                             <div class="col-xs-6 col-md-6">
@@ -415,7 +455,8 @@
                                         <input type="text" class="form-control" name="nuova_dinastia"
                                                id="id_nuova_dinastia">
                                         <button type="button" id=""
-                                                onclick="add_tipo('id_nuova_dinastia','id_nome_dinastia'),add_tipo('id_nuova_dinastia','id_dinastia_appartenenza')"> +
+                                                onclick="add_tipo('id_nuova_dinastia','id_nome_dinastia'),add_tipo('id_nuova_dinastia','id_dinastia_appartenenza')">
+                                            +
                                         </button>
                                     </div>
                                 </div>
@@ -588,6 +629,103 @@
 <!-- Large modal Per selezione luogo-->
 @include('modal_luoghi')
 
+
+<div id="modal_dinastia" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Associa Dinastia</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-6 col-md-6">
+                        <label for="exampleInputEmail1">Dinastie</label>
+                        <select class="form-control" id="id_select_dinastia">
+                            <option selected disabled>Seleziona tipologia</option>
+                            @foreach($data['dinastie'] as $dinastia)
+                                <option id_dinastia="{{$dinastia['id']}}">{{$dinastia['nome_dinastia']}}</option>
+
+                            @endforeach
+
+                        </select>
+                    </div>
+                    <div class="col-xs-6 col-md-6">
+                        <label for="exampleInputEmail1">Nuova Dinastia</label>
+                        <input class="form-control" type="text" id="id_nuova_dinastia"
+                               placeholder="Nuova dinastia"/>
+                        <button type="button" id=""
+                                onclick="add_tipo('id_nuova_dinastia','id_select_dinastia')"> +
+                        </button>
+                    </div>
+                </div>
+                <p></p>
+                <div class="row">
+                    <div class="panel panel-success scroll_table" style=""
+                         id="id_dinastia">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-6 col-md-6">
+                                    <h3 class="panel-title">Personaggi </h3>
+                                </div>
+                                <div class="col-xs-6 col-md-6">
+
+                                    <input type="text" class="form-control" table_to_search="id_table_ass_personaggio" placeholder="Search"
+                                           id="id_search_personaggio_for_dinastia">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="panel-body">
+
+
+                            <div class="panel panel-default"
+                                 style="">
+                                <div class="panel-heading"> Table
+                                </div>
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Cognome</th>
+                                        <th>nome</th>
+                                        <th>Dinastia</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="id_table_ass_personaggio">
+                                    @foreach($data['personaggi'] as $personaggio)
+
+                                        <a>
+                                            <tr  id="id_tr_{{$personaggio->id}}"  onclick="cheked_row('id_table_ass_personaggio',this.id)" personaggio_id ="{{$personaggio->id}}" class="select_row_genitori clickable-row">
+                                                <td>{{$personaggio->id}}</td>
+                                                <td>{{$personaggio->cognome}}</td>
+                                                <td>{{$personaggio->nome}}</td>
+                                                <td>{{$personaggio->dinastia}}</td>
+                                                <td>
+
+                                                </td>
+                                            </tr>
+                                        </a>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                                <p></p>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="add_row_dinastia_personaggio()">Associa</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 
 <!-- Large modal Per selezione DINASTIA-->
