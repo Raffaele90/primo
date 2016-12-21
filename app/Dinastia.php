@@ -20,6 +20,7 @@ class Dinastia extends Model
 
     public function personaggi()
     {
-        return $this->belongsToMany('App\Personaggio', 'dinastia_personaggio', 'dinastia_id', 'personaggio_id');
+        return $this->belongsToMany('App\Personaggio', 'dinastia_personaggio', 'dinastia_id', 'personaggio_id')
+            ->withPivot('parent_id');
     }
 }

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\evento;
 use App\luogo;
 use App\Personaggio;
+
+use App\Dinastia;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -21,7 +23,7 @@ class LuogoController extends Controller
 
         $data['luoghi'] = luogo::orderBy('denominazione_luogo', 'ASC')->get();
         $data['tipo_luoghi'] = $luogo->get_tipo_luoghi();
-        $data['dinastie'] = Personaggio::distinct()->select('nome_dinastia')->orderBy('nome_dinastia', 'ASC')->get();
+        $data['dinastie'] = Dinastia::distinct()->orderBy('nome_dinastia', 'ASC')->get();
         return view('edit_luogo')->with('data', $data);
     }
 
@@ -54,9 +56,15 @@ class LuogoController extends Controller
         $luogo->ulteriore_caratterizzazione = $request['ulteriore_caratterizzazione'];
         $luogo->localizzazione_luogo = $request['localizzazione_luogo'];
         $luogo->tipo_sub_luogo = $request['tipo_sub_luogo'];
-        $luogo->nome_dinastia = $request['dinastia_appartenenza'];
         $luogo->ac_dc = $request['ac_dc'];
-        $luogo->attuale_destinazione = $request['attuale_destinazione'];
+        $luogo->cap = $request['cap'];
+        $luogo->indirizzo = $request['indirizzo'];
+
+        $luogo->regione_id = luogo::get_id_regione($request['regione']);
+
+        $luogo->provincia_id = luogo::get_id_provincia($request['provincia']);
+
+        $luogo->comune_id = luogo::get_id_comune($request['comune']);
 
 
         $success = $luogo->save();
@@ -105,9 +113,7 @@ class LuogoController extends Controller
         $luogo->ulteriore_caratterizzazione = $request['ulteriore_caratterizzazione'];
         $luogo->localizzazione_luogo = $request['localizzazione_luogo'];
         $luogo->tipo_sub_luogo = $request['tipo_sub_luogo'];
-        $luogo->nome_dinastia = $request['dinastia_appartenenza'];
         $luogo->ac_dc = $request['ac_dc'];
-        $luogo->attuale_destinazione = $request['attuale_destinazione'];
         $luogo->cap = $request['cap'];
         $luogo->indirizzo = $request['indirizzo'];
 

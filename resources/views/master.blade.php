@@ -51,11 +51,11 @@
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                           aria-expanded="false">Eventi <span class="caret"></span></a>
+                           aria-expanded="false">Eventi/Opere <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="insert_evento">Insert Evento <span
+                            <li><a href="insert_evento">Insert <span
                                             class="sr-only">(current)</span></a></li>
-                            <li><a href="edit_evento">Edit Evento</a></li>
+                            <li><a href="edit_evento">Edit</a></li>
 
                         </ul>
                     </li>

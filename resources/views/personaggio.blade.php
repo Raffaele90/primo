@@ -101,15 +101,6 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-xs-10 col-md-10">
-
-                                            <label for="exampleInputEmail1">Dinastia</label>
-
-                                            <input
-                                                    type="text" class="form-control" data-toggle="modal"
-                                                    data-target="#modalDinastia" readonly id="idDinastia"
-                                                    placeholder="Dinastia"
-                                                    name="nome_dinastia">
-
                                             <label for="exampleInputEmail1">Padre</label>
 
                                             <input
@@ -431,36 +422,6 @@
 
 
                         <div class="modal-body">
-                            <div class="row">
-                                <div class="col-xs-6 col-md-6">
-                                    <div class="form-group">
-
-                                        <label> Dinastia </label>
-                                        <select class="form-control" style="display: block;" id="id_nome_dinastia"
-                                                name="">
-                                            @if (Request::path()=='insert_personaggio')
-                                                @foreach($data['dinastia'] as $dinastia)
-                                                    <option> {{$dinastia['nome_dinastia']}}</option>
-                                                @endforeach
-                                            @endif
-                                        </select>
-
-                                    </div>
-                                </div>
-                                <div class="col-xs-6 col-md-6">
-
-                                    <div class="form-group">
-                                        <label for="sel1">Nuova Dinastia</label>
-
-                                        <input type="text" class="form-control" name="nuova_dinastia"
-                                               id="id_nuova_dinastia">
-                                        <button type="button" id=""
-                                                onclick="add_tipo('id_nuova_dinastia','id_nome_dinastia'),add_tipo('id_nuova_dinastia','id_dinastia_appartenenza')">
-                                            +
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="row">
 
                                 <p></p>

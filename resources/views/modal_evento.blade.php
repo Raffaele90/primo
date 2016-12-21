@@ -6,7 +6,7 @@
             <div class="panel panel-success"
                  id="id_eventi">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Nuovo Evento</h3>
+                    <h3 class="panel-title">Nuovo </h3>
                 </div>
                 <div class="panel-body" id="new_evento">
                     <div class="form-group">
@@ -75,36 +75,14 @@
                                            readonly id="id_denominazione_luogo_evento"
                                            placeholder="Denominazione ID" name="origine_luogo_id">
                                 </div>
-                                <div class="form-group">
-                                    <div class="col-xs-4 col-md-4">
-                                        <label for="exampleInputEmail1">Giorno</label>
-                                        <input class="form-control" type="number" min="1" max="31" step="1"
-                                               id="id_data_giorno"
-                                               placeholder="giorno" name="giorno"/>
-
-                                    </div>
-                                    <div class="col-xs-4 col-md-4">
-                                        <label for="exampleInputEmail1">Mese</label>
-                                        <input class="form-control" type="number" min="0" max="12" step="1"
-                                               id="id_data_mese"
-                                               placeholder="mese" name="mese"/>
-
-                                    </div>
-                                    <div class="col-xs-4 col-md-4">
-                                        <label for="exampleInputEmail1">Anno</label>
-                                        <input class="form-control" type="number" min="0" max="5000" step="1"
-                                               id="id_data_anno"
-                                               placeholder="anno" name="anno"/>
-
-                                    </div>
 
 
-                                </div>
                                 <div class="form-group">
                                     <label for="comment">Descrizione</label>
                                     <textarea class="form-control" rows="5" name="descrizione_evento"
                                               placeholder="Descrizione" id="idDescrizioneEvento"></textarea>
                                 </div>
+
                             </div>
 
                             <div class="col-xs-6 col-md-6">
@@ -161,6 +139,32 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-xs-4 col-md-4">
+                                            <label for="exampleInputEmail1">Giorno</label>
+                                            <input class="form-control" type="number" min="1" max="31" step="1"
+                                                   id="id_data_giorno"
+                                                   placeholder="giorno" name="giorno"/>
+
+                                        </div>
+                                        <div class="col-xs-4 col-md-4">
+                                            <label for="exampleInputEmail1">Mese</label>
+                                            <input class="form-control" type="number" min="0" max="12" step="1"
+                                                   id="id_data_mese"
+                                                   placeholder="mese" name="mese"/>
+
+                                        </div>
+                                        <div class="col-xs-4 col-md-4">
+                                            <label for="exampleInputEmail1">Anno</label>
+                                            <input class="form-control" type="number" min="0" max="5000" step="1"
+                                                   id="id_data_anno"
+                                                   placeholder="anno" name="anno"/>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
                                     <label for="exampleInputEmail1">Ulteriore
                                         caratterizzazione</label> <textarea type="text" class="form-control"
                                                                             name="ulteriore_caratterizzazione_evento"
@@ -208,7 +212,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-md-12 field_opera">
+                        <div class="col-xs-12 col-md-12">
 
                             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                                 <div class="panel panel-default">
@@ -424,10 +428,10 @@
 
                             <button type="submit" class="btn btn-default">Salva Evento
                             </button>
-                            <button type="button"
+                            <!--<button type="button"
                                     onclick="show_hide_module('id_personaggi','vuota'),goToByScroll('id_personaggi')"
                                     class="btn btn-default">Collega Personaggi
-                            </button>
+                            </button>-->
 
                         @endif
                     </div>
@@ -463,7 +467,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-xs-6 col-md-6">
-                        <label  for="exampleInputEmail1">Dinastie</label>
+                        <label for="exampleInputEmail1">Dinastie</label>
                         <select class="form-control" id="id_select_dinastia">
                             <option selected disabled>Seleziona tipologia</option>
                             @foreach($data['dinastie'] as $dinastia)

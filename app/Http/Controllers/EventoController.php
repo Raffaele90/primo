@@ -60,6 +60,7 @@ class EventoController extends Controller
         $data['personaggi'] = personaggio::orderBy('cognome', 'ASC')->get();
         $data['eventi'] = evento::orderBy('denominazione_evento', 'ASC')->get();
         $data['tipo_eventi'] = evento::distinct()->select('tipo_evento')->orderBy('tipo_evento', 'ASC')->get();
+        $data['regioni'] = DB::table('regioni')->orderBy('nome', 'ASC')->get();
 
         return view('edit_evento')->with('data', $data);
 
@@ -72,7 +73,7 @@ class EventoController extends Controller
         $data['luoghi'] = luogo::orderBy('denominazione_luogo', 'ASC')->get();
         $data['tipo_luoghi'] = $luogo->get_tipo_luoghi();
         $data['dinastie'] = Dinastia::distinct()->orderBy('nome_dinastia', 'ASC')->get();
-        //  dd($data['dinastie'][0]['nome_dinastia']);
+        $data['regioni'] = DB::table('regioni')->orderBy('nome', 'ASC')->get();
         $data['personaggi'] = personaggio::orderBy('cognome', 'ASC')->get();
         $data['eventi'] = evento::orderBy('denominazione_evento', 'ASC')->get();
         $data['tipo_eventi'] = evento::distinct()->select('tipo_evento')->orderBy('tipo_evento', 'ASC')->get();

@@ -17,7 +17,7 @@
         <div class="modal-content">
             <div class="row">
                 <div class="col-xs-12 col-md-12">
-                    <form method="POST" action="insert_evento">
+                    <form method="POST" action="insert_evento" style="margin-bottom: 0px;">
                         {{ csrf_field() }}
                         @if(Session::has('success'))
                             <div class="alert alert-success">

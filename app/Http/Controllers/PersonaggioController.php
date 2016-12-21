@@ -30,7 +30,7 @@ class PersonaggioController extends Controller
         $data['eventi'] = evento::orderBy('tipo_evento', 'ASC')->get();
         $data['tipo_eventi'] = evento::distinct()->select('tipo_evento')->orderBy('tipo_evento', 'ASC')->get();
 
-        $data['regioni'] = DB::table('regioni')->orderBy('nome','ASC')->get();
+        $data['regioni'] = DB::table('regioni')->orderBy('nome', 'ASC')->get();
         return view('insert_personaggio')->with('data', $data);
     }
 
@@ -40,10 +40,13 @@ class PersonaggioController extends Controller
 
         $data['luoghi'] = luogo::orderBy('denominazione_luogo', 'ASC')->get();
         $data['tipo_luoghi'] = $luogo->get_tipo_luoghi();
-        $data['dinastia'] = Personaggio::select('nome_dinastia')->where('nome_dinastia', '<>', 'null')->distinct()->orderBy('nome_dinastia', 'ASC')->get();
+        $data['dinastia'] = Dinastia::distinct()->orderBy('nome_dinastia', 'ASC')->get();//Personaggio::select('nome_dinastia')->where('nome_dinastia', '<>', 'null')->distinct()->orderBy('nome_dinastia', 'ASC')->get();
+        $data['dinastie'] = Dinastia::distinct()->orderBy('nome_dinastia', 'ASC')->get();//Personaggio::select('nome_dinastia')->where('nome_dinastia', '<>', 'null')->distinct()->orderBy('nome_dinastia', 'ASC')->get();
+
         $data['personaggi'] = Personaggio::orderBy('cognome', 'ASC')->get();
         $data['eventi'] = evento::orderBy('tipo_evento', 'ASC')->get();
         $data['tipo_eventi'] = evento::distinct()->select('tipo_evento')->orderBy('tipo_evento', 'ASC')->get();
+        $data['regioni'] = DB::table('regioni')->orderBy('nome', 'ASC')->get();
 
         return view('edit_personaggio')->with('data', $data);
     }
@@ -87,11 +90,29 @@ class PersonaggioController extends Controller
 
     public function store(Request $request)
     {
-        dd($request);
         $this->validate_personaggio($request);
         $personaggio = $this->get_info($request);
         $personaggio->save();
 
+        //Ass DINASTIA a personaggio
+        //Analizzo la dinastia se non la trovo nella tab dinastia la devo inserire
+        for ($i = 0; $i < count($request['dinastia_personaggio']); $i++) {
+            $dinastia = Dinastia::where('nome_dinastia', '=', $request['dinastia_personaggio'][$i])->first();
+            if ($dinastia === null) {
+                $dinastia = new Dinastia();
+                $dinastia->nome_dinastia = $request['dinastia_personaggio'][$i];
+                $dinastia->save();
+            }
+            if ($request['predecessore_id'][$i] != "undefined" and $request['predecessore_id'][$i] != "") {
+                $personaggio->dinastie()->attach([$dinastia->id => ['parent_id' => $request['predecessore_id'][$i]]]);
+
+            } else {
+                $personaggio->dinastie()->attach($dinastia->id);
+
+            }
+        }
+
+        //ASS eventi a personaggio
         $eventi_ass = [];
         for ($i = 0; $i < count($request['eventi']); $i++) {
             $id_evento = substr($request['eventi'][$i], 7);
@@ -159,7 +180,17 @@ class PersonaggioController extends Controller
         }
         $pers['eventi_non_associati'] = evento::whereNotIn('id', $arr)->get()->toArray();
         $pers['anagrafica'] = Personaggio::find($request['id']);
+        $pers['dinastie_ass'] = Personaggio::find($request['id'])->dinastie()->get(); //Trovo tutte le dinastie associate al personaggio
 
+        for ($i = 0; $i < count($pers['dinastie_ass']); $i++) {
+            $parent_id = $pers['dinastie_ass'][$i]['pivot']['parent_id'];
+            $parent = Personaggio::find($parent_id);
+            $pers['dinastie_ass'][$i]['pivot']['nome_parent'] = $parent['cognome'] . " " . $parent['nome'];
+            $pers['dinastie_ass'][$i]['pivot']['nome_parent'] = trim($pers['dinastie_ass'][$i]['pivot']['nome_parent']); //Carico il nome e cogn del padre nella stessa posizione dove trovo l'id
+
+        }
+
+        //dd($pers['dinastie_ass'][0]['pivot']['parent_id']);
         $pers['dinastie'] = Personaggio::distinct()->select('nome_dinastia')->get();
 
         $pers['dinastia'] = [];
@@ -197,28 +228,13 @@ class PersonaggioController extends Controller
             array_push($ids_famiglia, $coniuge3);
 
         $pers['personaggi'] = Personaggio::whereNotIn('id', $ids_famiglia)->orderBy("cognome", "ASC")->get();
-        /*
-        $pers['dinastia'][$cont]['padre'] = Personaggio::find($padre);
-        $pers['dinastia'][$cont]['madre'] = Personaggio::find($madre);
-        while (1) {
-            if ($padre != null or $madre != null) {
-                $padre = Personaggio::find($padre)['padre_id'];
-                $madre = Personaggio::find($madre)['madre_id'];
-                $cont += 1;
-                $pers['dinastia'][$cont]['padre'] = Personaggio::find($padre);
-                $pers['dinastia'][$cont]['madre'] = Personaggio::find($madre);
 
-            } else {
-                break;
-            }
-        }*/
         $pers['luogo_nascita'] = "";
         $pers['luogo_morte'] = "";
         $pers['luogo_nascita'] = luogo::find($pers['anagrafica']['luogo_nascita']);
         $pers['luogo_morte'] = luogo::find($pers['anagrafica']['luogo_morte']);
 
-        return $pers;//Personaggio::join('luogo', 'luogo.idLuogo', '=', 'personaggio.luogo_nascita')->where('personaggio.id','=',$request['id'])->get();
-
+        return $pers;
 
     }
 

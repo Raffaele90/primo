@@ -14,7 +14,7 @@ class luogo extends Model
     protected $table = 'luogo';
 
     protected $fillable = [
-        'denominazione_luogo', 'anno_costruzione', 'descrizione_monumento', 'localizzazione_luogo', 'tipo_luogo', 'ulteriore_caratterizzazione', 'tipo_sub_luogo', 'nome_dinastia', 'ac_dc', 'attuale_destinazione', 'regione_id', 'provincia_id', 'comune_id', 'indirizzo', 'cap'];
+        'denominazione_luogo', 'anno_costruzione', 'descrizione_monumento', 'localizzazione_luogo', 'tipo_luogo', 'ulteriore_caratterizzazione', 'tipo_sub_luogo', 'ac_dc', 'regione_id', 'provincia_id', 'comune_id', 'indirizzo', 'cap'];
 
 
     public function get_tipo_luoghi()

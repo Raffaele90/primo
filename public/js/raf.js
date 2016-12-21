@@ -43,6 +43,20 @@ function add_row_dinastia_personaggio() {
 
     $("#lista_dinastia_personaggio").append(tr)
 }
+function add_row_dinastia_personaggio_parameter(id_dinastia,nome_dinastia, id_predecessore, nome_pers) {
+    tr = "<tr> </tr>" +
+        "<td></td>"+
+        "<td><input class='input_hidden' name='dinastia_personaggio[]' value='" + id_dinastia + "'/> " + nome_dinastia + "</td>" +
+        "<td><input class='input_hidden' name='predecessore_id[]' value='" + id_predecessore + "'/> " + nome_pers +"</td>" +
+        "<td> <button type='button' class='btn btn-default'  aria-label='Left Align'>" +
+        "       <span class='glyphicon glyphicon-eye-open' aria-hidden='true'>" +
+        "       </span></button><button type='button' class='btn btn-default' onclick='remove_row_dinastia(this)' aria-label='Left Align'>" +
+        "       <span class='glyphicon glyphicon-trash' aria-hidden='true'></span> " + "</td>" +
+        "</tr>"
+
+    $("#lista_dinastia_personaggio").append(tr)
+}
+
 function get_province(nome_regione, id_select) {
 
     nome_regione = nome_regione.trim()
@@ -373,6 +387,12 @@ function set_form_personaggio(personaggio) {
     $(".pers_dinastia").remove()
 
 
+    //Popolo tabella Dinastie associante
+    var dinastie_ass = personaggio['dinastie_ass']
+    for (i = 0; i < dinastie_ass.length; i++) {
+        add_row_dinastia_personaggio_parameter(dinastie_ass[i]['id'],dinastie_ass[i]['nome_dinastia'],dinastie_ass[i]['pivot']['parent_id'],dinastie_ass[i]['pivot']['nome_parent'])
+    }
+
     //Aggiungo option nella select Dinastia
     add_option("id_nome_dinastia", personaggio['anagrafica']['nome_dinastia'], false)
     for (i = 0; i < personaggio['dinastie'].length; i++) {
@@ -571,6 +591,7 @@ function set_form_luoghi(luogo) {
 
     //SET_REGIONE
     var selected = false
+    add_option('id_regione', "", selected)
     for (i = 0; i < luogo['regioni'].length; i++) {
         if (luogo['regioni'][i]['id'] == luogo['regione_id']) {
             selected = true
@@ -1014,6 +1035,7 @@ function insert_personaggio() {
 
 function get_value_from_form_personaggio() {
 
+//    alert()
     nome = document.getElementById("idNome").value;
     cognome = document.getElementById("idCognome").value;
     data_nascita = document.getElementById("idNascita").value;
@@ -1028,7 +1050,15 @@ function get_value_from_form_personaggio() {
 
     descrizione = document.getElementById("idDescrizione").value;
     tipo = document.getElementById("idTipo").value;
-    nome_dinastia = document.getElementById("idDinastia").value;
+    var dinastia_personaggio = [];
+    $("input[name='dinastia_personaggio[]']").each(function() {
+        dinastia_personaggio.push($(this).val());
+    });
+
+    var predecessore_id = [];
+    $("input[name='predecessore_id[]']").each(function() {
+        predecessore_id.push($(this).val());
+    });
 
     var json_personaggio = {
         "nome": nome,
@@ -1044,7 +1074,9 @@ function get_value_from_form_personaggio() {
         "data_morte": data_morte,
         "descrizione": descrizione,
         "tipo": tipo,
-        "nome_dinastia": nome_dinastia
+        "dinastia_personaggio": dinastia_personaggio,
+        "predecessore_id" : predecessore_id
+
     }
 
     return json_personaggio;
