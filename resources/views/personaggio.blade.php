@@ -53,9 +53,58 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-xs-6 col-md-6">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Luogo di nascita</label> <input
+                                            type="text" readonly class="form-control" data-target="#modalLuoghi"
+                                            data-toggle="modal"
+                                            name="label_luogo_nascita" onclick="set_modal_value('modalLuoghi',this.id)"
+                                            id="label_idLuogoNascita"
+                                            placeholder="Luogo">
+                                    <input
+                                            type="text" class="form-control input_hidden" data-target="#modalLuoghi"
+                                            data-toggle="modal"
+                                            name="luogo_nascita" id="idLuogoNascita"
+                                            placeholder="id luogo">
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-md-6">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Data nascita</label> <input
+                                            type="date" class="form-control" name="data_nascita" id="idNascita"
+                                            placeholder="Data di nascita">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6 col-md-6">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Luogo di morte</label> <input
+                                            type="text" readonly class="form-control" data-target="#modalLuoghi"
+                                            data-toggle="modal"
+                                            name="label_luogo_morte" id="label_idLuogoMorte"
+                                            onclick="set_modal_value('modalLuoghi',this.id)"
+                                            placeholder="Luogo">
+                                    <input
+                                            type="text" class="form-control input_hidden" data-target="#modalLuoghi"
+                                            data-toggle="modal"
+                                            name="luogo_morte" id="idLuogoMorte"
+                                            placeholder="id luogo">
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-md-6">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Data morte</label> <input
+                                            type="date" class="form-control" name="data_morte" id="idMorte"
+                                            placeholder="Data di morte">
+                                </div>
+                            </div>
+
+                        </div>
 
                         <div class="row">
-                            <div class="col-xs-12 col-md-12">
+                            <div class="col-xs-6 col-md-6">
                                 <div class="panel panel-warning scroll_table">
                                     <div class="panel-heading">
                                         <div class="row">
@@ -88,15 +137,13 @@
                                             </tbody>
                                         </table>
                                         <button type="button"
-                                                class="btn btn-primary" data-target="#modal_dinastia" data-toggle="modal">Associa nuova dinastia
+                                                class="btn btn-primary" data-target="#modal_dinastia"
+                                                data-toggle="modal">Associa nuova dinastia
                                         </button>
                                     </div>
 
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="row">
                             <div class="col-xs-6 col-md-6">
                                 <div class="form-group">
                                     <div class="row">
@@ -166,83 +213,14 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="col-xs-6 col-md-6">
-                                <label for="exampleInputEmail1">Dinastia</label>
-
-                                <div id="sample">
-                                    <div id="myDiagramDiv"
-                                         style="background-color: #696969; border: solid 1px black; height: 50%">
-
-                                    </div>
-                                    <div>
-                                        <div id="myInspector">
-
-
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <div>
-
-                                    <textarea id="mySavedModel"
-                                              style=" display:none; width:100%;height:250px">
-                                    </textarea>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
                         </div>
+
                         <div class="row">
-                            <div class="col-xs-6 col-md-6">
-                                <div class="form-group">
-                                    <label for="exampleInputEmail1">Luogo di nascita</label> <input
-                                            type="text" readonly class="form-control" data-target="#modalLuoghi"
-                                            data-toggle="modal"
-                                            name="label_luogo_nascita" onclick="set_modal_value('modalLuoghi',this.id)"
-                                            id="label_idLuogoNascita"
-                                            placeholder="Luogo">
-                                    <input
-                                            type="text" class="form-control input_hidden" data-target="#modalLuoghi"
-                                            data-toggle="modal"
-                                            name="luogo_nascita" id="idLuogoNascita"
-                                            placeholder="id luogo">
-                                </div>
-                            </div>
-                            <div class="col-xs-6 col-md-6">
-                                <div class="form-group">
-                                    <label for="exampleInputEmail1">Data nascita</label> <input
-                                            type="date" class="form-control" name="data_nascita" id="idNascita"
-                                            placeholder="Data di nascita">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6 col-md-6">
-                                <div class="form-group">
-                                    <label for="exampleInputEmail1">Luogo di morte</label> <input
-                                            type="text" readonly class="form-control" data-target="#modalLuoghi"
-                                            data-toggle="modal"
-                                            name="label_luogo_morte" id="label_idLuogoMorte"
-                                            onclick="set_modal_value('modalLuoghi',this.id)"
-                                            placeholder="Luogo">
-                                    <input
-                                            type="text" class="form-control input_hidden" data-target="#modalLuoghi"
-                                            data-toggle="modal"
-                                            name="luogo_morte" id="idLuogoMorte"
-                                            placeholder="id luogo">
-                                </div>
-                            </div>
-                            <div class="col-xs-6 col-md-6">
-                                <div class="form-group">
-                                    <label for="exampleInputEmail1">Data morte</label> <input
-                                            type="date" class="form-control" name="data_morte" id="idMorte"
-                                            placeholder="Data di morte">
-                                </div>
-                            </div>
+
+
 
                         </div>
+
 
                         <div class="row">
 
@@ -632,7 +610,8 @@
                                 </div>
                                 <div class="col-xs-6 col-md-6">
 
-                                    <input type="text" class="form-control" table_to_search="id_table_ass_personaggio" placeholder="Search"
+                                    <input type="text" class="form-control" table_to_search="id_table_ass_personaggio"
+                                           placeholder="Search"
                                            id="id_search_personaggio_for_dinastia">
                                 </div>
                             </div>
@@ -658,7 +637,10 @@
                                     @foreach($data['personaggi'] as $personaggio)
 
                                         <a>
-                                            <tr  id="id_tr_{{$personaggio->id}}"  onclick="cheked_row('id_table_ass_personaggio',this.id)" personaggio_id ="{{$personaggio->id}}" class="select_row_genitori clickable-row">
+                                            <tr id="id_tr_{{$personaggio->id}}"
+                                                onclick="cheked_row('id_table_ass_personaggio',this.id)"
+                                                personaggio_id="{{$personaggio->id}}"
+                                                class="select_row_genitori clickable-row">
                                                 <td>{{$personaggio->id}}</td>
                                                 <td>{{$personaggio->cognome}}</td>
                                                 <td>{{$personaggio->nome}}</td>
@@ -683,6 +665,55 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" onclick="add_row_dinastia_personaggio()">Associa</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<!-- MODAL SHOW DINASTIA GRAFO -->
+
+<div id="modal_show_dinastie" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">View Dinastia</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12 col-md-12">
+                        <label for="exampleInputEmail1">Dinastia</label>
+
+                        <div id="sample">
+                            <div id="myDiagramDiv"
+                                 style="background-color: #696969; border: solid 1px black; height: 50%">
+
+                            </div>
+                            <div>
+                                <div id="myInspector">
+
+
+                                </div>
+                            </div>
+
+                            <div>
+                                <div>
+
+                                    <textarea id="mySavedModel"
+                                              style=" display:none; width:100%;height:250px">
+                                    </textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="add_row_dinastia()">Associa</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

@@ -5,21 +5,52 @@
 var dinastie_ass = '{ "dinastie" : []}';
 flag_init = 0
 
+function get_giorno(data){
+
+   var data = data.split("-")
+    return data[2]
+}
+
+
+function get_mese(data){
+    var data = data.split("-")
+    return data[1]
+}
+
+
+function get_anno(data){
+    var data = data.split("-")
+    return data[0]
+}
+
+
+//Mostra la dinastia visualizzata sul grafo
+
+function show_preview_dinastia (){
+    var formData = {
+        id: $("#idPersonaggio").val(),
+        nome: $("#idCognome").val(),
+        cognome: $("#idNome").val(),
+        nuovo_id_padre: id_padre// perhè l'id è din3233
+    }
+    load_dinastia(formData)
+}
+
 //tramite l'id table ricerca se ci sono altre row checked, rimuove il check e lo mette alla nuova
-function cheked_row(id_table,id_tr){
+function cheked_row(id_table, id_tr) {
     //Se la riga cliccata è quella checked allora deve deselezionarla solo
     attr = document.getElementById(id_tr).getAttribute("checked")
-    if(attr != null){
-        $("#"+id_table+" tr[checked]").removeAttr("style")
-        $("#"+id_table+" tr[checked]").removeAttr('checked')
+    if (attr != null) {
+        $("#" + id_table + " tr[checked]").removeAttr("style")
+        $("#" + id_table + " tr[checked]").removeAttr('checked')
         return
     }
 
-    $("#"+id_table+" tr[checked]").removeAttr("style")
-    $("#"+id_table+" tr[checked]").removeAttr('checked')
+    $("#" + id_table + " tr[checked]").removeAttr("style")
+    $("#" + id_table + " tr[checked]").removeAttr('checked')
 
-    $("#"+id_tr).attr("checked","checked")
-    $("#"+id_tr).attr("style","background:#c1e2b3;")
+    $("#" + id_tr).attr("checked", "checked")
+    $("#" + id_tr).attr("style", "background:#c1e2b3;")
 
 
 }
@@ -32,10 +63,10 @@ function add_row_dinastia_personaggio() {
     var cognome_personaggio = $("#id_table_ass_personaggio tr[checked] td:eq(2)").html()
 
     tr = "<tr> </tr>" +
-        "<td></td>"+
+        "<td></td>" +
         "<td><input class='input_hidden' name='dinastia_personaggio[]' value='" + id_dinastia + "'/> " + nome_dinastia + "</td>" +
         "<td><input class='input_hidden' name='predecessore_id[]' value='" + id_predecessore + "'/> " + nome_personaggio + " " + cognome_personaggio + "</td>" +
-        "<td> <button type='button' class='btn btn-default'  aria-label='Left Align'>" +
+        "<td> <button type='button' class='btn btn-default'  data-toggle='modal' data-target='#modal_show_dinastie' aria-label='Left Align'>" +
         "       <span class='glyphicon glyphicon-eye-open' aria-hidden='true'>" +
         "       </span></button><button type='button' class='btn btn-default' onclick='remove_row_dinastia(this)' aria-label='Left Align'>" +
         "       <span class='glyphicon glyphicon-trash' aria-hidden='true'></span> " + "</td>" +
@@ -43,11 +74,11 @@ function add_row_dinastia_personaggio() {
 
     $("#lista_dinastia_personaggio").append(tr)
 }
-function add_row_dinastia_personaggio_parameter(id_dinastia,nome_dinastia, id_predecessore, nome_pers) {
+function add_row_dinastia_personaggio_parameter(id_dinastia, nome_dinastia, id_predecessore, nome_pers) {
     tr = "<tr> </tr>" +
-        "<td></td>"+
+        "<td></td>" +
         "<td><input class='input_hidden' name='dinastia_personaggio[]' value='" + id_dinastia + "'/> " + nome_dinastia + "</td>" +
-        "<td><input class='input_hidden' name='predecessore_id[]' value='" + id_predecessore + "'/> " + nome_pers +"</td>" +
+        "<td><input class='input_hidden' name='predecessore_id[]' value='" + id_predecessore + "'/> " + nome_pers + "</td>" +
         "<td> <button type='button' class='btn btn-default'  aria-label='Left Align'>" +
         "       <span class='glyphicon glyphicon-eye-open' aria-hidden='true'>" +
         "       </span></button><button type='button' class='btn btn-default' onclick='remove_row_dinastia(this)' aria-label='Left Align'>" +
@@ -139,8 +170,8 @@ function add_row_dinastia_parameter(id_dinastia, nome_dinastia, dal, al, ac_dc, 
 function add_row_dinastia() {
 
 
-    var id_dinastia = check($("#id_select_dinastia").children(":selected").attr("id_dinastia"));
-    var nome_dinastia = check($("#id_select_dinastia").val());
+    var id_dinastia = check($("#id_select_dinastia_evento").children(":selected").attr("id_dinastia"));
+    var nome_dinastia = check($("#id_select_dinastia_evento").val());
     var dal = check($("#id_input_dal").val());
     var ac_dc = check($("input[name=ac_dc_periodo_din]:checked").val());
     var al = check($("#id_input_al").val());
@@ -376,8 +407,6 @@ function riempi_casella_dinastia(id_pers, id_casella, nome) {
 }
 function set_form_personaggio(personaggio) {
 
-
-
     //Reset Form
     document.getElementById("id_form_personaggio").reset();
     $("#corpo_lista_eventi").empty();
@@ -390,7 +419,7 @@ function set_form_personaggio(personaggio) {
     //Popolo tabella Dinastie associante
     var dinastie_ass = personaggio['dinastie_ass']
     for (i = 0; i < dinastie_ass.length; i++) {
-        add_row_dinastia_personaggio_parameter(dinastie_ass[i]['id'],dinastie_ass[i]['nome_dinastia'],dinastie_ass[i]['pivot']['parent_id'],dinastie_ass[i]['pivot']['nome_parent'])
+        add_row_dinastia_personaggio_parameter(dinastie_ass[i]['id'], dinastie_ass[i]['nome_dinastia'], dinastie_ass[i]['pivot']['parent_id'], dinastie_ass[i]['pivot']['nome_parent'])
     }
 
     //Aggiungo option nella select Dinastia
@@ -782,7 +811,17 @@ function set_form_eventi(evento) {
     $('#label_id_denominazione_luogo_evento').val(evento['vecchio_luogo'])
 
     $('#id_denominazione_luogo_evento').val(evento['origine_luogo_id'])
-    $('#id_data_evento').val(evento['data_evento'])
+
+    $('#id_data_giorno').val(get_giorno(evento['data_evento']))
+    $('#id_data_mese').val(get_mese(evento['data_evento']))
+    $('#id_data_anno').val(get_anno(evento['data_evento']))
+    //SET AC_DC
+    if (evento['ac_dc'] == "ac") {
+        $('input[name=ac_dc_evento]:eq(0)', '#id_form_evento').prop("checked", true)
+    } else if (evento['ac_dc'] == "dc") {
+        $('input[name=ac_dc_evento]:eq(1)', '#id_form_evento').attr("checked", true)
+    }
+
     $('#id_ulteriore_caratterizzazione_evento').val(evento['ulteriore_caratterizzazione'])
     $('#idDescrizioneEvento').val(evento['descrizione_evento'])
     $('#id_data_costruzione').val(evento['data_costruzione'])
@@ -894,25 +933,33 @@ function get_luogo_db(id_luogo) {
 }
 function get_info_evento() {
 
+    var personaggi_ass = [];
+    $("input[name='personaggi[]']").each(function () {
+        personaggi_ass.push($(this).val());
+    });
 
-    tipo_evento = $("#idTipoEvento").val()
-    sub_tipo_evento = $("#idTipoSubEvento").val()
+    var tipo_evento = $("#idTipoEvento").val()
+    var tipo_sub_evento = $("#idTipoSubEvento").val()
 
     json_evento = {
+        tipologia: $("#id_tipologia").val(),
         denominazione_evento: document.getElementById("id_denominazione_evento").value,
+        importanza_evento: document.getElementById("id_importanza_evento").value,
+        stato: document.getElementById("id_stato").value,
         tipo_evento: tipo_evento,
-        sub_tipo_evento: sub_tipo_evento,
+        tipo_sub_evento: tipo_sub_evento,
+        origine_luogo_id: document.getElementById("id_denominazione_luogo_evento").value,
+        giorno: $("#id_data_giorno").val(),
+        mese: $("#id_data_mese").val(),
+        anno: $("#id_data_anno").val(),
+        ac_dc_evento: $('input[name=ac_dc_evento]:checked').val(),
         descrizione_evento: document.getElementById("idDescrizioneEvento").value,
-        denominazione_luogo_evento: document.getElementById("id_denominazione_luogo_evento").value,
-        data_di_costruzione: document.getElementById("id_data_evento").value,
-//        "descrizione_monumento": document.getElementById("id_descrizione_monumento").value,
         ulteriore_caratterizzazione_evento: document.getElementById("id_ulteriore_caratterizzazione_evento").value,
 //        "nuova_denominazione_luogo": document.getElementById("id_nuova_denominazione_luogo").value,
         descrizione_movimento_opera: document.getElementById("id_descrizione_movimento_opera").value,
-        nuovo_luogo_id: document.getElementById("id_nuova_denominazione_luogo_evento").value,
-        importanza_evento: document.getElementById("id_importanza_evento").value,
-        stato: document.getElementById("id_stato").value,
-
+        nuovo_luogo_id_evento: document.getElementById("id_nuova_denominazione_luogo_evento").value,
+        personaggi: personaggi_ass,
+        dinastie_periodi: $("#id_json_dinastie").val(),
 
     }
     return json_evento;
@@ -920,6 +967,7 @@ function get_info_evento() {
 function insert_Evento() {
 
     json_evento = get_info_evento();
+    alert(JSON.stringify(json_evento))
     var type = "POST"; //for creating new resource
     url = "insert_evento"
     $.ajax({
@@ -1051,12 +1099,12 @@ function get_value_from_form_personaggio() {
     descrizione = document.getElementById("idDescrizione").value;
     tipo = document.getElementById("idTipo").value;
     var dinastia_personaggio = [];
-    $("input[name='dinastia_personaggio[]']").each(function() {
+    $("input[name='dinastia_personaggio[]']").each(function () {
         dinastia_personaggio.push($(this).val());
     });
 
     var predecessore_id = [];
-    $("input[name='predecessore_id[]']").each(function() {
+    $("input[name='predecessore_id[]']").each(function () {
         predecessore_id.push($(this).val());
     });
 
@@ -1075,7 +1123,7 @@ function get_value_from_form_personaggio() {
         "descrizione": descrizione,
         "tipo": tipo,
         "dinastia_personaggio": dinastia_personaggio,
-        "predecessore_id" : predecessore_id
+        "predecessore_id": predecessore_id
 
     }
 
@@ -1352,13 +1400,7 @@ $(document).ready(function () {
             $("input[name=label_coniuge3]").val("");
             $("input[name=coniuge3]").val("");
         }
-        var formData = {
-            id: $("#idPersonaggio").val(),
-            nome: $("#idCognome").val(),
-            cognome: $("#idNome").val(),
-            nuovo_id_padre: id_padre// perhè l'id è din3233
-        }
-        load_dinastia(formData)
+
         $("#modalDinastia").modal("hide")
 
     })

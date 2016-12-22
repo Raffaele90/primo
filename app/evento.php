@@ -11,7 +11,7 @@ class evento extends Model
     protected $table = 'evento';
 
 
-    protected $fillable = ['tipo_evento', 'tipologia', 'denominazione_evento', 'origine_luogo_id', 'nuovo_luogo_id', 'descrizione_evento', 'anno_evento', 'descrizione_movimento_opera', 'tipo_sub_evento', 'ulteriore_caratterizzazione', 'importanza', 'pub_pri'];
+    protected $fillable = ['tipo_evento', 'tipologia', 'denominazione_evento', 'origine_luogo_id', 'nuovo_luogo_id', 'descrizione_evento', 'data_evento', 'descrizione_movimento_opera', 'tipo_sub_evento', 'ulteriore_caratterizzazione', 'importanza', 'pub_pri','ac_dc'];
 
     public function personaggi()
     {

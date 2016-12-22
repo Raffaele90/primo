@@ -140,26 +140,35 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="row">
-                                        <div class="col-xs-4 col-md-4">
+                                        <div class="col-xs-3 col-md-3">
                                             <label for="exampleInputEmail1">Giorno</label>
                                             <input class="form-control" type="number" min="1" max="31" step="1"
                                                    id="id_data_giorno"
                                                    placeholder="giorno" name="giorno"/>
 
                                         </div>
-                                        <div class="col-xs-4 col-md-4">
+                                        <div class="col-xs-3 col-md-3">
                                             <label for="exampleInputEmail1">Mese</label>
                                             <input class="form-control" type="number" min="0" max="12" step="1"
                                                    id="id_data_mese"
                                                    placeholder="mese" name="mese"/>
 
                                         </div>
-                                        <div class="col-xs-4 col-md-4">
+                                        <div class="col-xs-3 col-md-3">
                                             <label for="exampleInputEmail1">Anno</label>
                                             <input class="form-control" type="number" min="0" max="5000" step="1"
                                                    id="id_data_anno"
                                                    placeholder="anno" name="anno"/>
 
+                                        </div>
+                                        <div class="col-xs-1 col-md-1">
+                                            <div class="radio">
+
+                                                <input class="form-control" name="ac_dc_evento" type="radio" value="ac">
+                                                <span>a.C.</span>
+                                                <input class="form-control" name="ac_dc_evento" type="radio" value="dc">
+                                                <span>d.C.</span>
+                                            </div><!-- /input-group -->
                                         </div>
                                     </div>
 
@@ -219,12 +228,13 @@
                                     <div class="panel-heading" role="tab" id="headingOne">
                                         <h4 class="panel-title">
                                             <a role="button" data-toggle="collapse" data-parent="#accordion"
-                                               href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                               href="#collapse_dinastie" aria-expanded="true"
+                                               aria-controls="collapse_dinastie">
                                                 ASSOCIA DINASTIE
                                             </a>
                                         </h4>
                                     </div>
-                                    <div id="collapseOne" class="panel-collapse collapse " role="tabpanel"
+                                    <div id="collapse_dinastie" class="panel-collapse collapse " role="tabpanel"
                                          aria-labelledby="headingOne">
                                         <div class="panel-body">
                                             <div id="id_dinastie" style="display: block;">
@@ -269,25 +279,15 @@
                                                             </div>
 
                                                         </div>
-                                                        @if(Request::path() == 'insert_evento' or Request::path() == 'edit_evento')
 
-                                                            <button type="button"
-                                                                    class="btn btn-primary dropdown-toggle"
-                                                                    data-toggle="modal" data-target="#modal_dinastie">
-                                                                + Add Dinastia
-                                                            </button>
-                                                            <p></p>
-                                                        @endif
+                                                        <button type="button"
+                                                                class="btn btn-primary dropdown-toggle"
+                                                                data-toggle="modal" data-target="#modal_dinastie">
+                                                            + Add Dinastia
+                                                        </button>
+                                                        <p></p>
 
                                                     </div>
-
-
-                                                    @if (Request::path() =='insert_personaggio' or Request::path() =='edit_personaggio')
-
-                                                        <button type="button" onclick="insert_Evento() "
-                                                                class="btn btn-danger btn_update_raf">Aggiungi Evento
-                                                        </button>
-                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -468,7 +468,7 @@
                 <div class="row">
                     <div class="col-xs-6 col-md-6">
                         <label for="exampleInputEmail1">Dinastie</label>
-                        <select class="form-control" id="id_select_dinastia">
+                        <select class="form-control" id="id_select_dinastia_evento">
                             <option selected disabled>Seleziona tipologia</option>
                             @foreach($data['dinastie'] as $dinastia)
                                 <option id_dinastia="{{$dinastia['id']}}">{{$dinastia['nome_dinastia']}}</option>

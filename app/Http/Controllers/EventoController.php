@@ -102,6 +102,7 @@ class EventoController extends Controller
         $evento->tipologia = $request['tipologia'];
         $evento->denominazione_evento = $request['denominazione_evento'];
         $evento->data_evento = $this->format_data($request['anno'], $request['mese'], $request['giorno']);
+        $evento->ac_dc = $request['ac_dc_evento'];
         $evento->tipo_evento = $request['tipo_evento'];
         $evento->tipo_sub_evento = $request['tipo_sub_evento'];
 
@@ -175,7 +176,8 @@ class EventoController extends Controller
 
         $evento->denominazione_evento = $request['denominazione_evento'];
         $evento->tipo_evento = $request['tipo_evento'];
-        $evento->data_evento = $request['data_costruzione'] == null ? null : $request['data_costruzione'];
+        $evento->data_evento = $this->format_data($request['anno'], $request['mese'], $request['giorno']);
+        $evento->ac_dc = $request['ac_dc_evento'];
         $evento->tipo_sub_evento = $request['tipo_sub_evento'];
         $evento->descrizione_evento = $request['descrizione_evento'];
         $evento->origine_luogo_id = $request['origine_luogo_id'] == null ? null : $request['origine_luogo_id'];
